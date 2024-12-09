@@ -77,7 +77,7 @@ function Table({ DATA, tablehead, ReloadTable }) {
               })  
               .catch(error => {
                 setSearchTriggered(false);
-                toast.error("Cant reject request!", { autoClose: true });
+                toast.error("Can't reject request!", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }

@@ -29,12 +29,15 @@ class SignupController extends Controller
             $validator = Validator::make($request->all(), [ 
                 'username' => 'required',
                 'name' => 'required',
+                'middle_name' => 'required',
+                'last_name' => 'required',
                 'password' => 'required',
                 'gender' => 'required',
                 'contact' => 'required',
                 'birthdate' => 'required',   
                 'address' => 'required',   
                 'year_residency' => 'required',   
+                'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
             if($validator->fails()) {
                 return response()->json([
@@ -95,12 +98,15 @@ class SignupController extends Controller
             $validator = Validator::make($request->all(), [ 
                 'username' => 'required',
                 'name' => 'required',
+                'middle_name' => 'required',
+                'last_name' => 'required',
                 'password' => 'required',
                 'gender' => 'required',
                 'contact' => 'required',
                 'birthdate' => 'required',   
                 'address' => 'required',   
                 'year_residency' => 'required',   
+                'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
     
             if($validator->fails()) {
@@ -111,9 +117,16 @@ class SignupController extends Controller
     
             else {
                 try {
+                    $pictureData = null; // Initialize the variable to hold the file path
+                    if ($request->hasFile('id_picture')) {
+                        $file = $request->file('id_picture');
+                        $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
+                    }
                     $add = User::create([
                         'username' => $request->username,
                         'name' => strtoupper($request->name),
+                        'middle_name' => strtoupper($request->middle_name),
+                        'last_name' => strtoupper($request->last_name),
                         'gender' => $request->gender,   
                         'password' => $request->password,   
                         'address' => $request->address,   
@@ -121,8 +134,9 @@ class SignupController extends Controller
                         'role' => 'USER',   
                         'access_level' => 5,   
                         'year_residency' => $request->year_residency,   
+                        'id_picture' => $pictureData,   
                         'birthdate' => $request->birthdate,  
-                        'account_status' => 1,  
+                        'account_status' => 0,  
                         'updated_by' => $request->name,
                         'created_by' => $request->name,
                     ]);
@@ -132,7 +146,7 @@ class SignupController extends Controller
                     if($add) {
                         return response()->json([
                             'status' => 200,
-                            'message' => 'Account submitted successfully!'
+                            'message' => 'Account submitted successfully! Please wait for the admin to acknowledge your account.'
                         ], 200);
                     }
                     else {

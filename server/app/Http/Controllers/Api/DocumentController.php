@@ -56,7 +56,7 @@ class DocumentController extends Controller
         $authUser = User::select('name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [ 
-            'doc_name' => 'required|unique:organizations,doc_name',
+            'doc_name' => 'required|unique:documents,doc_name',
         ]);
 
         if($validator->fails()) {

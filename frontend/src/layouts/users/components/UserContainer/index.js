@@ -146,7 +146,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             <SoftAvatar
-              src={logo}
+              src={User.id_picture ? `data:image/png;base64,${User.id_picture}` : logo}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -157,6 +157,8 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
                 {User.name}{" "}
+                {User.middle_name}{" "}
+                {User.last_name}{" "}
               </SoftTypography>
               <SoftTypography variant="button" color="text" fontWeight="medium">
                 {User.username}{" "}

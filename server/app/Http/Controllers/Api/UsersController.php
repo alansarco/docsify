@@ -66,6 +66,7 @@ class UsersController extends Controller
         }
 
         $user = User::select('*',
+            DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as date_added"),
             DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
@@ -97,6 +98,8 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'account_status' => 'required',
             'address' => 'required',
@@ -123,6 +126,8 @@ class UsersController extends Controller
                     $update = User::where('username', $request->username)
                     ->update([
                         'name' => strtoupper($request->name),
+                        'middle_name' => strtoupper($request->middle_name),
+                        'last_name' => strtoupper($request->last_name),
                         'gender' => $request->gender,   
                         'address' => $request->address,   
                         'contact' => $request->contact,   
@@ -195,12 +200,15 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'contact' => 'required',
             'birthdate' => 'required',
             'address' => 'required',
             'year_residency' => 'required',
             'access_level' => 'required',
+            'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         if($validator->fails()) {
@@ -218,13 +226,21 @@ class UsersController extends Controller
 
         if(!$residentExist) {
             try {
+                $pictureData = null; // Initialize the variable to hold the file path
+                if ($request->hasFile('id_picture')) {
+                    $file = $request->file('id_picture');
+                    $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
+                }
                 $add = User::create([
                     'username' => $request->username,
                     'name' => strtoupper($request->name),
+                    'middle_name' => strtoupper($request->middle_name),
+                    'last_name' => strtoupper($request->last_name),
                     'gender' => $request->gender,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
                     'role' => strtoupper($role),   
+                    'id_picture' => $pictureData,   
                     'access_level' => $request->access_level,   
                     'year_residency' => $request->year_residency,   
                     'birthdate' => $request->birthdate,  
