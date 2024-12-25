@@ -10,7 +10,7 @@
     <div style="padding: 20px;">
         <h1 style="text-align: center; color: #333">Document Request Status!</h1>
         <p style="font-size: 13px; color: #333; margin-top: 5px;">{{ $otp }}</p>
-        <p style="font-size: 11px; margin-top: 10px; color: #333; font-style: italic;">This is an automated email from Brgy Central Bicutan Profiling System, please do not reply.</p>
+        <p style="font-size: 11px; margin-top: 10px; color: #333; font-style: italic;">This is an automated email from Brgy DOCSIFY - Document Request System, please do not reply.</p>
     </div>
 </body>
 </html>         

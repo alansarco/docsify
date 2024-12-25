@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AESCipher;
 use App\Models\App_Info;
+use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,6 @@ class LoginController extends Controller {
         $credentials = $request->validate($rules);
 
         if (!Auth::attempt($credentials)) {
-            // End
             return response()->json([
                 'message' => "Invalid account credentials!"
             ]);
@@ -52,6 +52,7 @@ class LoginController extends Controller {
                 'role' => $user->role,
                 'access' => $user->access_level,
                 'access_token' => $token,
+                'clientid' => $request->clientid,
                 'message' => "Login Success!"
             ])->withCookie($cookie);
 
@@ -66,6 +67,7 @@ class LoginController extends Controller {
         $authUser = Auth::user();
 
         $userInfo = User::select('*', 
+            DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("DATE_FORMAT(last_online, '%M %d, %Y') as last_online")
         )
         ->where('username', $authUser->username)
@@ -97,4 +99,30 @@ class LoginController extends Controller {
             'message' => "Session End!"
         ])->withCookie($cookie);
     }
+    
+    public function clientselect() {
+        $today = Carbon::today();
+
+        $clients = Client::select('*', 
+            DB::raw("TO_BASE64(client_logo) as client_logo"),
+        )
+        ->where('subscription_start', '<=', $today)
+        ->where('subscription_end', '>=', $today)
+        ->get();
+
+        if($clients) {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "Clients Found!",
+            ]);
+        }
+        else {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "No Clients Found!",
+            ]);
+        }
+    }
+
+
 }

@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('login', [LoginController::class, 'login']);
+Route::get('clientselect', [LoginController::class, 'clientselect']);
 Route::get('app_info', [GeneralController::class, 'app_info']);
 Route::post('createotpverification', [SignupController::class, 'createotpverification']);
 Route::get('signupsuffix', [SignupController::class, 'signupsuffix']);

@@ -3,6 +3,7 @@ export const mainRoute = "http://127.0.0.1:8000";
 
 export const apiRoutes = {  
     login: `${mainRoute}/api/login`,
+    clientSelect: `${mainRoute}/api/clientselect`,
     signupsuffixRetrieve: `${mainRoute}/api/signupsuffix`,
     signupuser: `${mainRoute}/api/signupuser`,
     createOTP: `${mainRoute}/api/createotp`,
