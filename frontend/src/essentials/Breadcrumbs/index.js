@@ -66,7 +66,7 @@ function Breadcrumbs({ icon, title, route, light }) {
         color={light ? "white" : "dark"}
         noWrap
       >
-        Profiling System
+        Document Request System
       </SoftTypography>
     </SoftBox>
   );

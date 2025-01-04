@@ -35,7 +35,7 @@ function Add({HandleRendering, ReloadTable }) {
             access_level: '',
             contact: '',
             birthdate: '',
-            year_residency: '', 
+            year_enrolled: '', 
             agreement: false,   
       };
 
@@ -79,7 +79,7 @@ function Add({HandleRendering, ReloadTable }) {
                   "access_level",
                   "contact",
                   "birthdate",
-                  "year_residency",
+                  "year_enrolled",
             ];
             console.log(formData);
 
@@ -106,7 +106,7 @@ function Add({HandleRendering, ReloadTable }) {
                                     data.append("contact", formData.contact);
                                     data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
-                                    data.append("year_residency", formData.year_residency);
+                                    data.append("year_enrolled", formData.year_enrolled);
                                     data.append("access_level", formData.access_level);
                                     const response = await axios.post(apiRoutes.accountStore, data, {headers});
                                     if(response.data.status == 200) {
@@ -207,11 +207,6 @@ function Add({HandleRendering, ReloadTable }) {
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                           </Grid>
-                                          <Grid item xs={12} sm={6} md={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Barangay/City: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5" disabled value="Brgy Central Bicutan, Taguig City" />
-                                          </Grid>
                                           <Grid item xs={12} md={8} lg={4}px={1}>
                                                 <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
@@ -226,7 +221,7 @@ function Add({HandleRendering, ReloadTable }) {
                                           <Grid item xs={12} sm={6} md={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Year Residency: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_residency" value={formData.year_residency} onChange={handleChange} >
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {years && years.map((year) => (
                                                       <option key={year} value={year}>

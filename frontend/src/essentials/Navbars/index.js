@@ -57,7 +57,7 @@ function DashboardNavbar(props) {
   const route = useLocation().pathname.split("/").slice(1);
   const [formattedDate, setFormattedDate] = useState('');
   const [formattedTime, setFormattedTime] = useState('');
-  const {token, user, access, setToken, setUser, setRole, setAccess} = useStateContext();
+  const {token, user, access, setToken, setUser, setRole, setAccess, setClientProvider, setClientName, setClientAcr} = useStateContext();
   const [submitLogout, setSubmitLogout] = useState(false);
 
   
@@ -146,11 +146,19 @@ function DashboardNavbar(props) {
         setToken(null);
         setRole(null);
         setAccess(null);
+        setClientProvider(null);
+        setClientName(null);
+        setClientAcr(null);
         toast.success(`${response.data.message}`, { autoClose: true });
       })
       .catch(error => {
         setUser(null);
         setToken(null);
+        setRole(null);
+        setAccess(null);
+        setClientProvider(null);
+        setClientName(null);
+        setClientAcr(null);
         toast.error(`Error! ${error}`, { autoClose: true });
       });
     } 
@@ -180,7 +188,7 @@ function DashboardNavbar(props) {
             account_circle
           </Icon>
         }
-        title={[authUser.name, ""]}
+        title={[authUser.fullname, ""]}
         onClick={handlePassword}
 
       />

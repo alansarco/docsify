@@ -99,7 +99,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
                   Contact_Number: USER.contact == null ? " " : USER.contact,
                   Address: USER.address == null ? " " : `${USER.address || ""} ${USER.default_address || ""}`,
                   Status: USER.status == "1" ? "Verified" : "Not Verified",
-                  Year_Residency: USER.year_residency == null ? " " : USER.year_residency,
+                  Year_Residency: USER.year_enrolled == null ? " " : USER.year_enrolled,
                   Last_Online: USER.last_online,
                 }}
               />

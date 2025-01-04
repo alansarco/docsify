@@ -5,10 +5,16 @@ const StateContext = createContext({
   role: null,
   access: null,
   token: null,
+  clientprovider: null,
+  clientname: null,
+  clientacr: null,
   setUser: () => {},
   setRole: () => {},
   setAccess: () => {},  
   setToken: () => {},
+  setClientProvider: () => {},
+  setClientName: () => {},
+  setClientAcr: () => {},
   updateTokenExpiration: () => {}, // Expose this function to update the token's expiration
 });
 
@@ -17,6 +23,9 @@ export const ContextProvider = ({ children }) => {
   const [role, _setRole] = useState(localStorage.getItem("ACCESS_ROLE"));   
   const [access, _setAccess] = useState(localStorage.getItem("ACCESS_LEVEL"));
   const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
+  const [clientprovider, _setClientProvider] = useState(localStorage.getItem("ACCESS_CLIENT"));
+  const [clientname, _setClientName] = useState(localStorage.getItem("ACCESS_CLIENT_NAME"));
+  const [clientacr, _setClientAcr] = useState(localStorage.getItem("ACCESS_CLIENT_ACR"));
   // const [token, _setToken] = useState("expired");
   
   const setUser = (newUser) => {
@@ -51,6 +60,32 @@ export const ContextProvider = ({ children }) => {
       localStorage.setItem("ACCESS_TOKEN", newToken);
     } else {
       localStorage.removeItem("ACCESS_TOKEN");
+    }
+  };
+
+  const setClientProvider = (newClient) => {
+    _setClientProvider(newClient);
+    if (newClient) {
+      localStorage.setItem("ACCESS_CLIENT", newClient);
+    } else {
+      localStorage.removeItem("ACCESS_CLIENT");
+    }
+  };
+
+  const setClientName = (newClientName) => {
+    _setClientName(newClientName);
+    if (newClientName) {
+      localStorage.setItem("ACCESS_CLIENT_NAME", newClientName);
+    } else {
+      localStorage.removeItem("ACCESS_CLIENT_NAME");
+    }
+  };
+  const setClientAcr = (newClientAcr) => {
+    _setClientAcr(newClientAcr);
+    if (newClientAcr) {
+      localStorage.setItem("ACCESS_CLIENT_ACR", newClientAcr);
+    } else {
+      localStorage.removeItem("ACCESS_CLIENT_ACR");
     }
   };
 
@@ -96,10 +131,16 @@ export const ContextProvider = ({ children }) => {
         role,
         access,
         token,
+        clientprovider,
+        clientname,
+        clientacr,
         setUser,
         setRole,
         setAccess,
         setToken,
+        setClientProvider,
+        setClientName,
+        setClientAcr,
         updateTokenExpiration,
       }}
     >

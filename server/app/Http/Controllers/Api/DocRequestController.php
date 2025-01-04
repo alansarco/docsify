@@ -105,7 +105,7 @@ class DocRequestController extends Controller
             'purpose' => $request->purpose,
             'status' => 0,
             'date_needed' => $request->date_needed,
-            'created_by' => $authUser->name,
+            'created_by' => $authUser->first_name,
         ]);
 
         if($addDoc) {

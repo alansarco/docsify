@@ -13,7 +13,7 @@
         <p style="font-size: 13px; color: #333; margin-top: 5px;">We've sent you an OTP (One-Time Password) to complete the process securely. Please use the following OTP code:</p>
         <h2 style="background-color: #ccdaff; padding: 10px; border-radius: 5px; margin-top: -5px;">code: {{ $otp }}</h2>
         <p style="font-size: 13px; margin-top: -10px; color: #333">Please note that this OTP is valid for a limited time (5 minutes) and should not be shared with anyone.</p>
-        <p style="font-size: 11px; margin-top: 10px; color: #333; font-style: italic;">This is an automated email from Brgy DOCSIFY - Document Request System, please do not reply.</p>
+        <p style="font-size: 11px; margin-top: 10px; color: #333; font-style: italic;">This is an automated email from DOCSIFY - Document Request System, please do not reply.</p>
     </div>
 </body>
 </html>         

@@ -70,7 +70,7 @@ class AnnouncementController extends Controller
 
     // update specific admin's information
     public function updateannouncement(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [
             'event_name' => 'required',
@@ -101,7 +101,7 @@ class AnnouncementController extends Controller
                     'hashtag2' => $request->hashtag2,
                     'hashtag3' => $request->hashtag3,
                     'color' => $request->color,
-                    'updated_by' => $authUser->name,
+                    'updated_by' => $authUser->first_name,
                 ]);
 
             if($update) {
@@ -124,7 +124,7 @@ class AnnouncementController extends Controller
     }
 
     public function addannouncement(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [ 
             'event_name' => 'required',
@@ -153,7 +153,7 @@ class AnnouncementController extends Controller
             'hashtag2' => $request->hashtag2,
             'hashtag3' => $request->hashtag3,
             'color' => $request->color,
-            'created_by' => $authUser->name,
+            'created_by' => $authUser->first_name,
         ]);
 
         if($add) {

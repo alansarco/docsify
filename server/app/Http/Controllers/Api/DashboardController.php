@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $populationCount = [];
         
         for ($x = 0; $x <= 10; $x++) {
-            $population = User::where('year_residency', '<=', $currentYear)->count();
+            $population = User::where('year_enrolled', '<=', $currentYear)->count();
             $populationCount[$currentYear] = $population;
             $currentYear--;
         }

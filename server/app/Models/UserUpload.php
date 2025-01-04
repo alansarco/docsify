@@ -22,7 +22,7 @@ class UserUpload extends Model
         'email', 
         'gender', 
         'address', 
-        'year_residency', 
+        'year_enrolled', 
         'password', 
         'password_change',
         'account_status',

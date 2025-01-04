@@ -13,7 +13,7 @@ import SoftButton from "components/SoftButton";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
-import logo from "assets/images/logo.png";
+import logo from "assets/images/logo.jpg";
 
 // react-router-dom components
 import { Link, useNavigate, Navigate  } from "react-router-dom";
@@ -148,7 +148,7 @@ function ForgotPassword() {
     <>
     {submitLogin && <FixedLoading />}
     <CoverLayout
-      title="Brgy. Central Bicutan"
+      title="DOCSIFY"
       description={step < 4 ? "Forgot Password?" : "Password Chaged Successfully!"} 
       image={logo}
     >

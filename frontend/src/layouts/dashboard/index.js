@@ -29,7 +29,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 
 function Dashboard() {
-  const {token, access, updateTokenExpiration} = useStateContext();
+  const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
   updateTokenExpiration();
   if (!token) {
     return <Navigate to="/authentication/sign-in" />
@@ -104,7 +104,6 @@ function Dashboard() {
   };  
   const localizer = momentLocalizer(moment);
 
-
   const year = new Date().getFullYear();
   return (
     <>
@@ -112,8 +111,14 @@ function Dashboard() {
         <DashboardNavbar RENDERNAV="1" />         
         <SoftBox px={2} py={3}>
           <SoftBox px={2} py={1} mb={2}>
-            {authUser != "" && <SoftTypography variant="h4">Welcome back, <span className="text-info text-gradient h4">{authUser.name}!</span> </SoftTypography>}
-              <SoftTypography fontStyle="italic" color="inherit" fontSize="0.9rem">Central Bicutan - Barangay Profiling System</SoftTypography>
+            {authUser != "" && 
+              <SoftTypography variant="h4">
+                Welcome back, <span className="text-info text-gradient h4">{authUser.first_name}!</span> 
+              </SoftTypography>}
+              <SoftTypography fontStyle="italic" color="inherit" fontSize="0.9rem">
+                DOCSIFY - {clientprovider ? clientname : "Document Request System"}
+              </SoftTypography>
+              
           </SoftBox>
           <SoftBox mb={3}>
             <Grid container spacing={3}>

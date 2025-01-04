@@ -14,7 +14,7 @@ class ResidentController extends Controller
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
-        $yearResideny = $request->year_residency ?? '';
+        $yearResideny = $request->year_enrolled ?? '';
 
         // Call the stored procedure
         $users = DB::select('CALL GET_RESIDENTS(?, ?, ?, ?)', [$filter, $genderFilter, $accountStatus, $yearResideny]);

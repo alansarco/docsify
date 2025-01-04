@@ -53,7 +53,7 @@ class DocumentController extends Controller
             }
     }
     public function addorg(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [ 
             'doc_name' => 'required|unique:documents,doc_name',
@@ -67,7 +67,7 @@ class DocumentController extends Controller
 
         $addOrg = Document::create([
             'doc_name' => $request->doc_name,
-            'created_by' => $authUser->name,
+            'created_by' => $authUser->first_name,
         ]);
 
         if($addOrg) {

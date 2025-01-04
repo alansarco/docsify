@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // @mui material components
 import Checkbox from "@mui/material/Checkbox";
@@ -13,7 +13,7 @@ import SoftButton from "components/SoftButton";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
-import logo from "assets/images/logo.png";
+import logo from "assets/images/logo.jpg";
 
 // react-router-dom components
 import { Link, useNavigate, Navigate  } from "react-router-dom";
@@ -30,12 +30,25 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 
 function SignIn() {
   const currentFileName = "layouts/authentication/sign-in/index.js";
-  const {token,  setUser, setRole, setAccess, setToken} = useStateContext(); 
+  const {token,  setUser, setRole, setAccess, setToken, setClientProvider, setClientName, setClientAcr} = useStateContext(); 
   const [submitLogin, setSubmitLogin] = useState(false);
+  const [fetchclients, setFetchClients] = useState([]);
+
+  useEffect(() => {
+    axios.get(apiRoutes.clientSelect)
+    .then(response => {
+      setFetchClients(response.data.clients);
+      passToSuccessLogs(response.data, currentFileName);
+    })
+    .catch(error => {
+      passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
+    });
+  }, []);
 
   const [formData, setFormData] = useState({
     username: 'alsarco7@gmail.com',
     password: 'Sarco123!',
+    clientid: '',
   });
 
   const navigate = useNavigate(); 
@@ -62,12 +75,16 @@ function SignIn() {
       try {
         const response = await axios.post(apiRoutes.login, formData);
         let token = response.data.access_token;
+        console.log("USER: ", response.data.user)
         passToSuccessLogs(response.data.message, currentFileName);
         if (token) {
           setToken(token);
           setUser(response.data.user);
           setRole(response.data.role);
           setAccess(response.data.access);
+          setClientProvider(response.data.clientid);
+          setClientName(response.data.clientname);
+          setClientAcr(response.data.clientacr);
           navigate("/dashboard");
         }
         else {  
@@ -90,11 +107,26 @@ function SignIn() {
     <>
     {submitLogin && <FixedLoading />}
     <CoverLayout
-      title="Brgy. Central Bicutan"
+      title="DOCSIFY"
       description="Login Account"
       image={logo}
     >
       <SoftBox component="form" role="form" onSubmit={handleSubmit}>
+        <SoftBox mb={1}>
+          <SoftBox ml={0.5}>
+            <SoftTypography component="label" variant="caption" fontWeight="bold" color="white" >
+              Campus
+            </SoftTypography>
+          </SoftBox>
+          <select disabled={submitLogin} className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
+          <option value="">--- Select Campus ---</option>
+                {fetchclients && fetchclients.map((school) => (
+                <option key={school.clientid} value={school.clientid}>
+                    {school.client_name}
+                </option>
+                ))}
+          </select>
+        </SoftBox>
         <SoftBox mb={1}>
           <SoftBox ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold" color="white" >

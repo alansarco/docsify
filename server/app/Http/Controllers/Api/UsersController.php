@@ -24,7 +24,7 @@ class UsersController extends Controller
     public function index(Request $request) {
         $filter = $request->filter ?? '';
 
-        $users = DB::select('CALL GET_NORMAL_USERS(?)', [$filter]);
+        $users = DB::select('CALL GET_STUDENT_USERS(?)', [$filter]);
 
         // Convert the results into a collection
         $usersCollection = collect($users);
@@ -105,7 +105,7 @@ class UsersController extends Controller
             'address' => 'required',
             'contact' => 'required',
             'access_level' => 'required',
-            'year_residency' => 'required',
+            'year_enrolled' => 'required',
             'birthdate' => 'required',
         ]);
 
@@ -134,7 +134,7 @@ class UsersController extends Controller
                         'role' => strtoupper($role),   
                         'access_level' => $request->access_level,   
                         'account_status' => $request->account_status,   
-                        'year_residency' => $request->year_residency,   
+                        'year_enrolled' => $request->year_enrolled,   
                         'birthdate' => $request->birthdate,  
                         'updated_by' => $authUser->name,
                     ]);
@@ -206,7 +206,7 @@ class UsersController extends Controller
             'contact' => 'required',
             'birthdate' => 'required',
             'address' => 'required',
-            'year_residency' => 'required',
+            'year_enrolled' => 'required',
             'access_level' => 'required',
             'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
@@ -242,7 +242,7 @@ class UsersController extends Controller
                     'role' => strtoupper($role),   
                     'id_picture' => $pictureData,   
                     'access_level' => $request->access_level,   
-                    'year_residency' => $request->year_residency,   
+                    'year_enrolled' => $request->year_enrolled,   
                     'birthdate' => $request->birthdate,  
                     'account_status' => 1,  
                     'created_by' => $authUser->name,
@@ -314,15 +314,15 @@ class UsersController extends Controller
                         $gender = isset($cells[4]) ? $cells[4]->getValue() : '';
                         $birthdate = isset($cells[5]) ? $cells[5]->getValue() : null;
                         $address = isset($cells[6]) ? $cells[6]->getValue() : '';
-                        $year_residency = isset($cells[7]) ? $cells[7]->getValue() : null;
+                        $year_enrolled = isset($cells[7]) ? $cells[7]->getValue() : null;
 
                         // Validation
                         $role = 'USER';
                         if ($access_level == 999) {
                             $role = 'ADMIN';
                         }
-                        if (!$year_residency) {
-                            $year_residency = date('Y');
+                        if (!$year_enrolled) {
+                            $year_enrolled = date('Y');
                         }
 
                         if (!is_numeric($contact)) {
@@ -334,8 +334,8 @@ class UsersController extends Controller
                         if (!preg_match('/\d{4}-\d{2}-\d{2}/', $birthdate)) {
                             throw new \Exception("Row $rowNumber: Invalid birthdate format for LRN $username - $birthdate");
                         }
-                        if (!preg_match('/^\d{4}$/', $year_residency)) {
-                            throw new \Exception("Row $rowNumber: Invalid year year_residency for LRN $username - $year_residency");
+                        if (!preg_match('/^\d{4}$/', $year_enrolled)) {
+                            throw new \Exception("Row $rowNumber: Invalid year year_enrolled for LRN $username - $year_enrolled");
                         }
 
                         UserUpload::updateOrCreate(
@@ -349,7 +349,7 @@ class UsersController extends Controller
                                 'email' => $username,
                                 'gender' => strtoupper($gender),
                                 'address' => strtoupper($address),
-                                'year_residency' => $year_residency,
+                                'year_enrolled' => $year_enrolled,
                                 'account_status' => 1,
                                 'deleted_at' => null,
                                 'created_by' => "Uploaded by " . $authUser->name,

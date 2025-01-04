@@ -204,7 +204,7 @@ function Residents() {
                         <Grid item xs={12} lg={8} className="d-block d-md-flex">
                             <SoftTypography variant="button" className="me-2 my-auto">Filter Result:</SoftTypography>
                             <SoftBox className="my-auto">
-                            <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="year_residency" value={formData.year_residency} onChange={handleChange} >
+                            <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
                                 <option value="">-- Year of Residency --</option>
                                 {years && years.map((year) => (
                                 <option key={year} value={year}>

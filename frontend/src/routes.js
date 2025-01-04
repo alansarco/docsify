@@ -19,15 +19,21 @@ import ForgotPassword from "layouts/authentication/sign-in/forgot-password";
 
 import Shop from "essentials/Icons/Shop";
 import AdminPanelSettingsTwoToneIcon from '@mui/icons-material/AdminPanelSettingsTwoTone';
-import GroupTwoToneIcon from '@mui/icons-material/GroupTwoTone';
 import FaceTwoToneIcon from '@mui/icons-material/FaceTwoTone';
-import CampaignTwoToneIcon from '@mui/icons-material/CampaignTwoTone';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import OutlinedFlagTwoToneIcon from '@mui/icons-material/OutlinedFlagTwoTone';
-import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
-import Groups3TwoToneIcon from '@mui/icons-material/Groups3TwoTone';
 import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
+import SupportAgentTwoToneIcon from '@mui/icons-material/SupportAgentTwoTone';
+import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
+import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
+import BeenhereTwoToneIcon from '@mui/icons-material/BeenhereTwoTone';
+import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveTwoTone';
+import AccountBalanceTwoToneIcon from '@mui/icons-material/AccountBalanceTwoTone';
+import TerminalTwoToneIcon from '@mui/icons-material/TerminalTwoTone';
+import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
+import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
+import BackupTwoToneIcon from '@mui/icons-material/BackupTwoTone';
+import ImportContactsTwoToneIcon from '@mui/icons-material/ImportContactsTwoTone';
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -41,17 +47,8 @@ const routes = (access) => [
     noCollapse: true,
   },
 
-  // Conditionally render the Accounts menu and its submenus based on access
-  access == 999 && { type: "title", title: "Accounts", key: "account-pages" },
-  access == 999 && {
-    type: "collapse",
-    name: "Users",
-    key: "users",
-    route: "/users",
-    icon: <GroupTwoToneIcon size="12px" />,
-    component: <Users />,
-    noCollapse: true,
-  },
+  // account-pages
+  access >= 10 && { type: "title", title: "Accounts", key: "account-pages" },
   access == 999 && {
     type: "collapse",
     name: "Admins",
@@ -61,7 +58,54 @@ const routes = (access) => [
     component: <Admins />,
     noCollapse: true,
   },
+  access == 999 && {
+    type: "collapse",
+    name: "Representatives",
+    key: "representatives",
+    route: "/representatives",
+    icon: <SupportAgentTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 30 && {
+    type: "collapse",
+    name: "Registrars",
+    key: "registrars",
+    route: "/registrars",
+    icon: <SupervisorAccountTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access >= 10 && access <= 30 && {
+    type: "collapse",
+    name: "Students",
+    key: "students",
+    route: "/students",
+    icon: <SchoolTwoToneIcon size="12px" />,
+    component: <Users />,
+    noCollapse: true,
+  },
 
+  //campus-pages
+  access == 999 && { type: "title", title: "Campuses", key: "campus-pages" },
+  access == 999 && {
+    type: "collapse",
+    name: "Active Campus",
+    key: "active-campus",
+    route: "/active-campus",
+    icon: <BeenhereTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 999 && {
+    type: "collapse",
+    name: "Inactive Campus",
+    key: "inactive-campus",
+    route: "/inactive-campus",
+    icon: <ArchiveTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
   access == 999 && { type: "title", title: "Residents", key: "resident-pages" },
   access == 999 && {
     type: "collapse",
@@ -72,56 +116,148 @@ const routes = (access) => [
     component: <Residents />,
     noCollapse: true,
   },
-  { type: "title", title: "Pages", key: "pages" },
-  {
-    type: "collapse",
-    name: "Announcements",
-    key: "announcements",
-    route: "/announcements",
-    icon: <CampaignTwoToneIcon size="12px" />,
-    component: <Announcements />,
-    noCollapse: true,
-  },
-  {
-    type: "collapse",
-    name: "Reports",
-    key: "reports",
-    route: "/reports",
-    icon: <OutlinedFlagTwoToneIcon size="12px" />,
-    component: <Reports />,
-    noCollapse: true,
-  },
-  {
-    type: "collapse",
-    name: "Docu. Request",
-    key: "document-requests",
-    route: "/document-requests",
-    icon: <DocumentScannerTwoToneIcon size="12px" />,
-    component: <DocRequest />,
-    noCollapse: true,
-  },
-  {
-    type: "collapse",
-    name: "Officials",
-    key: "officials",
-    route: "/officials",
-    icon: <Groups3TwoToneIcon size="12px" />,
-    component: <Officials />,
-    noCollapse: true,
-  },
-  { type: "title", title: "Others", key: "others" },
-  access == 999 && {
+
+  //school-pages
+  access == 30 && { type: "title", title: "Campus Pages", key: "school-pages" },
+  access == 30 && {
     type: "collapse",
     name: "Documents",
     key: "documents",
     route: "/documents",
     icon: <ArticleTwoToneIcon size="12px" />,
-    component: <Documents />,
+    component: <Announcements />,
     noCollapse: true,
   },
+  access == 30 && {
+    type: "collapse",
+    name: "Sections",
+    key: "sections",
+    route: "/sections",
+    icon: <AccountBalanceTwoToneIcon size="12px" />,
+    component: <Reports />,
+    noCollapse: true,
+  },
+  access == 30 && {
+    type: "collapse",
+    name: "Programs",
+    key: "programs",
+    route: "/programs",
+    icon: <TerminalTwoToneIcon size="12px" />,
+    component: <DocRequest />,
+    noCollapse: true,
+  },
+
+  //request-pages
+  access == 10 && { type: "title", title: "Document Requests", key: "request-pages" },
+  access == 10 && {
+    type: "collapse",
+    name: "Active",
+    key: "active-requests",
+    route: "/active-requests",
+    icon: <TaskTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 10 && {
+    type: "collapse",
+    name: "History",
+    key: "request-history",
+    route: "/request-history",
+    icon: <ScheduleTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+
+  //my-pages
+  access >= 5 && access <= 10 && { type: "title", title: "My Pages", key: "my-pages" },
+  access == 10 && {
+    type: "collapse",
+    name: "Active Tasks",
+    key: "active-tasks",
+    route: "/active-tasks",
+    icon: <TaskTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 10 && {
+    type: "collapse",
+    name: "Task History",
+    key: "task-history",
+    route: "/task-history",
+    icon: <ScheduleTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 5 && {
+    type: "collapse",
+    name: "Active Requests",
+    key: "my-active-requests",
+    route: "/my-active-requests",
+    icon: <TaskTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 5 && {
+    type: "collapse",
+    name: "Request History",
+    key: "my-request-history",
+    route: "/my-request-history",
+    icon: <ScheduleTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 5 && {
+    type: "collapse",
+    name: "Personal Storage",
+    key: "personal-storage",
+    route: "/personal-storage",
+    icon: <BackupTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+
+  //others-pages
+  { type: "title", title: "Others", key: "others-pages" },
   access == 999 && {
     type: "collapse",
-    name: "System Settings",
+    name: "Logs",
+    key: "admin-logs",
+    route: "/admin-logs",
+    icon: <ImportContactsTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 30 && {
+    type: "collapse",
+    name: "Logs",
+    key: "representative-logs",
+    route: "/representative-logs",
+    icon: <ImportContactsTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 10 && {
+    type: "collapse",
+    name: "Logs",
+    key: "registrar-logs",
+    route: "/registrar-logs",
+    icon: <ImportContactsTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  access == 5 && {
+    type: "collapse",
+    name: "Logs",
+    key: "student-logs",
+    route: "/student-logs",
+    icon: <ImportContactsTwoToneIcon size="12px" />,
+    component: <Blank />,
+    noCollapse: true,
+  },
+  
+  access == 999 && {
+    type: "collapse",
+    name: "Settings",
     key: "settings",
     route: "/settings",
     icon: <SettingsTwoToneIcon size="12px" />,
@@ -182,6 +318,7 @@ const routes = (access) => [
     component: <SignUp />,
     noCollapse: true,
   },
+
 ].filter(Boolean); // Filter out `null` values from the array
 
 export default routes;

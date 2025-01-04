@@ -16,7 +16,7 @@ class ReportController extends Controller
 {
     public function index() {
         $pendingreports = Report::leftJoin('users', 'reports.created_by', '=', 'users.username')
-            ->select('reports.*', 'users.name as reported_by', 'users.contact', 
+            ->select('reports.*', 'users.first_name as reported_by', 'users.contact', 
             DB::raw("DATE_FORMAT(reports.created_at, '%M %d, %Y %h:%i %p') AS report_datetime"),
             DB::raw("DATE_FORMAT(reports.date_happen, '%M %d, %Y') AS date_happen"),
             DB::raw("TIME_FORMAT(reports.time_happen, '%h:%i %p') AS time_happen"),
@@ -32,7 +32,7 @@ class ReportController extends Controller
             ->get();
 
         $resolvedreports = Report::leftJoin('users', 'reports.created_by', '=', 'users.username')
-            ->select('reports.*', 'users.name as reported_by', 'users.contact', 
+            ->select('reports.*', 'users.first_name as reported_by', 'users.contact', 
             DB::raw("DATE_FORMAT(reports.created_at, '%M %d, %Y %h:%i %p') AS report_datetime"),
             DB::raw("DATE_FORMAT(reports.date_happen, '%M %d, %Y') AS date_happen"),
             DB::raw("TIME_FORMAT(reports.time_happen, '%h:%i %p') AS time_happen"),
@@ -82,13 +82,13 @@ class ReportController extends Controller
     }
 
     public function submitcomment(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         ReportComment::create([
             'report_id' => $request->id,
             'comment' => $request->comment,
-            'name' => $authUser->name,
-            'created_by' => $authUser->name,
+            'first_name' => $authUser->first_name,
+            'created_by' => $authUser->first_name,
         ]);
 
         $comments = ReportComment::select('*',
@@ -111,7 +111,7 @@ class ReportController extends Controller
 
     // update specific admin's information
     public function updatereport(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -137,7 +137,7 @@ class ReportController extends Controller
                     'date_happen' => $request->date_happen,
                     'time_happen' => $request->time_happen,
                     'status' => $request->status,
-                    'updated_by' => $authUser->name,
+                    'updated_by' => $authUser->first_name,
                 ]);
 
             if($update) {

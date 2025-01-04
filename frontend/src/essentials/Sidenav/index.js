@@ -24,14 +24,17 @@ import SidenavRoot from "essentials/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "essentials/Sidenav/styles/sidenav";
  
 // Images
-import brand from "assets/images/logo.png";
+import brand from "assets/images/logo.jpg";
 
 // React context
 import { useSoftUIController, setMiniSidenav } from "context";
 import { useSignInData } from "layouts/authentication/sign-in/data/signinRedux";
+import { useStateContext } from "context/ContextProvider";
 
 function Sidenav({ color, routes, ...rest }) {
   const [controller, dispatch] = useSoftUIController();
+  const {clientname} = useStateContext();
+  
   const { miniSidenav, transparentSidenav } = controller;
   const location = useLocation();
   const { pathname } = location;
@@ -130,15 +133,18 @@ function Sidenav({ color, routes, ...rest }) {
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </SoftTypography>
         </SoftBox>
-        <SoftBox component={NavLink} to="/dashboard" display="flex" alignItems="center">
-          {brand && <SoftBox component="img" src={brand} alt="Logo" width="2.5rem" />}
+        <SoftBox component={NavLink} to="/dashboard" alignItems="center" className="flex" justifyContent="center"> 
+          {brand && <SoftBox component="img" className="bg-white px-2 rounded shadow-sm" src={brand} alt="Logo" width="70%" />}
           <SoftBox
-            width="50%"
+            width="100%"
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            <SoftTypography color="dark" className="ps-2" fontWeight="bold">
-              CB-BPS
-            </SoftTypography> 
+            {clientname &&
+             <SoftTypography color="dark" fontWeight="bold" className="text-wrap mt-2">
+             {clientname}
+           </SoftTypography> 
+            }
+           
           </SoftBox>
         </SoftBox>
       </SoftBox>

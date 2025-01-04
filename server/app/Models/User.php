@@ -21,10 +21,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'clientid',
         'username',
         'role', 
         'access_level', 
-        'name', 
+        'first_name', 
         'middle_name', 
         'last_name', 
         'birthdate', 
@@ -33,7 +34,10 @@ class User extends Authenticatable
         'gender', 
         'id_picture', 
         'address', 
-        'year_residency', 
+        'grade', 
+        'section', 
+        'program', 
+        'year_enrolled', 
         'password', 
         'password_change',
         'account_status',

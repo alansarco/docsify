@@ -16,7 +16,7 @@ function CoverLayout({ color, header, title, description, image, children }) {
     <PageLayout>
       <SoftBox className="d-flex px-4 py-4" height={{ xs: "100%", md: "100vh" }}>
         <Grid
-          className="m-auto shadow-lg rounded border"
+          className="m-auto shadow-lg rounded"
           container
           maxWidth={{ xs: "100%", md: "800px" }}
           justifyContent="center"
@@ -33,19 +33,19 @@ function CoverLayout({ color, header, title, description, image, children }) {
             </SoftBox>
           </Grid>
           {/* Right Side */}
-          <Grid item xs={12} md={6} className="bg-dark d-flex align-items-center" p={3}>
+          <Grid item xs={12} md={6} className="bg-dark align-items-center" p={3}>
             <SoftBox>
               <SoftBox pt={2} px={3}>
                 {!header ? (
                   <>
-                    <SoftBox mb={0}>
+                    {/* <SoftBox mb={0}>
                       <SoftTypography  variant="h3" fontWeight="bold" className="text-white" >
                         {title}
                       </SoftTypography>
-                    </SoftBox>
+                    </SoftBox> */}
                     <SoftTypography pt={2} mb={0} variant="h5" fontWeight="bold" className="text-info" >
-                        {description}
-                      </SoftTypography>
+                      {description}
+                    </SoftTypography>
                   </>
                 ) : (
                   header

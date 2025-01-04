@@ -107,7 +107,7 @@ function Table({ users, tablehead, HandleUSER, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.year_residency}    
+            {row.year_enrolled}    
           </SoftBox>   
           <SoftBox
             className="px-2"

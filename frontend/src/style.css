@@ -11271,3 +11271,16 @@ textarea.form-control-lg {
   text-align: justify !important;; /* Justifies the text */
   text-indent: 1.5em !important;; /* Adds indentation on the first line of each paragraph */
 }
+
+.text-lg {
+  font-size: 4rem !important;
+}
+
+.role {
+  transition: 0.3s ease-in-out;
+}
+
+.role:hover {
+  transition: 0.3s ease-in-out;
+  transform: scale(1.1);
+}

@@ -1,3 +1,19 @@
+export const gradeSelect = [
+      { value: 7, desc: "7" },
+      { value: 8, desc: "8" },
+      { value: 9, desc: "9" },
+      { value: 10, desc: "10" },
+      { value: 11, desc: "11" },
+      { value: 12, desc: "12" },
+];
+
+export const roleSelect = [
+      { value: 999, desc: "Admin" },
+      { value: 30, desc: "School Representative" },
+      { value: 10, desc: "Registrar" },
+      { value: 5, desc: "Student" },
+];
+
 export const genderSelect = [
       { value: "M", desc: "Male" },
       { value: "F", desc: "Female" }

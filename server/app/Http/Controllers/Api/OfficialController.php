@@ -59,10 +59,10 @@ class OfficialController extends Controller
 
     // update specific admin's information
     public function updateofficial(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'first_name' => 'required',
             'biography' => 'required',
             'position' => 'required',
             'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
@@ -83,11 +83,11 @@ class OfficialController extends Controller
                 }
                 $update = Official::where('id', $request->id)
                 ->update([
-                    'name' => strtoupper($request->name),
+                    'first_name' => strtoupper($request->first_name),
                     'position_name' => $request->position,
                     'biography' => $request->biography,
                     'id_picture' => $pictureData,
-                    'updated_by' => $authUser->name,
+                    'updated_by' => $authUser->first_name,
                 ]);
 
             if($update) {
@@ -110,10 +110,10 @@ class OfficialController extends Controller
     }
 
     public function addofficial(Request $request) {
-        $authUser = User::select('name')->where('username', Auth::user()->username)->first();
+        $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
         $validator = Validator::make($request->all(), [ 
-            'name' => 'required',
+            'first_name' => 'required',
             'biography' => 'required',
             'position' => 'required',
             'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
@@ -133,11 +133,11 @@ class OfficialController extends Controller
         }
         
         $add = Official::create([
-            'name' => strtoupper($request->name),
+            'first_name' => strtoupper($request->first_name),
             'position_name' => $request->position,
             'biography' => $request->biography,
             'id_picture' => $pictureData,
-            'created_by' => $authUser->name,
+            'created_by' => $authUser->first_name,
         ]);
 
         if($add) {

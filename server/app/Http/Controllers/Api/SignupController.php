@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utilities\Utils;
 use App\Mail\OtpStringsEmailVerification;
 use App\Models\OTP;
 use Illuminate\Support\Facades\Validator;
@@ -27,16 +28,16 @@ class SignupController extends Controller
                 ]);    
             }
             $validator = Validator::make($request->all(), [ 
+                'email' => 'required|email',
                 'username' => 'required',
-                'name' => 'required',
+                'first_name' => 'required',
                 'middle_name' => 'required',
                 'last_name' => 'required',
                 'password' => 'required',
                 'gender' => 'required',
-                'contact' => 'required',
+                'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
                 'birthdate' => 'required',   
                 'address' => 'required',   
-                'year_residency' => 'required',   
                 'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
             if($validator->fails()) {
@@ -48,7 +49,14 @@ class SignupController extends Controller
                 $user = DB::table('users')->where('username', $request->username)->first();
                 if($user) {
                     return response()->json([
-                        'message' => 'Username exist!'
+                        'message' => 'Username already exist!'
+                    ]);        
+                }
+
+                $useremail = DB::table('users')->where('email', $request->email)->first();
+                if($useremail) {
+                    return response()->json([
+                        'message' => 'Email already exist!'
                     ]);        
                 }
                 else {
@@ -61,7 +69,7 @@ class SignupController extends Controller
                           $otp = Str::random(6);
                           $existingOTP = OTP::where('id', $otp)->first();
                     }
-                    $otpSent = Mail::to($request->username)->send(new OtpStringsEmailVerification($otp));
+                    $otpSent = Mail::to($request->email)->send(new OtpStringsEmailVerification($otp));
         
                     $newOTP = OTP::create([
                           'id' => $otp,
@@ -96,16 +104,16 @@ class SignupController extends Controller
 
         if($checkOTP) {
             $validator = Validator::make($request->all(), [ 
+                'email' => 'required|email',
                 'username' => 'required',
-                'name' => 'required',
+                'first_name' => 'required',
                 'middle_name' => 'required',
                 'last_name' => 'required',
                 'password' => 'required',
                 'gender' => 'required',
-                'contact' => 'required',
+                'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
                 'birthdate' => 'required',   
                 'address' => 'required',   
-                'year_residency' => 'required',   
                 'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
     
@@ -122,23 +130,38 @@ class SignupController extends Controller
                         $file = $request->file('id_picture');
                         $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                     }
+
+                    $clientid = $request->role == 999 ? '' : $request->clientid;
+                    $grade = $request->role != 5 ? '' : $request->grade;
+                    $section = $request->role != 5 ? '' : $request->section;
+                    $program = $request->role != 5 ? '' : $request->program;
+                    $year_enrolled = $request->role != 5 ? '' : $request->year_enrolled;
+
+                    $role = new Utils;
+                    $role = $role->checkRole($request->role);
+                    
                     $add = User::create([
+                        'clientid' => $clientid,
                         'username' => $request->username,
-                        'name' => strtoupper($request->name),
+                        'email' => $request->email,
+                        'first_name' => strtoupper($request->first_name),
                         'middle_name' => strtoupper($request->middle_name),
                         'last_name' => strtoupper($request->last_name),
                         'gender' => $request->gender,   
                         'password' => $request->password,   
                         'address' => $request->address,   
                         'contact' => $request->contact,   
-                        'role' => 'USER',   
-                        'access_level' => 5,   
-                        'year_residency' => $request->year_residency,   
+                        'role' => $role,   
+                        'access_level' => $request->role,   
+                        'grade' => $grade,   
+                        'section' => $section,   
+                        'program' => $program,   
+                        'year_enrolled' => $year_enrolled,   
                         'id_picture' => $pictureData,   
                         'birthdate' => $request->birthdate,  
                         'account_status' => 0,  
-                        'updated_by' => $request->name,
-                        'created_by' => $request->name,
+                        'updated_by' => $request->first_name,
+                        'created_by' => $request->first_name,
                     ]);
 
                     OTP::where('id', $request->otp_code)->delete();
