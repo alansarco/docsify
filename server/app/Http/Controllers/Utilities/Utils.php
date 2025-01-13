@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Utilities;
 
 use Exception;
 use App\Models\Client;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Utils
@@ -31,5 +33,14 @@ class Utils
         else if ($role == 30) return "REPRESENTATIVE";
         else if ($role == 10) return "REGISTRAR";
         else return "USER";
+    }
+
+    public function getAuthUser() {
+        $authUser = User::select('username',
+            DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), '', IFNULL(last_name, '')) as fullname"))
+            ->where('username', Auth::user()->username)
+            ->first();
+
+        return $authUser;
     }
 }

@@ -13,7 +13,7 @@ import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
 
-function Table({ admins, tablehead, HandleUSER, HandleRendering }) {
+function Table({ users, tablehead, HandleUSER, HandleRendering }) {
   const { light, secondary } = colors;
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
@@ -40,7 +40,7 @@ function Table({ admins, tablehead, HandleUSER, HandleRendering }) {
     );
   });
 
-  const renderRows = admins.map((row) => {
+  const renderRows = users.map((row) => {
     return (
       <TableRow key={row.username}>
           <SoftBox
@@ -53,7 +53,7 @@ function Table({ admins, tablehead, HandleUSER, HandleRendering }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
             sx={{
               "&:hover ": {
-                letterSpacing: "1px"        
+                color: "#006eff"        
               },
             }}  
           >
@@ -91,30 +91,42 @@ function Table({ admins, tablehead, HandleUSER, HandleRendering }) {
           </SoftBox>  
           <SoftBox
             className="px-2"
-            component="td"
             textAlign="center"
+            component="td"
             fontSize={size.xs}
-            color="secondary" 
+            color="info"
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
-            borderTop={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`} 
           >
             <SoftTypography color={row.account_status == "1" ? "info" : "primary"} sx={{ fontSize: "1rem" }}>{row.account_status == "1" ? <CheckIcon /> : "x"}</SoftTypography>
-          </SoftBox>  
+          </SoftBox>   
           <SoftBox
             className="px-2"
+            textAlign="left"
             component="td"
             fontSize={size.xs}
             color="secondary" 
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.last_online}    
-          </SoftBox>  
+            {row.last_online}
+          </SoftBox>
+          <SoftBox
+            className="px-2"
+            textAlign="left"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.date_added}
+          </SoftBox>
         </TableRow>
     )});
 
   return (  
-      <TableContainer className="shadow-none bg-gray p-3">
+      <TableContainer className="shadow-none  p-3">
         <MuiTable className="table table-sm table-hover table-responsive">  
           <SoftBox component="thead">
             <TableRow>{renderColumns}</TableRow>  

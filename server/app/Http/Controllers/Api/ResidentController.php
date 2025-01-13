@@ -14,10 +14,10 @@ class ResidentController extends Controller
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
-        $yearResideny = $request->year_enrolled ?? '';
+        $yearEnrolled = $request->year_enrolled ?? '';
 
         // Call the stored procedure
-        $users = DB::select('CALL GET_RESIDENTS(?, ?, ?, ?)', [$filter, $genderFilter, $accountStatus, $yearResideny]);
+        $users = DB::select('CALL GET_STUDENT_USERS(?, ?, ?, ?)', [$filter, $genderFilter, $accountStatus, $yearEnrolled]);
 
         // Convert the results into a collection
         $usersCollection = collect($users);

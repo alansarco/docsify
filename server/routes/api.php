@@ -46,7 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('admins')->group(function () {
-        Route::get('/', [AdminController::class, 'index']);
+        Route::post('/', [AdminController::class, 'index']);
+        Route::post('addadmin', [AdminController::class, 'addadmin']);
+        Route::post('updateadmin', [AdminController::class, 'updateadmin']);
     });
 
     Route::prefix('accounts')->group(function () {

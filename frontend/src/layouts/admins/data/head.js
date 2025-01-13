@@ -26,6 +26,11 @@ export const tablehead = [
   },
   {
     name: "last online",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "date added",
     padding: "ps-2",
     align: "left",
   },

@@ -84,7 +84,7 @@ class LoginController extends Controller {
                 }
                 else if ($valid_client) {
                     return response()->json([
-                        'message' => 'You are not enrolled in this campus!'  
+                        'message' => 'You are not connected in this campus!'  
                     ]);
                 }
                 return response()->json([

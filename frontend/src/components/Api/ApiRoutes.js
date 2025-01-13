@@ -17,6 +17,8 @@ export const apiRoutes = {
     doLogout: `${mainRoute}/api/user`,
     
     adminRetrieve: `${mainRoute}/api/admins`,
+    addAdmin: `${mainRoute}/api/admins/addadmin`,
+    updateAdmin: `${mainRoute}/api/admins/updateadmin`,
 
     residentsRetrieve: `${mainRoute}/api/residents`,
 

@@ -26,21 +26,21 @@ import { Navigate } from "react-router-dom";
 import UserContainer from "layouts/users/components/UserContainer";
 import Add from "layouts/users/components/Add";
 
-import Table from "layouts/residents/data/table";
-import { tablehead } from "layouts/residents/data/head";  
+import Table from "layouts/students/data/table";
+import { tablehead } from "layouts/students/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
-import UploadStudents from "layouts/residents/components/UploadStudents";
+import UploadStudents from "layouts/students/components/UploadStudents";
 import { genderSelect } from "components/General/Utils";
 import { years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 
-function Residents() {
-    const currentFileName = "layouts/residents/index.js";
+function Students() {
+    const currentFileName = "layouts/students/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -286,4 +286,4 @@ function Residents() {
   );
 }
 
-export default Residents;
+export default Students;

@@ -3,7 +3,7 @@ import Dashboard from "layouts/dashboard";
 import Admins from "layouts/admins";
 import Users from "layouts/users";
 import Blank from "layouts/blank";
-import Residents from "layouts/residents";
+import Students from "layouts/students";
 import Announcements from "layouts/announcements";
 import Profile from "layouts/profile";
 import Documents from "layouts/documents";
@@ -76,16 +76,24 @@ const routes = (access) => [
     component: <Blank />,
     noCollapse: true,
   },
+  // access >= 10 && access <= 30 && {
+  //   type: "collapse",
+  //   name: "Students",
+  //   key: "students",
+  //   route: "/students",
+  //   icon: <SchoolTwoToneIcon size="12px" />,
+  //   component: <Users />,
+  //   noCollapse: true,
+  // },
   access >= 10 && access <= 30 && {
     type: "collapse",
     name: "Students",
     key: "students",
     route: "/students",
-    icon: <SchoolTwoToneIcon size="12px" />,
-    component: <Users />,
+    icon: <FaceTwoToneIcon size="12px" />,
+    component: <Students />,
     noCollapse: true,
   },
-
   //campus-pages
   access == 999 && { type: "title", title: "Campuses", key: "campus-pages" },
   access == 999 && {
@@ -106,17 +114,7 @@ const routes = (access) => [
     component: <Blank />,
     noCollapse: true,
   },
-  access == 999 && { type: "title", title: "Residents", key: "resident-pages" },
-  access == 999 && {
-    type: "collapse",
-    name: "Residents",
-    key: "residents",
-    route: "/residents",
-    icon: <FaceTwoToneIcon size="12px" />,
-    component: <Residents />,
-    noCollapse: true,
-  },
-
+  
   //school-pages
   access == 30 && { type: "title", title: "Campus Pages", key: "school-pages" },
   access == 30 && {

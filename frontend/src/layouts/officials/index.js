@@ -186,7 +186,7 @@ function Officials() {
                       <SoftBox className=" bg-white shadow rounded p-3 py-4">
                       <SoftBox className="d-flex">
                         <img 
-                              src={`data:image/png;base64,${data.id_picture}`}
+                              src={`data:image/*;base64,${data.id_picture}`}
                               alt={`${data.name}'s ID`} 
                               className="img-fluid rounded mt-2 border text-center m-auto" 
                               style={{ width: '150px',  height: '150px' }} // Adjust the size as needed

@@ -21,7 +21,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
 import logo from "assets/images/logo.png";
-import bgImage from "assets/images/brgy.jpg";
+import bgImage from "assets/images/banner.jpg";
 import Information from "../Information";
 import Edit from "../Edit";
 import { apiRoutes } from "components/Api/ApiRoutes";
@@ -156,7 +156,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
           <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                {User.name}{" "}
+                {User.first_name}{" "}
                 {User.middle_name}{" "}
                 {User.last_name}{" "}
               </SoftTypography>
