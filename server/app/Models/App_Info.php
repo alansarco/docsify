@@ -14,8 +14,8 @@ class App_Info extends Model
     protected $table = "app_info";
 
     protected $fillable = [
-        'brgy_id',
-        'brgy_name',
+        'system_id',
+        'system_name',
         'acronym',
         'org_structure',
         'system_info',

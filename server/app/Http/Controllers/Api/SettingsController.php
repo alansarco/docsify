@@ -41,7 +41,7 @@ class SettingsController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'brgy_id' => 'required',
+            'system_id' => 'required',
             'security_code' => 'required',
             'event_notif' => 'required',
             'email' => 'required',
@@ -66,7 +66,7 @@ class SettingsController extends Controller
                 ];
                 
                 // Perform the update with the conditional data array
-                $update = App_Info::where('brgy_id', $request->brgy_id)->update($updateData);
+                $update = App_Info::where('system_id', $request->system_id)->update($updateData);
 
                 if($update) {
                     return response()->json([

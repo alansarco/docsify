@@ -46,7 +46,7 @@ function Settings() {
   const [success, setSuccess] = useState(true);
 
   const initialState = {
-    brgy_id: "",
+    system_id: "",
     security_code: "",
     email: "",
     contact: "",
@@ -90,7 +90,7 @@ function Settings() {
             toast.error(messages.prohibit, { autoClose: true });
           } else {
             const submissionData = new FormData();
-            submissionData.append("brgy_id", formData.brgy_id);
+            submissionData.append("system_id", formData.system_id);
             submissionData.append("security_code", formData.security_code);
             submissionData.append("email", formData.email);
             submissionData.append("contact", formData.contact);
@@ -147,7 +147,7 @@ function Settings() {
   useEffect(() => {
     if (fetchdata && fetchdata.length > 0) {
       setFormData({
-        brgy_id: fetchdata[0].brgy_id || "",
+        system_id: fetchdata[0].system_id || "",
         security_code: fetchdata[0].security_code || "",
         email: fetchdata[0].email || "",
         contact: fetchdata[0].contact || "",

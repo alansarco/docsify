@@ -99,10 +99,10 @@ function Abouts() {
                   </Grid>  
                   <Grid item xs={12} px={1} mt={2}>
                     <SoftTypography color="dark" className="text-sm paragraph_format">
-                       <b>{fetchdata[0]?.brgy_id && "Contact:"}</b> {fetchdata[0]?.contact || ""}
+                       <b>{fetchdata[0]?.system_id && "Contact:"}</b> {fetchdata[0]?.contact || ""}
                     </SoftTypography>
                     <SoftTypography color="dark" className="text-sm paragraph_format">
-                      <b>{fetchdata[0]?.brgy_id && "Email:"}</b> {fetchdata[0]?.email || ""}
+                      <b>{fetchdata[0]?.system_id && "Email:"}</b> {fetchdata[0]?.email || ""}
                     </SoftTypography>
                   </Grid>  
                 </Grid>
