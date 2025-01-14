@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utilities\Utils;
 use App\Mail\OtpStringsEmail;
 use App\Models\OTP;
 use Illuminate\Support\Facades\Validator;
@@ -117,12 +118,9 @@ class ForgotPasswordController extends Controller
             ]);
         }
 
-        $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
-        if(!preg_match($pattern, $request->newpassword)) {
-            return response()->json([
-                'message' => 'Password must contain capital and small letter, number, and special character!'
-            ]);    
-        }
+        $checkpass = new Utils;
+        $checkpass = $checkpass->checkPassword($request->password);
+        if($checkpass) return $checkpass;
 
         $hashedPassword = Hash::make($request->newpassword);
         $update = User::where('username', $request->username)->update([ 'password' => $hashedPassword]);

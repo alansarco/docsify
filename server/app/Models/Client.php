@@ -18,6 +18,7 @@ class Client extends Model
         'client_name',
         'client_acr',
         'client_logo',
+        'client_banner',
         'subscription_start',
         'subscription_end',
         'current_payment',

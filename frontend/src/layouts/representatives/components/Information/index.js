@@ -44,7 +44,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Admin?',
+      title: 'Delete Representative?',
       text: "Are you sure you want to delete this account? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
@@ -58,7 +58,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteAdmin, { params: { username }, headers })
+            axios.get(apiRoutes.deleteRepresentative, { params: { username }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -105,15 +105,28 @@ function Information({USER, HandleRendering, ReloadTable}) {
               />
             </Grid>
             <Grid item xs={12} md={6} xl={6}>
-              <ProfileInfoCard
-                  title="Other Information"
-                  info={{
-                  Updated_Date: USER.created_date ?? " ",
-                  Updated_By: USER.updated_by ?? " ",
-                  Created_Date: USER.created_date ?? " ",
-                  Created_by: USER.created_by ?? " ",
-                  }}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <ProfileInfoCard
+                      title="Campus Information"
+                      info={{
+                      Campus_Name: USER.client_name ?? " ",
+                      Short_Name: USER.client_acr ?? " ",                      
+                      }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <ProfileInfoCard
+                      title="Other Information"
+                      info={{
+                      Updated_Date: USER.created_date ?? " ",
+                      Updated_By: USER.updated_by ?? " ",
+                      Created_Date: USER.created_date ?? " ",
+                      Created_by: USER.created_by ?? " ",
+                      }}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">

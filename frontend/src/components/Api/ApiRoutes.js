@@ -19,6 +19,16 @@ export const apiRoutes = {
     adminRetrieve: `${mainRoute}/api/admins`,
     addAdmin: `${mainRoute}/api/admins/addadmin`,
     updateAdmin: `${mainRoute}/api/admins/updateadmin`,
+    deleteAdmin: `${mainRoute}/api/admins/deleteadmin`,
+    retrieveAdminOne: `${mainRoute}/api/admins/retrieveadmin`,
+    
+    representativeRetrieve: `${mainRoute}/api/representatives`,
+    addRepresentative: `${mainRoute}/api/representatives/addrepresentative`,
+    updateRepresentative: `${mainRoute}/api/representatives/updaterepresentative`,
+    deleteRepresentative: `${mainRoute}/api/representatives/deleterepresentative`,
+    retrieveRepresentativeOne: `${mainRoute}/api/representatives/retrieverepresentative`,
+    clientSelectRep: `${mainRoute}/api/clientselectrep`,
+    clientSelectRepUpdate: `${mainRoute}/api/clientselectrepupdate`,
 
     residentsRetrieve: `${mainRoute}/api/residents`,
 

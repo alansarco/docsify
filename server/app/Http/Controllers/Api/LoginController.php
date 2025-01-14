@@ -145,6 +145,7 @@ class LoginController extends Controller {
 
         $clients = Client::select('*', 
             DB::raw("TO_BASE64(client_logo) as client_logo"),
+            DB::raw("TO_BASE64(client_banner) as client_banner"),
         )
         ->where('subscription_start', '<=', $today)
         ->where('subscription_end', '>=', $today)
@@ -163,6 +164,4 @@ class LoginController extends Controller {
             ]);
         }
     }
-
-
 }

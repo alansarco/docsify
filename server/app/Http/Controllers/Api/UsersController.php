@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utilities\Utils;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -396,12 +397,9 @@ class UsersController extends Controller
     public function personalchangepass(Request $request) {
         $authUser = Auth::user();
 
-        $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
-        if(!preg_match($pattern, $request->newpass)) {
-            return response()->json([
-                'message' => 'Password must contain capital and small letter, number, and special character!'
-            ]);    
-        }
+        $checkpass = new Utils;
+        $checkpass = $checkpass->checkPassword($request->password);
+        if($checkpass) return $checkpass;
 
         $validator = Validator::make($request->all(), [
             'newpass' => 'required',

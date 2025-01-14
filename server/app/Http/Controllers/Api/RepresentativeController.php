@@ -14,17 +14,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
 use App\Models\AdminLog;
+use App\Models\Client;
 
-class AdminController extends Controller
+class RepresentativeController extends Controller
 {
-    // Get all the list of admins
+    // Get all the list of representatives
     public function index(Request $request) {
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
 
         // Call the stored procedure
-        $users = DB::select('CALL GET_USERS_ADMIN(?, ?, ?)', [$filter, $genderFilter, $accountStatus]);
+        $users = DB::select('CALL GET_USERS_REPRESENTATIVE(?, ?, ?)', [$filter, $genderFilter, $accountStatus]);
 
         // Convert the results into a collection
         $usersCollection = collect($users);
@@ -47,27 +48,28 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 200,
                 'users' => $paginatedUsers,
-                'message' => 'Admins retrieved!',
+                'message' => 'School Representatives retrieved!',
             ], 200);
         } else {
             return response()->json([
-                'message' => 'No Admin Accounts found!',
+                'message' => 'No School Representatives Accounts found!',
                 'users' => $paginatedUsers
             ]);
         }
     }
 
-    public function addadmin(Request $request) {
+    public function addrepresentative(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
-
-        if(Auth::user()->role !== "ADMIN" || Auth::user()->role < 999) {
+        
+        if($authUser->role !== "ADMIN" || $authUser->access_level < 999) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
 
         $validator = Validator::make($request->all(), [
+            'clientid' => 'required',
             'email' => 'required|email',
             'username' => 'required',
             'first_name' => 'required',
@@ -91,12 +93,23 @@ class AdminController extends Controller
 
         if(!$acountExist && !$emailExist) {
             try {
+                Client::where('clientid', $request->clientid)
+                ->where(function ($query) {
+                    $query->whereNull('client_representative') 
+                        ->orWhere('client_representative', '');
+                })
+                ->update([
+                    'client_representative' => $request->username,
+                    'updated_by' => $authUser->fullname,
+                ]);
+
                 $pictureData = null; // Initialize the variable to hold the file path
                 if ($request->hasFile('id_picture')) {
                     $file = $request->file('id_picture');
                     $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                 }
                 $add = User::create([
+                    'clientid' => $request->clientid,
                     'username' => $request->username,
                     'first_name' => strtoupper($request->first_name),
                     'middle_name' => strtoupper($request->middle_name),
@@ -106,9 +119,9 @@ class AdminController extends Controller
                     'email' => $request->email,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
-                    'role' => 'ADMIN',   
+                    'role' => 'REPRESENTATIVE',   
                     'id_picture' => $pictureData,   
-                    'access_level' => 999,   
+                    'access_level' => 30,   
                     'birthdate' => $request->birthdate,  
                     'account_status' => 1,  
                     'created_by' => $authUser->fullname,
@@ -116,14 +129,14 @@ class AdminController extends Controller
 
             if($add) {
                 AdminLog::create([
-                    'module' => 'Admin Accounts',
-                    'action' => 'ADD',
-                    'details' => $authUser->fullname .' added account '. $request->username,
+                    'module' => 'Representative Accounts',
+                    'action' => 'DELETE',
+                    'details' => $authUser->fullname .' addded account '. $request->username,
                     'created_by' => $authUser->fullname,
                 ]);
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Admin added successfully!'
+                    'message' => 'School admin/representative added successfully!'
                 ], 200);
             }
             else {
@@ -149,7 +162,7 @@ class AdminController extends Controller
         }
     }
 
-    public function updateadmin(Request $request) {
+    public function updaterepresentative(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -162,6 +175,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'username' => 'required',
+            'clientid' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'gender' => 'required',
@@ -188,7 +202,26 @@ class AdminController extends Controller
 
             if($user) {
                 try {
+                    $updated = Client::where('clientid', $request->clientid)
+                    ->where(function ($query) {
+                        $query->whereNull('client_representative') 
+                            ->orWhere('client_representative', '');
+                    })
+                    ->update([
+                        'client_representative' => $request->username,
+                        'updated_by' => $authUser->fullname,
+                    ]);
+                    if ($updated) {
+                        Client::where('clientid', '!=',$request->clientid)
+                        ->where('client_representative', $request->username)
+                        ->update([
+                            'client_representative' => null,
+                            'updated_by' => $authUser->fullname,
+                        ]);
+                    }
+
                     $updateData = [
+                        'clientid' => $request->clientid,
                         'username' => $request->username,
                         'first_name' => strtoupper($request->first_name),
                         'middle_name' => strtoupper($request->middle_name),
@@ -212,14 +245,14 @@ class AdminController extends Controller
                     
                     if($update) {
                         AdminLog::create([
-                            'module' => 'Admin Accounts',
-                            'action' => 'UPDATE',
+                            'module' => 'Representative Accounts',
+                            'action' => 'DELETE',
                             'details' => $authUser->fullname .' updated account '. $request->username,
                             'created_by' => $authUser->fullname,
                         ]);
                         return response()->json([
                             'status' => 200,
-                            'message' => 'Admin updated successfully!'
+                            'message' => 'School admin/representative updated successfully!'
                         ], 200);
                     }
                     else {
@@ -235,14 +268,14 @@ class AdminController extends Controller
             }
             else {
                 return response()->json([
-                    'message' => 'Admin not found!'
+                    'message' => 'School admin/representative not found!'
                 ]);
             }
         }
     }
 
     // Delete 
-    public function deleteadmin(Request $request) {
+    public function deleterepresentative(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -251,44 +284,51 @@ class AdminController extends Controller
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
+        
         $delete = User::where('username', $request->username)->delete();
 
         if($delete) {
             AdminLog::create([
-                'module' => 'Admin Accounts',
+                'module' => 'Representative Accounts',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted account '. $request->username,
                 'created_by' => $authUser->fullname,
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => 'Admin deleted successfully!'
+                'message' => 'School admin/representative deleted successfully!'
             ], 200);
         }
         else {
             return response()->json([
-                'message' => 'Admin not found!'
+                'message' => 'School admin/representative not found!'
             ]);
         }
     }
-
+    
     // retrieve specific user's information
-    public function retrieveadmin(Request $request) {
+    public function retrieverepresentative(Request $request) {
         $account = User::where('username', $request->username)->first();
         $haveAccount = false;
         if($account) {
             $haveAccount = true;
         }
 
-        $user = User::select('*',
-            DB::raw("TO_BASE64(id_picture) as id_picture"),
-            DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
-            DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as date_added"),
-            DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
-            DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),
-            DB::raw("CONCAT(DATE_FORMAT(updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+        $user = User::leftJoin('clients', 'users.clientid', '=', 'clients.clientid')
+        ->select('users.*',
+            'clients.client_name',
+            'clients.client_acr',
+            'clients.clientid',
+            DB::raw("TO_BASE64(users.id_picture) as id_picture"),
+            DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+            DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
+            DB::raw("CONCAT(DATE_FORMAT(users.birthdate, '%M %d, %Y')) as birthday"),
+            DB::raw("CONCAT(DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p')) as date_added"),
+            DB::raw("CONCAT(DATE_FORMAT(users.last_online, '%M %d, %Y %h:%i %p')) as last_online"),
+            DB::raw("CONCAT(DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p')) as created_date"),
+            DB::raw("CONCAT(DATE_FORMAT(users.updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
         )
-        ->where('username', $request->username)->first();
+        ->where('users.username', $request->username)->first();
 
         if($user) {
             return response()->json([
@@ -302,6 +342,70 @@ class AdminController extends Controller
             return response()->json([
                 'user' => $user,
                 'message' => "Data not found!"
+            ]);
+        }
+    }
+
+    public function clientselectrep() {
+        $today = Carbon::today();
+
+        $clients = Client::leftJoin('users', 'users.username', '=', 'clients.client_representative')
+        ->select('clients.*', 
+            DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+            DB::raw("TO_BASE64(clients.client_banner) as client_banner")
+        )
+        ->where('clients.subscription_start', '<=', $today)
+        ->where('clients.subscription_end', '>=', $today)
+        ->where(function($query) {
+            $query->whereNull('users.clientid')
+                ->orWhere(function($query) {
+                    $query->where('users.account_status', '!=', 1)
+                        ->orWhere('users.role', '!=', 'REPRESENTATIVE');
+                });
+        })
+        ->get();
+
+        if($clients) {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "Clients Found!",
+            ]);
+        }
+        else {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "No Clients Found!",
+            ]);
+        }
+    }
+
+    public function clientselectrepupdate(Request $request) {
+        $today = Carbon::today();
+
+        $clients = Client::leftJoin('users', 'users.username', '=', 'clients.client_representative')
+        ->select('clients.*', 
+            DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+            DB::raw("TO_BASE64(clients.client_banner) as client_banner")
+        )
+        ->where('clients.subscription_start', '<=', $today)
+        ->where('clients.subscription_end', '>=', $today)
+        ->where(function ($query) use ($request)  {
+            $query->whereNull('clients.client_representative')
+            ->orWhere('clients.client_representative', '=', '')
+            ->orWhere('clients.clientid', $request->client);
+        })
+        ->get();
+
+        if($clients) {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "Clients Found!",
+            ]);
+        }
+        else {
+            return response()->json([
+                'clients' => $clients,         
+                'message' => "No Clients Found!",
             ]);
         }
     }

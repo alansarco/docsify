@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
 use App\Http\Controllers\Api\OfficialController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\RepresentativeController;
 use App\Http\Controllers\Api\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('login', [LoginController::class, 'login']);
 Route::get('clientselect', [LoginController::class, 'clientselect']);
+Route::get('clientselectrep', [RepresentativeController::class, 'clientselectrep']);
+Route::get('clientselectrepupdate', [RepresentativeController::class, 'clientselectrepupdate']);
 Route::get('app_info', [GeneralController::class, 'app_info']);
 Route::post('createotpverification', [SignupController::class, 'createotpverification']);
 Route::get('signupsuffix', [SignupController::class, 'signupsuffix']);
@@ -49,6 +52,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [AdminController::class, 'index']);
         Route::post('addadmin', [AdminController::class, 'addadmin']);
         Route::post('updateadmin', [AdminController::class, 'updateadmin']);
+        Route::get('deleteadmin', [AdminController::class, 'deleteadmin']);
+        Route::get('retrieveadmin', [AdminController::class, 'retrieveadmin']);
+    });
+
+    Route::prefix('representatives')->group(function () {
+        Route::post('/', [RepresentativeController::class, 'index']);
+        Route::post('addrepresentative', [RepresentativeController::class, 'addrepresentative']);
+        Route::post('updaterepresentative', [RepresentativeController::class, 'updaterepresentative']);
+        Route::get('deleterepresentative', [RepresentativeController::class, 'deleterepresentative']);
+        Route::get('retrieverepresentative', [RepresentativeController::class, 'retrieverepresentative']);
     });
 
     Route::prefix('accounts')->group(function () {

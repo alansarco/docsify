@@ -70,13 +70,18 @@ function SignUp() {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
             else if (type === "file" && name === "id_picture") {
-                const file = files[0];
-                if (file && (file.type === "application/png" || file.name.endsWith(".png"))) {
-                    setFormData({ ...formData, id_picture: file });
-                } else {
-                    toast.error("Only .png images are allowed");
-                    e.target.value = null;
-                }
+                  const file = files[0];
+                  if (file && (file.type === "application/png" || 
+                          file.type === "image/jpeg" ||
+                          file.name.endsWith(".jpg") ||
+                          file.name.endsWith(".jpeg") ||
+                          file.name.endsWith(".png")
+                    )) {
+                      setFormData({ ...formData, id_picture: file });
+                  } else {
+                      toast.error("Only .png images are allowed");
+                      e.target.value = null;
+                  }
             } 
             else {
                   setFormData({ ...formData, [name]: value });

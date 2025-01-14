@@ -1,22 +1,3 @@
-// React layouts
-import Dashboard from "layouts/dashboard";
-import Admins from "layouts/admins";
-import Users from "layouts/users";
-import Blank from "layouts/blank";
-import Students from "layouts/students";
-import Announcements from "layouts/announcements";
-import Profile from "layouts/profile";
-import Documents from "layouts/documents";
-import Settings from "layouts/settings";
-import Abouts from "layouts/abouts";
-import Reports from "layouts/reports";
-import Officials from "layouts/officials";
-import DocRequest from "layouts/requests";
-
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
-import ForgotPassword from "layouts/authentication/sign-in/forgot-password";
-
 import Shop from "essentials/Icons/Shop";
 import AdminPanelSettingsTwoToneIcon from '@mui/icons-material/AdminPanelSettingsTwoTone';
 import FaceTwoToneIcon from '@mui/icons-material/FaceTwoTone';
@@ -34,6 +15,27 @@ import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
 import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 import BackupTwoToneIcon from '@mui/icons-material/BackupTwoTone';
 import ImportContactsTwoToneIcon from '@mui/icons-material/ImportContactsTwoTone';
+
+
+// React layouts
+import SignIn from "layouts/authentication/sign-in";
+import SignUp from "layouts/authentication/sign-up";
+import ForgotPassword from "layouts/authentication/sign-in/forgot-password";
+
+import Dashboard from "layouts/dashboard";
+import Admins from "layouts/admins";
+import Users from "layouts/users";
+import Blank from "layouts/blank";
+import Students from "layouts/students";
+import Announcements from "layouts/announcements";
+import Profile from "layouts/profile";
+import Documents from "layouts/documents";
+import Settings from "layouts/settings";
+import Abouts from "layouts/abouts";
+import Reports from "layouts/reports";
+import Officials from "layouts/officials";
+import DocRequest from "layouts/requests";
+import Representatives from "layouts/representatives";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -64,7 +66,7 @@ const routes = (access) => [
     key: "representatives",
     route: "/representatives",
     icon: <SupportAgentTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <Representatives />,
     noCollapse: true,
   },
   access == 30 && {

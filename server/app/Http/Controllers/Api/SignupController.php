@@ -20,13 +20,10 @@ class SignupController extends Controller
 {
     public function createotpverification(Request $request) {
         try {
-            
-            $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
-            if(!preg_match($pattern, $request->password)) {
-                return response()->json([
-                    'message' => 'Password must contain capital and small letter, number, and special character!'
-                ]);    
-            }
+            $checkpass = new Utils;
+            $checkpass = $checkpass->checkPassword($request->password);
+            if($checkpass) return $checkpass;
+
             $validator = Validator::make($request->all(), [ 
                 'email' => 'required|email',
                 'username' => 'required',

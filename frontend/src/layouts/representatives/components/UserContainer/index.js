@@ -89,7 +89,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
   useEffect(() => {
     if (reload) {
       setReload(true);
-      axios.get(apiRoutes.retrieveAdminOne, { params: { username }, headers })
+      axios.get(apiRoutes.retrieveRepresentativeOne, { params: { username }, headers })
         .then(response => {
           if (response.data.status === 200) {
             setUser(response.data.user);
@@ -125,7 +125,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
             `${linearGradient(
               rgba(gradients.info.main, 0.3),
               rgba(gradients.info.state, 0.2)
-            )}, url(${bgImage})`, 
+            )}, url(${User.client_banner ? `data:image/jpg;base64,${encodeURIComponent(User.client_banner)}` : bgImage})`,
           backgroundSize: "cover",
           backgroundPosition: "50%",
           overflow: "hidden",

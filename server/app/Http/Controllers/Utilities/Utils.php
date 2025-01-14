@@ -36,11 +36,21 @@ class Utils
     }
 
     public function getAuthUser() {
-        $authUser = User::select('username',
+        $authUser = User::select('username', 'role', 'access_level', 'clientid',
             DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), '', IFNULL(last_name, '')) as fullname"))
             ->where('username', Auth::user()->username)
             ->first();
 
         return $authUser;
+    }
+
+    public function checkPassword($password) {
+        $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
+        if (!preg_match($pattern, $password)) {
+            return response()->json([
+                'message' => 'Password must contain capital and small letter, number, and special character!'
+            ]);    
+        }
+        return null;
     }
 }
