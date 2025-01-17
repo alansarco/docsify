@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DocRequestController;
@@ -62,6 +63,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('updaterepresentative', [RepresentativeController::class, 'updaterepresentative']);
         Route::get('deleterepresentative', [RepresentativeController::class, 'deleterepresentative']);
         Route::get('retrieverepresentative', [RepresentativeController::class, 'retrieverepresentative']);
+    });
+
+    Route::prefix('campuses')->group(function () {
+        Route::post('active', [CampusController::class, 'active']);
+        Route::post('addcampus', [CampusController::class, 'addcampus']);
+        Route::post('updatecampus', [CampusController::class, 'updatecampus']);
+        Route::get('deletecampus', [CampusController::class, 'deletecampus']);
+        Route::get('retrievecampus', [CampusController::class, 'retrievecampus']);
     });
 
     Route::prefix('accounts')->group(function () {

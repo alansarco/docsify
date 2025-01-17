@@ -30,6 +30,12 @@ export const apiRoutes = {
     clientSelectRep: `${mainRoute}/api/clientselectrep`,
     clientSelectRepUpdate: `${mainRoute}/api/clientselectrepupdate`,
 
+    activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
+    addCampus: `${mainRoute}/api/campuses/addcampus`,
+    updateCampus: `${mainRoute}/api/campuses/updatecampus`,
+    deleteCampus: `${mainRoute}/api/campuses/deletecampus`,
+    retrieveCampusOne: `${mainRoute}/api/campuses/retrievecampus`,
+
     residentsRetrieve: `${mainRoute}/api/residents`,
 
     retrieveAnnouncement: `${mainRoute}/api/announcements`,

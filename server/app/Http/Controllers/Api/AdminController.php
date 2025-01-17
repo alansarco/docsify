@@ -112,6 +112,7 @@ class AdminController extends Controller
                     'birthdate' => $request->birthdate,  
                     'account_status' => 1,  
                     'created_by' => $authUser->fullname,
+                    'updated_by' => $authUser->fullname,
                 ]);
 
             if($add) {
@@ -283,10 +284,10 @@ class AdminController extends Controller
         $user = User::select('*',
             DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
-            DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as date_added"),
             DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),
             DB::raw("CONCAT(DATE_FORMAT(updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+            DB::raw("CONCAT(TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE())) AS age")
         )
         ->where('username', $request->username)->first();
 

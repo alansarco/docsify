@@ -36,6 +36,7 @@ import Reports from "layouts/reports";
 import Officials from "layouts/officials";
 import DocRequest from "layouts/requests";
 import Representatives from "layouts/representatives";
+import Campuses from "layouts/campuses";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -104,7 +105,7 @@ const routes = (access) => [
     key: "active-campus",
     route: "/active-campus",
     icon: <BeenhereTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <Campuses />,
     noCollapse: true,
   },
   access == 999 && {

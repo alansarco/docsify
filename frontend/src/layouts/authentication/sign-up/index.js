@@ -79,7 +79,7 @@ function SignUp() {
                     )) {
                       setFormData({ ...formData, id_picture: file });
                   } else {
-                      toast.error("Only .png images are allowed");
+                      toast.error("Only .png and .jpg images are allowed");
                       e.target.value = null;
                   }
             } 

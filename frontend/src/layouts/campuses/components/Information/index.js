@@ -16,12 +16,12 @@ import { useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { messages } from "components/General/Messages";
 import axios from "axios";  
+import { formatCurrency } from "components/General/Utils";
 
-function Information({USER, HandleRendering, ReloadTable}) {
+function Information({DATA, LICENSE, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
   const currentFileName = "layouts/users/components/UserContainer/index.js";
-
-  const username = USER.username;
+  const clientid = DATA.clientid;
   const {token, role, access} = useStateContext();  
   const YOUR_ACCESS_TOKEN = token; 
   const headers = {
@@ -44,8 +44,8 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Representative?',
-      text: "Are you sure you want to delete this account? You won't be able to revert this!",
+      title: 'Delete Campus?',
+      text: "Are you sure you want to delete this? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',  
@@ -58,7 +58,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteRepresentative, { params: { username }, headers })
+            axios.get(apiRoutes.deleteCampus, { params: { clientid }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -89,41 +89,52 @@ function Information({USER, HandleRendering, ReloadTable}) {
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} xl={6}>
               <ProfileInfoCard
-                title="Personal Information"
+                title="Campus Information"
                 info={{
-                  Firstname: USER.first_name,
-                  Middle_Name: USER.middle_name,
-                  Lastname: USER.last_name,
-                  Age: USER.age ?? " ",
-                  Gender: USER.gender ?? " ",
-                  Birthdate: USER.birthday ?? " ",
-                  Email: USER.email ?? " ",
-                  Contact_Number: USER.contact ?? " ",
-                  Address: USER.address ?? " ",
-                  Status: USER.account_status == "1" ? "Verified" : "Not Verified",
-                  Last_Online: USER.last_online ?? "None",
+                  Name: DATA.client_name,
+                  Acronym: DATA.client_acr ?? " ",
+                  Current_License: DATA.license_key ?? " ",
+                  Current_Payment: formatCurrency(DATA.current_payment) ?? " ",
+                  Total_Payment: formatCurrency(DATA.total_payment) ?? " ",
+                  Subscription_Start: DATA.format_subscription_start ?? " ",
+                  Subscription_End: DATA.format_subscription_end ?? " ",
+                  Email: DATA.client_email ?? " ",
+                  Contact_Number: DATA.client_contact ?? " ",
+                  Address: DATA.client_address ?? " ",
+                  Total_Student: DATA.studentCount ?? " ",
+                  Total_Registrar: DATA.registrarCount ?? " ",
+                  School_Admin_Representative: DATA.representative_name ?? " ",
+                  School_Admin_Representative_ID: DATA.client_representative ?? " ",
                 }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={6}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <ProfileInfoCard
-                      title="Campus Information"
-                      info={{
-                      Campus_Name: USER.client_name ?? " ",
-                      Short_Name: USER.client_acr ?? " ",                      
-                      }}
-                  />
-                </Grid>
+                {LICENSE && LICENSE.length > 0 &&
+                  <Grid item xs={12}>
+                      <ProfileInfoCard
+                          title="License History"
+                          info={{
+                              ...LICENSE.reduce((acc, license, index) => {
+                                acc[`${index + 1}`] = 
+                                (license.license_key ?? "") + " | " +
+                                (license.date_use ?? "") + " | " +
+                                (formatCurrency(license.license_price) ?? "");
+                              return acc;
+                      
+                              }, {})
+                          }}
+                      />
+                  </Grid>
+                  }
                 <Grid item xs={12}>
                   <ProfileInfoCard
                       title="Other Information"
                       info={{
-                      Updated_Date: USER.created_date ?? " ",
-                      Updated_By: USER.updated_by ?? " ",
-                      Created_Date: USER.created_date ?? " ",
-                      Created_by: USER.created_by ?? " ",
+                      Updated_Date: DATA.updated_date ?? " ",
+                      Updated_By: DATA.updated_by ?? " ",
+                      Created_Date: DATA.created_date ?? " ",
+                      Created_by: DATA.created_by ?? " ",
                       }}
                   />
                 </Grid>

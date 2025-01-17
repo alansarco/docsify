@@ -125,6 +125,7 @@ class RepresentativeController extends Controller
                     'birthdate' => $request->birthdate,  
                     'account_status' => 1,  
                     'created_by' => $authUser->fullname,
+                    'updated_by' => $authUser->fullname,
                 ]);
 
             if($add) {
@@ -323,10 +324,10 @@ class RepresentativeController extends Controller
             DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
             DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
             DB::raw("CONCAT(DATE_FORMAT(users.birthdate, '%M %d, %Y')) as birthday"),
-            DB::raw("CONCAT(DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p')) as date_added"),
             DB::raw("CONCAT(DATE_FORMAT(users.last_online, '%M %d, %Y %h:%i %p')) as last_online"),
             DB::raw("CONCAT(DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p')) as created_date"),
             DB::raw("CONCAT(DATE_FORMAT(users.updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+            DB::raw("CONCAT(TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE())) AS age")
         )
         ->where('users.username', $request->username)->first();
 
@@ -354,7 +355,6 @@ class RepresentativeController extends Controller
             DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
             DB::raw("TO_BASE64(clients.client_banner) as client_banner")
         )
-        ->where('clients.subscription_start', '<=', $today)
         ->where('clients.subscription_end', '>=', $today)
         ->where(function($query) {
             $query->whereNull('users.clientid')

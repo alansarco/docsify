@@ -94,6 +94,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
                   Firstname: USER.first_name,
                   Middle_Name: USER.middle_name,
                   Lastname: USER.last_name,
+                  Age: USER.age ?? " ",
                   Gender: USER.gender ?? " ",
                   Birthdate: USER.birthday ?? " ",
                   Email: USER.email ?? " ",
@@ -108,7 +109,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
               <ProfileInfoCard
                   title="Other Information"
                   info={{
-                  Updated_Date: USER.created_date ?? " ",
+                  Updated_Date: USER.updated_date ?? " ",
                   Updated_By: USER.updated_by ?? " ",
                   Created_Date: USER.created_date ?? " ",
                   Created_by: USER.created_by ?? " ",

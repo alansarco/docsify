@@ -71,6 +71,10 @@ function Admins() {
 
     const [formData, setFormData] = useState(initialState);
 
+    const HandleClear = (user) => {
+      setFormData(initialState);
+    };
+
     const handleChange = (e) => {
         const { name, value, type } = e.target;
         if (type === "checkbox") {
@@ -204,7 +208,7 @@ function Admins() {
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
-                        {fetchdata && fetchdata.data && fetchdata.data.users.length < 1 ? "No data Found" : fetching}                    
+                        {fetchdata && fetchdata.data && fetchdata.data.length < 1 ? "No data Found" : fetching}                    
                         </SoftTypography>
                       </SoftBox>
                       </>
@@ -242,20 +246,24 @@ function Admins() {
                               ))}
                             </select>
                             </SoftBox>
-                            <SoftBox className="px-md-0 px-2 mt-3" display="flex" margin="0" justifyContent="end">
-                                <SoftInput 
-                                  value={formData.filter}
-                                  onChange={handleChange}
-                                  placeholder="Search here..." name="filter" size="small"
-                                  icon={{
-                                      component: 'search',
-                                      direction: 'right',
-                                  }}
-                                />
-                                <SoftButton className="px-3 rounded-0 rounded-right" variant="gradient" color="info" size="medium" iconOnly type="submit">
-                                    <Icon>search</Icon>
+                            <SoftInput 
+                              className="my-3"
+                              value={formData.filter}
+                              onChange={handleChange}
+                              placeholder="Search here..." name="filter" size="small"
+                            />
+                            <Grid container display="flex" justifyContent="end">
+                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
+                                <SoftButton onClick={HandleClear}  className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="secondary" size="small" >
+                                  clear
                                 </SoftButton>
-                            </SoftBox>
+                              </Grid>
+                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
+                                <SoftButton className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="info" size="small" type="submit">
+                                  search
+                                </SoftButton>
+                              </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </SoftBox>

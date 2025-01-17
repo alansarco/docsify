@@ -5,7 +5,7 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { statusSelect, getN, genderSelect, currentDate } from "components/General/Utils";
+import { statusSelect, years, genderSelect, currentDate } from "components/General/Utils";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
@@ -13,28 +13,43 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { getN } from "components/General/Utils";
 
-function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
+function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
+      const [fetchclients, setFetchClients] = useState([]);
+      const client = DATA.clientid;
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
+
+      useEffect(() => {
+            axios.get(apiRoutes.clientSelectRepUpdate, { params: { client } })
+            .then(response => {
+              setFetchClients(response.data.clients);
+              passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+              passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
+            });
+      }, []);
       
       const initialState = {
-            username: USER.username,
-            first_name: USER.first_name == null ? "" : USER.first_name,
-            middle_name: USER.middle_name == null ? "" : USER.middle_name,
-            last_name: USER.last_name == null ? "" : USER.last_name,
-            address: USER.address == null ? "" : USER.address,
-            gender: USER.gender == null ? "" : USER.gender,
-            email: USER.email == null ? "" : USER.email,
-            contact: USER.contact == null ? "" : USER.contact,
-            birthdate: USER.birthdate == null ? "" : USER.birthdate,
-            account_status: USER.account_status == null ? "" : USER.account_status, 
+            username: DATA.username,
+            clientid: DATA.clientid == null ? "" : DATA.clientid,
+            client_name: DATA.client_name == null ? "" : DATA.client_name,
+            client_acr: DATA.client_acr == null ? "" : DATA.client_acr,
+            client_email: DATA.client_email == null ? "" : DATA.client_email,
+            client_contact: DATA.client_contact == null ? "" : DATA.client_contact,
+            client_address: DATA.client_address == null ? "" : DATA.client_address,
+            license_key: DATA.license_key == null ? "" : DATA.license_key,
+            new_license_key: DATA.new_license_key == null ? "" : DATA.new_license_key,
+            client_logo: DATA.client_logo == null ? null : DATA.client_logo,
+            client_banner: DATA.client_banner == null ? null : DATA.client_banner,
             agreement: false,   
       };
 
@@ -46,7 +61,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             if (type === "checkbox") {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
-            else if (type === "file" && name === "id_picture") {
+            else if (type === "file" && (name === "client_logo" || name === "client_banner")) {
                   const file = files[0];
                   if (file && (file.type === "application/png" || 
                           file.type === "image/jpeg" ||
@@ -54,12 +69,17 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                           file.name.endsWith(".jpeg") ||
                           file.name.endsWith(".png")
                     )) {
-                      setFormData({ ...formData, id_picture: file });
+                    if(name === "client_logo") {
+                          setFormData({ ...formData, client_logo: file });
+                    }
+                    else {
+                          setFormData({ ...formData, client_banner: file });
+                    }
                   } else {
                       toast.error("Only .png and .jpg images are allowed");
                       e.target.value = null;
                   }
-            }  
+            } 
             else {
                   setFormData({ ...formData, [name]: value });
             }
@@ -74,18 +94,15 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "username",
-                  "first_name",
-                  "last_name",
-                  "gender",
-                  "contact",
-                  "birthdate",
-                  "address",
-                  "email",
+                  "clientid",
+                  "client_name",
+                  "client_acr",
+                  "client_email",
+                  "client_contact",
+                  "client_address",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
-            console.log('DATA: ', emptyRequiredFields)
 
             if (emptyRequiredFields.length === 0) {
                   if(!formData.agreement) {
@@ -99,21 +116,25 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                               }
                               else {  
                                     const data = new FormData();
-                                    data.append("username", formData.username);
-                                    data.append("first_name", formData.first_name);
-                                    data.append("middle_name", formData.middle_name);
-                                    data.append("last_name", formData.last_name);
-                                    data.append("id_picture", formData.id_picture);
-                                    data.append("gender", formData.gender);
-                                    data.append("contact", formData.contact);
-                                    data.append("birthdate", formData.birthdate);
-                                    data.append("address", formData.address);
-                                    data.append("email", formData.email);
-                                    data.append("account_status", formData.account_status);
-                                    const response = await axios.post(apiRoutes.updateAdmin, data, {headers});
+                                    data.append("clientid", formData.clientid);
+                                    data.append("client_name", formData.client_name);
+                                    data.append("client_acr", formData.client_acr);
+                                    data.append("client_email", formData.client_email);
+                                    data.append("client_contact", formData.client_contact);
+                                    data.append("client_address", formData.client_address);
+                                    data.append("client_logo", formData.client_logo);
+                                    data.append("client_banner", formData.client_banner);
+                                    data.append("license_key", formData.license_key);
+                                    data.append("new_license_key", formData.new_license_key);
+                                    const response = await axios.post(apiRoutes.updateCampus, data, {headers});
                                     if(response.data.status == 200) {
+                                          if(formData.license_key != formData.new_license_key && formData.new_license_key != '') {
+                                                setFormData((prevState) => ({
+                                                      ...prevState,
+                                                      license_key: formData.new_license_key, // Update license_key to new_license_key
+                                                }));
+                                          }
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          // setFormData(initialState);
                                           ReloadTable();
                                           UpdateLoading(true);
                                     } else {
@@ -149,78 +170,63 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Personal Information    
+                                          Campus Information    
                                     </SoftTypography>
-                                    <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
+                                          <input type="hidden" name="clientid" value={formData.clientid} size="small" /> 
+                                          <Grid item xs={12} md={6} lg={6} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="client_name" value={formData.client_name} onChange={handleChange} size="small" /> 
                                           </Grid>     
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Middle Name:</SoftTypography>
-                                                <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Acronym:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="client_acr" value={formData.client_acr} onChange={handleChange} size="small" /> 
                                           </Grid>     
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Last Name:</SoftTypography>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" /> 
-                                          </Grid>         
-                                          <Grid item xs={12} md={6} lg={2} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Gender: </SoftTypography>
+                                                <SoftInput type="email" name="client_email" value={formData.client_email} onChange={handleChange} size="small" /> 
+                                          </Grid>   
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="gender" value={formData.gender} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {genderSelect && genderSelect.map((gender) => (
-                                                      <option key={gender.value} value={gender.value}>
-                                                            {gender.desc}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid>
-                                          <Grid item xs={12} lg={6} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
+                                                <SoftInput type="number" name="client_contact" value={getN(formData.client_contact)} onChange={handleChange} size="small" /> 
+                                          </Grid>   
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Address:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
-                                          </Grid>
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
+                                                <SoftInput name="client_address" value={formData.client_address} onChange={handleChange} size="small" /> 
+                                          </Grid>   
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Logo:</SoftTypography>
                                                 <input
                                                       type="file"
-                                                      name="id_picture"
+                                                      name="client_logo"
+                                                      accept="image/*"
+                                                      className="form-control form-control-sm rounded-5 text-xs"
+                                                      onChange={handleChange}
+                                                />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Banner:</SoftTypography>
+                                                <input
+                                                      type="file"
+                                                      name="client_banner"
                                                       accept="image/*"
                                                       className="form-control form-control-sm rounded-5 text-xs"
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={5} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid>
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Account Status: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {statusSelect && statusSelect.map((status) => (
-                                                      <option key={status.value} value={status.value}>
-                                                            {status.desc}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid>
+                                                <SoftTypography variant="button" className="me-1">Current License Key:</SoftTypography>
+                                                <input disabled className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key} onChange={handleChange} />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">New License Key:</SoftTypography>
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="new_license_key" value={formData.new_license_key} onChange={handleChange} />
+                                          </Grid>  
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>

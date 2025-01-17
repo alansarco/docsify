@@ -46,7 +46,7 @@ function Edit({DATA, HandleRendering, ReloadTable }) {
             if (file && (file.type === "application/png" || file.name.endsWith(".png"))) {
                 setFormData({ ...formData, id_picture: file });
             } else {
-                toast.error("Only .png images are allowed");
+                toast.error("Only .png and .jpg images are allowed");
                 e.target.value = null;
             }
         } 

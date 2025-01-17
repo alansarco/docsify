@@ -5,7 +5,7 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { accessSelect, years, genderSelect, currentDate } from "components/General/Utils";
+import { getN, genderSelect, currentDate } from "components/General/Utils";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
@@ -56,7 +56,7 @@ function Add({HandleRendering, ReloadTable }) {
                   )) {
                     setFormData({ ...formData, id_picture: file });
                 } else {
-                    toast.error("Only .png images are allowed");
+                    toast.error("Only .png and .jpg images are allowed");
                     e.target.value = null;
                 }
             } 
@@ -206,7 +206,7 @@ function Add({HandleRendering, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={formData.contact} onChange={handleChange} size="small" /> 
+                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
                                           </Grid> 
                                           <Grid item xs={12} md={6} lg={5} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>

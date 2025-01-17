@@ -1,3 +1,19 @@
+export const minPaymenSelect = [
+      { value: 1000, desc: "> 1,000.00" },
+      { value: 5000, desc: "> 5,000.00" },
+      { value: 10000, desc: "> 10,000.00" },
+      { value: 20000, desc: "> 20,000.00" },
+      { value: 500000, desc: "> 50,000.00" },
+];
+
+export const maxPaymenSelect = [
+      { value: 1000, desc: "< 1,000.00" },
+      { value: 5000, desc: "< 5,000.00" },
+      { value: 10000, desc: "< 10,000.00" },
+      { value: 20000, desc: "< 20,000.00" },
+      { value: 500000, desc: "< 50,000.00" },
+];
+
 export const gradeSelect = [
       { value: 7, desc: "7" },
       { value: 8, desc: "8" },
@@ -74,4 +90,30 @@ export function isEmpty(obj) {
     
       return false;
 };
-    
+
+
+
+/**
+ * Formats a number into currency with commas and two decimal places.
+ * @param {number|string} amount - The amount to format.
+ * @returns {string} - The formatted currency string.
+ */
+export function formatCurrency(amount) {
+      if (isNaN(amount)) return 0;
+  
+      return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'PHP', 
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+      }).format(amount);
+}
+
+export function getN(amount) {
+      if (isNaN(amount) || amount === '') return '0'; 
+      if (amount.startsWith('0') && amount.length > 1 && !amount.includes('.')) {
+          return amount.slice(1);
+      }
+      return amount;
+}
+  
