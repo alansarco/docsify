@@ -15,7 +15,7 @@ import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
 import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 import BackupTwoToneIcon from '@mui/icons-material/BackupTwoTone';
 import ImportContactsTwoToneIcon from '@mui/icons-material/ImportContactsTwoTone';
-
+import KeyOffTwoToneIcon from '@mui/icons-material/KeyOffTwoTone';
 
 // React layouts
 import SignIn from "layouts/authentication/sign-in";
@@ -29,14 +29,16 @@ import Blank from "layouts/blank";
 import Students from "layouts/students";
 import Announcements from "layouts/announcements";
 import Profile from "layouts/profile";
-import Documents from "layouts/documents";
+import Licenses from "layouts/licenses";
 import Settings from "layouts/settings";
 import Abouts from "layouts/abouts";
 import Reports from "layouts/reports";
 import Officials from "layouts/officials";
 import DocRequest from "layouts/requests";
 import Representatives from "layouts/representatives";
-import Campuses from "layouts/campuses";
+import ActiveCampus from "layouts/campuses";
+import InactiveCampus from "layouts/inactive-campuses";
+import AdminLog from "layouts/log-admin";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -105,7 +107,7 @@ const routes = (access) => [
     key: "active-campus",
     route: "/active-campus",
     icon: <BeenhereTwoToneIcon size="12px" />,
-    component: <Campuses />,
+    component: <ActiveCampus />,
     noCollapse: true,
   },
   access == 999 && {
@@ -114,7 +116,7 @@ const routes = (access) => [
     key: "inactive-campus",
     route: "/inactive-campus",
     icon: <ArchiveTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <InactiveCampus />,
     noCollapse: true,
   },
   
@@ -221,11 +223,20 @@ const routes = (access) => [
   { type: "title", title: "Others", key: "others-pages" },
   access == 999 && {
     type: "collapse",
+    name: "Licenses",
+    key: "licenses",
+    route: "/licenses",
+    icon: <KeyOffTwoToneIcon size="12px" />,
+    component: <Licenses />,
+    noCollapse: true,
+  },
+  access == 999 && {
+    type: "collapse",
     name: "Logs",
     key: "admin-logs",
     route: "/admin-logs",
     icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <AdminLog />,
     noCollapse: true,
   },
   access == 30 && {

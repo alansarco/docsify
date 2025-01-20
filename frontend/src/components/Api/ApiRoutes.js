@@ -31,10 +31,27 @@ export const apiRoutes = {
     clientSelectRepUpdate: `${mainRoute}/api/clientselectrepupdate`,
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
+    inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,
     addCampus: `${mainRoute}/api/campuses/addcampus`,
     updateCampus: `${mainRoute}/api/campuses/updatecampus`,
     deleteCampus: `${mainRoute}/api/campuses/deletecampus`,
     retrieveCampusOne: `${mainRoute}/api/campuses/retrievecampus`,
+    renewCampus: `${mainRoute}/api/campuses/renewcampus`,
+    
+    adminlogsRetrieve: `${mainRoute}/api/logs/adminlogs`,
+
+    licenseRetrieve: `${mainRoute}/api/licenses`,
+    addLicense: `${mainRoute}/api/licenses/addlicense`,
+    deleteLicense: `${mainRoute}/api/licenses/deletelicense`,
+
+
+
+
+
+
+
+
+
 
     residentsRetrieve: `${mainRoute}/api/residents`,
 
@@ -80,8 +97,6 @@ export const apiRoutes = {
     updateSettings: `${mainRoute}/api/settings/updatesettings`,
 
     docRetrieve: `${mainRoute}/api/documents`,
-    addDoc: `${mainRoute}/api/documents/addorg`,
-    deleteDoc: `${mainRoute}/api/documents/deleteorg`,
 
     docSelect: `${mainRoute}/api/document-requests/docselect`,
     requestRetrieve: `${mainRoute}/api/document-requests`,

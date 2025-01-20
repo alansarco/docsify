@@ -215,7 +215,7 @@ function Add({HandleRendering, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1">License Key:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key} onChange={handleChange} />
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key.toUpperCase()} onChange={handleChange} />
                                           </Grid>  
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">

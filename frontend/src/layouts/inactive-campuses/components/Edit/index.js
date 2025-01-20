@@ -5,7 +5,8 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { useState } from "react";
+import { statusSelect, years, genderSelect, currentDate } from "components/General/Utils";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
 import { useStateContext } from "context/ContextProvider";
@@ -13,8 +14,8 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
-function Add({HandleRendering, ReloadTable }) {
-      const currentFileName = "layouts/organizations/components/Add/index.js";
+function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
+      const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 
@@ -22,35 +23,40 @@ function Add({HandleRendering, ReloadTable }) {
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-        
+      
       const initialState = {
-            doc_name: "",
+            clientid: DATA.clientid == null ? "" : DATA.clientid,
+            license_key: DATA.license_key == null ? "" : DATA.license_key,
+            new_license_key: DATA.new_license_key == null ? "" : DATA.new_license_key,
             agreement: false,   
       };
 
       const [formData, setFormData] = useState(initialState);
 
       const handleChange = (e) => {
-            const { name, value, type } = e.target;
+            const { name, value, type, files } = e.target;
+    
             if (type === "checkbox") {
-                  setFormData({ ...formData, [name]: !formData[name]});
-            } else {
+                setFormData({ ...formData, [name]: !formData[name] });
+            } 
+            else {
                   setFormData({ ...formData, [name]: value });
             }
       };
 
       const handleCancel = () => {
             HandleRendering(1);
-            ReloadTable();
       };
             
       const handleSubmit = async (e) => {
             e.preventDefault(); 
             toast.dismiss();
-            // Check if all required fields are empty
-            const requiredFields = [
-                  "doc_name",
+             // Check if all required fields are empty
+             const requiredFields = [
+                  "clientid",
+                  "new_license_key",
             ];
+
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
 
             if (emptyRequiredFields.length === 0) {
@@ -64,17 +70,28 @@ function Add({HandleRendering, ReloadTable }) {
                                     toast.error(messages.prohibit, { autoClose: true });
                               }
                               else {  
-                                    const response = await axios.post(apiRoutes.addDoc, formData, {headers});
+                                    const data = new FormData();
+                                    data.append("clientid", formData.clientid);
+                                    data.append("license_key", formData.license_key);
+                                    data.append("new_license_key", formData.new_license_key);
+                                    const response = await axios.post(apiRoutes.renewCampus, data, {headers});
                                     if(response.data.status == 200) {
+                                          if(formData.license_key != formData.new_license_key && formData.new_license_key != '') {
+                                                setFormData((prevState) => ({
+                                                      ...prevState,
+                                                      license_key: formData.new_license_key, // Update license_key to new_license_key
+                                                }));
+                                          }
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          setFormData(initialState);
+                                          ReloadTable();
+                                          UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
                                     }
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error(messages.addUserError, { autoClose: true });
+                              toast.error("Error adding Admin!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
@@ -97,18 +114,21 @@ function Add({HandleRendering, ReloadTable }) {
                         <SoftTypography fontWeight="bold" className="text-xs">
                               Please fill in the required fields. Rest assured that data is secured.     
                         </SoftTypography> 
+                        
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Document Information    
-                                    </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12}md={6} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Name:</SoftTypography>
+                                          <input type="hidden" name="clientid" value={formData.clientid} size="small" /> 
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Current License Key:</SoftTypography>
+                                                <input disabled className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key} onChange={handleChange} />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">New License Key:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="doc_name" value={formData.doc_name} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                    </Grid>
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="new_license_key" value={formData.new_license_key} onChange={handleChange} />
+                                          </Grid>  
+                                    </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 
@@ -133,7 +153,7 @@ function Add({HandleRendering, ReloadTable }) {
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
                                                       <SoftButton variant="gradient" type="submit" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="info">
-                                                            Save
+                                                            Update
                                                       </SoftButton>
                                                 </SoftBox>
                                           </Grid>
@@ -146,4 +166,4 @@ function Add({HandleRendering, ReloadTable }) {
       );
 }
 
-export default Add;
+export default Edit;

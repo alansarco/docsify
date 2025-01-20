@@ -1,3 +1,13 @@
+export const actionSelect = [
+      { value: "ADD", desc: "ADD" },
+      { value: "DELETE", desc: "DELETE" },
+      { value: "UPDATE", desc: "UPDATE" },
+];
+export const moduleSelect = [
+      { value: "Accounts", desc: "Accounts" },
+      { value: "Campus", desc: "Campus" },
+];
+
 export const minPaymenSelect = [
       { value: 1000, desc: "> 1,000.00" },
       { value: 5000, desc: "> 5,000.00" },

@@ -6,10 +6,11 @@ use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DocRequestController;
-use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\LicenseController;
 use App\Http\Controllers\Api\GeneralController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
 use App\Http\Controllers\Api\OfficialController;
@@ -67,10 +68,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('campuses')->group(function () {
         Route::post('active', [CampusController::class, 'active']);
+        Route::post('inactive', [CampusController::class, 'inactive']);
         Route::post('addcampus', [CampusController::class, 'addcampus']);
         Route::post('updatecampus', [CampusController::class, 'updatecampus']);
         Route::get('deletecampus', [CampusController::class, 'deletecampus']);
         Route::get('retrievecampus', [CampusController::class, 'retrievecampus']);
+        Route::post('renewcampus', [CampusController::class, 'renewcampus']);
+    });
+
+    Route::prefix('logs')->group(function () {
+        Route::post('adminlogs', [LogController::class, 'adminlogs']);
     });
 
     Route::prefix('accounts')->group(function () {
@@ -123,11 +130,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('updatesettings', [SettingsController::class, 'updatesettings']);
     });
 
-    Route::prefix('documents')->group(function () {
-        Route::get('/', [DocumentController::class, 'index']);
-        Route::get('orgselect', [DocumentController::class, 'orgselect']);
-        Route::post('addorg', [DocumentController::class, 'addorg']);
-        Route::get('deleteorg', [DocumentController::class, 'deleteorg']);
+    Route::prefix('licenses')->group(function () {
+        Route::post('/', [LicenseController::class, 'index']);
+        Route::get('orgselect', [LicenseController::class, 'orgselect']);
+        Route::post('addlicense', [LicenseController::class, 'addlicense']);
+        Route::get('deletelicense', [LicenseController::class, 'deletelicense']);
     });
 
     Route::prefix('document-requests')->group(function () {

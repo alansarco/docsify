@@ -20,9 +20,10 @@ import { passToSuccessLogs } from "components/Api/Gateway";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading"; 
+import { formatCurrency } from "components/General/Utils";
 
 
-function Table({ admins, tablehead, ReloadTable }) {
+function Table({ DATA, tablehead, ReloadTable }) {
   const currentFileName = "layouts/organizations/data/table.js";
   const {token} = useStateContext();
   const { light } = colors;
@@ -35,7 +36,7 @@ function Table({ admins, tablehead, ReloadTable }) {
     'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
   };
 
-  const handleDelete = async (doc_name) => {
+  const handleDelete = async (license_key) => {
     Swal.fire({
       customClass: {
         title: 'alert-title',
@@ -45,8 +46,8 @@ function Table({ admins, tablehead, ReloadTable }) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Document?',
-      text: "Are you sure you want to delete this data? You won't be able to revert this!",
+      title: 'Delete License?',
+      text: "Are you sure you want to delete this? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',  
@@ -59,7 +60,7 @@ function Table({ admins, tablehead, ReloadTable }) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteDoc, { params: { doc_name }, headers })
+            axios.get(apiRoutes.deleteLicense, { params: { license_key }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -91,16 +92,16 @@ function Table({ admins, tablehead, ReloadTable }) {
         textAlign={head.align}
         fontSize={size.xxs}
         fontWeight={fontWeightBold}
-        color="secondary"
+        color="secondary"        
         >
         {head.name.toUpperCase()}
       </SoftBox>
     );
   });
 
-  const renderRows = admins.map((row) => {
+  const renderRows = DATA.map((row) => {
     return (
-      <TableRow key={row.doc_name}>
+      <TableRow key={row.license_key}>
           <SoftBox
             className="px-2"
             component="td"
@@ -109,7 +110,7 @@ function Table({ admins, tablehead, ReloadTable }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.doc_name}
+            {row.license_key}
           </SoftBox>      
           <SoftBox
             className="px-2"
@@ -119,7 +120,7 @@ function Table({ admins, tablehead, ReloadTable }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.created_by}
+            {formatCurrency(row.license_price)}
           </SoftBox>      
           <SoftBox
             className="px-2"
@@ -129,7 +130,38 @@ function Table({ admins, tablehead, ReloadTable }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.created_date}    
+            {row.license_duration}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.consumed_by}    
+            {row.client_acr}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.license_date_use}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.date_added}    
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -140,9 +172,11 @@ function Table({ admins, tablehead, ReloadTable }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            <SoftButton onClick={() => handleDelete(row.doc_name)} className="text-xxs py-0 px-3 rounded-pill" variant="gradient" color="primary" size="small">
+            {!row.license_client && 
+            <SoftButton onClick={() => handleDelete(row.license_key)} className="text-xxs py-0 px-3 rounded-pill" variant="gradient" color="primary" size="small">
               <DeleteTwoToneIcon /> delete
             </SoftButton>  
+            }
           </SoftBox>  
         </TableRow>
     )});
@@ -150,7 +184,7 @@ function Table({ admins, tablehead, ReloadTable }) {
   return (  
     <>
     {searchTriggered && <FixedLoading /> }
-    <TableContainer className="shadow-none bg-gray p-3">
+    <TableContainer className="shadow-none p-3">
         <MuiTable className="table table-sm table-hover table-responsive">  
           <SoftBox component="thead">
             <TableRow>{renderColumns}</TableRow>  

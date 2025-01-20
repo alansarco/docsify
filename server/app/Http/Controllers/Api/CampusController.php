@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
 use App\Models\AdminLog;
@@ -29,6 +27,47 @@ class CampusController extends Controller
 
         // Call the stored procedure
         $campus = DB::select('CALL GET_CAMPUS_ACTIVE(?, ?, ?, ?, ?)', [$filter, $minPayment, $maxPayment, $expiresAt, $startsAt]);
+
+        // Convert the results into a collection
+        $campusCollection = collect($campus);
+
+        // Set pagination variables
+        $perPage = 50; // Number of items per page
+        $currentPage = LengthAwarePaginator::resolveCurrentPage(); // Get the current page
+
+        // Slice the collection to get the items for the current page
+        $currentPageItems = $campusCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        // Create a LengthAwarePaginator instance
+        $paginatedCampuses = new LengthAwarePaginator($currentPageItems, $campusCollection->count(), $perPage, $currentPage, [
+            'path' => $request->url(), // Set the base URL for pagination links
+            'query' => $request->query(), // Preserve query parameters in pagination links
+        ]);
+
+        // Return the response
+        if ($paginatedCampuses->count() > 0) {
+            return response()->json([
+                'status' => 200,
+                'campuses' => $paginatedCampuses,
+                'message' => 'Campuses retrieved!',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'No Campuses found!',
+                'campuses' => $paginatedCampuses
+            ]);
+        }
+    }
+
+    public function inactive(Request $request) {
+        $filter = $request->filter ?? '';
+        $minPayment = $request->min_payment ?? '';
+        $maxPayment = $request->max_payment ?? '';
+        $expiresAt = $request->subscription_end ?? '';
+        $startsAt = $request->subscription_start ?? '';
+
+        // Call the stored procedure
+        $campus = DB::select('CALL GET_CAMPUS_INACTIVE(?, ?, ?, ?, ?)', [$filter, $minPayment, $maxPayment, $expiresAt, $startsAt]);
 
         // Convert the results into a collection
         $campusCollection = collect($campus);
@@ -205,26 +244,31 @@ class CampusController extends Controller
             ]);
         }
         else {
-            $valid_license = false;
-            if($request->new_license_key) {
-                $chekLicense = LicenseKey::where('license_key', $request->new_license_key)
-                ->whereNull('license_client')
-                ->orWhere('license_client', '')
-                ->first();
-                if(!$chekLicense) {
-                    return response()->json([
-                        'message' => 'Invalid license key!'
-                    ]);
-                }
-            $SubscriptionEnd = Carbon::parse($request->subscription_end)->addDays($chekLicense->license_duration);
-            $valid_license = true;
-            }
-
+            
+            $today = Carbon::today();
             $campusExist = DB::table('clients')->where('clientid', $request->clientid)->first();
+            $expiredLicense = DB::table('clients')
+                ->where('subscription_end', '<', $today)
+                ->where('clientid', $request->clientid)->first();
             $emailExist = DB::table('clients')->where('client_email', $request->client_email)->whereNot('clientid', $request->clientid)->first();
 
-            if($campusExist && !$emailExist) {
+            if($campusExist && !$emailExist && !$expiredLicense) {
                 try {
+                    $valid_license = false;
+                    if($request->new_license_key) {
+                        $chekLicense = LicenseKey::where('license_key', $request->new_license_key)
+                        ->whereNull('license_client')
+                        ->orWhere('license_client', '')
+                        ->first();
+                        if(!$chekLicense) {
+                            return response()->json([
+                                'message' => 'Invalid license key!'
+                            ]);
+                        }
+                    $SubscriptionEnd = Carbon::parse($campusExist->subscription_end)->addDays($chekLicense->license_duration);
+                    $valid_license = true;
+                    }
+
                     $updateData = [
                         'client_name' => $request->client_name,   
                         'client_acr' => $request->client_acr,   
@@ -241,7 +285,7 @@ class CampusController extends Controller
                         $updateData['license_key'] = $request->new_license_key;
                         $updateData['subscription_end'] = $SubscriptionEnd;
                         $updateData['current_payment'] = $chekLicense->license_price;
-                        $updateData['total_payment'] = $campusExist->current_payment + $chekLicense->license_price;
+                        $updateData['total_payment'] = $campusExist->total_payment + $chekLicense->license_price;
                     }
                     // Check if client_logo is provided and add it to the update array
                     if ($request->hasFile('client_logo')) {
@@ -292,6 +336,94 @@ class CampusController extends Controller
                 return response()->json([
                     'message' => 'Email already taken!'
                 ]);
+            }
+            else if($expiredLicense) {
+                return response()->json([
+                    'message' => 'License already expired!'
+                ]);
+            }
+            else {
+                return response()->json([
+                    'message' => 'Campus not exist!'
+                ]);
+            }
+        }
+    }
+
+    public function renewcampus(Request $request) {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        if($authUser->role !== "ADMIN" || $authUser->access_level < 999) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'clientid' => 'required',
+            'new_license_key' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message' => $validator->messages()->all()
+            ]);
+        }
+        else {
+            $chekLicense = LicenseKey::where('license_key', $request->new_license_key)
+            ->whereNull('license_client')
+            ->orWhere('license_client', '')
+            ->first();
+            if(!$chekLicense) {
+                return response()->json([
+                    'message' => 'Invalid license key!'
+                ]);
+            }
+            $SubscriptionEnd = Carbon::parse(Carbon::today())->addDays($chekLicense->license_duration);
+            $campusExist = DB::table('clients')->where('clientid', $request->clientid)->first();
+
+            if($campusExist) {
+                try {
+                    $updateData = [
+                        'license_key' => $request->new_license_key,   
+                        'subscription_end' => $SubscriptionEnd,   
+                        'current_payment' => $chekLicense->license_price,   
+                        'total_payment' => $campusExist->total_payment + $chekLicense->license_price,   
+                        'created_by' => $authUser->fullname,
+                        'updated_by' => $authUser->fullname,
+                    ];
+
+                    $update = Client::where('clientid', $request->clientid)->update($updateData);
+    
+                    if($update) {
+                        AdminLog::create([
+                            'module' => 'Campus',
+                            'action' => 'UPDATE',
+                            'details' => $authUser->fullname .' updated/renew license for campus '.$campusExist->clientid. '-'.$campusExist->client_name,
+                            'created_by' => $authUser->fullname,
+                        ]);
+                        LicenseKey::where('license_key', $request->new_license_key)
+                        ->update([
+                            'license_client' => $request->clientid,
+                            'license_date_use' => Carbon::today(),
+                            'updated_by' => $authUser->fullname,
+                        ]);
+                        return response()->json([
+                            'status' => 200,
+                            'message' => 'Campus license renewed successfully!'
+                        ], 200);
+                    }
+                    else {
+                        return response()->json([
+                            'message' => 'Something went wrong!'
+                        ]);
+                    }
+                } catch (Exception $e) {
+                    return response()->json([
+                        'message' => $e->getMessage()
+                    ]);
+                }
             }
             else {
                 return response()->json([

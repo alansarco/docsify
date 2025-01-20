@@ -23,11 +23,9 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import DataContainer from "layouts/campuses/components/DataContainer";
-import Add from "layouts/campuses/components/Add";
 
-import Table from "layouts/campuses/data/table";
-import { tablehead } from "layouts/campuses/data/head";  
+import Table from "layouts/log-admin/data/table";
+import { tablehead } from "layouts/log-admin/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
@@ -35,11 +33,11 @@ import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
 import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';
-import { minPaymenSelect,maxPaymenSelect } from "components/General/Utils";
+import { actionSelect, moduleSelect } from "components/General/Utils";
 import { toast } from "react-toastify";
 
-function ActiveCampus() {
-    const currentFileName = "layouts/campuses/index.js";
+function AdminLog() {
+    const currentFileName = "layouts/log-admin/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -63,10 +61,10 @@ function ActiveCampus() {
 
     const initialState = {
         filter: "",
-        min_payment: "",
-        max_payment: "",
-        subscription_start: "",
-        subscription_end: "",
+        filter_module: "",
+        filter_action: "",
+        created_start: "",
+        created_end: "",
     };
 
     const [formData, setFormData] = useState(initialState);
@@ -80,18 +78,14 @@ function ActiveCampus() {
         }
     };
 
-    const [DATA, setDATA] = useState(); 
     const [rendering, setRendering] = useState(1);
     const [fetchdata, setFetchdata] = useState([]);
     const tableHeight = DynamicTableHeight(); 
     
-    const HandleClear = (data) => {
+    const HandleClear = () => {
       setFormData(initialState);
     };
 
-    const HandleDATA = (data) => {
-        setDATA(data);
-    };
 
     const HandleRendering = (rendering) => {
         setRendering(rendering);
@@ -100,7 +94,7 @@ function ActiveCampus() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.activeCampusRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.adminlogsRetrieve + '?page=' + 1, formData, {headers})
           .then(response => {
             setFetchdata(response.data.campuses);
             passToSuccessLogs(response.data, currentFileName);
@@ -115,31 +109,15 @@ function ActiveCampus() {
       }
     }, [searchTriggered]);
 
-    const ReloadTable = () => {
-        axios.post(apiRoutes.activeCampusRetrieve + '?page=' + page, formData, {headers})
-        .then(response => {
-        setFetchdata(response.data.campuses);
-        passToSuccessLogs(response.data, currentFileName);
-        setReload(false);      
-        })
-        .catch(error => {
-        setReload(false);      
-        console.error('Error fetching data for the next page:', error);
-        });
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-        if(parseInt(formData.min_payment) > parseInt(formData.max_payment) && formData.max_payment != '') {
-          toast.warning('Min Payment must be lesser than Max Payment!', { autoClose: true });
-        }
-        else if(formData.subscription_start > formData.subscription_end && formData.subscription_end != '') {
+        if(formData.created_start > formData.created_end && formData.created_end != '') {
           toast.warning('Subscription Start be lesser than Subscription End', { autoClose: true });
         }
         else {
           setReload(true);      
           try {
-              const response = await axios.post(apiRoutes.activeCampusRetrieve + '?page=' + 1, formData, {headers});
+              const response = await axios.post(apiRoutes.adminlogsRetrieve + '?page=' + 1, formData, {headers});
               if(response.data.status == 200) {
                   setFetchdata(response.data.campuses);
               }
@@ -162,8 +140,9 @@ function ActiveCampus() {
     const nextPage = url.searchParams.get('page');
     setPage(nextPage ? parseInt(nextPage) : 1);
     setReload(true);      
+
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.activeCampusRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.adminlogsRetrieve + '?page=' + nextPage, formData, {headers})
     .then(response => {
       setFetchdata(response.data.campuses);
       passToSuccessLogs(response.data, currentFileName);
@@ -186,24 +165,15 @@ function ActiveCampus() {
       {reload && <FixedLoading />} 
       <DashboardLayout>
         <DashboardNavbar RENDERNAV={rendering} /> 
-          {DATA && rendering == 2 ? 
-            <DataContainer DATA={DATA} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
-          :
-          rendering == 3 ?
-            <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
-        :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Active Campus List</SoftTypography>
+                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Admin Logs</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
-                  </SoftButton>
-                  <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Campus
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
@@ -211,7 +181,7 @@ function ActiveCampus() {
                 <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && (fetchdata.data.length > 0) ? 
-                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} campuses={fetchdata.data} tablehead={tablehead} /> :
+                      <Table table="sm" HandleRendering={HandleRendering} campuses={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
@@ -230,26 +200,25 @@ function ActiveCampus() {
                         <Grid item xs={12}>
                             <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
                             <SoftBox className="my-auto">
-                              <SoftTypography variant="button" className="me-1">Subscription Start:</SoftTypography>
-                              <input className="form-control form-control-sm text-secondary rounded-5"  name="subscription_start" value={formData.subscription_start} onChange={handleChange} type="date" />
-                              <SoftTypography variant="button" className="me-1">Subscription End:</SoftTypography>
-                              <input className="form-control form-control-sm text-secondary rounded-5"  name="subscription_end" value={formData.subscription_end} onChange={handleChange} type="date" />
-                              <SoftTypography variant="button" className="me-1">Min. Payment:</SoftTypography>
-                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="min_payment" value={formData.min_payment} onChange={handleChange} >
+                              <SoftTypography variant="button" className="me-1">From:</SoftTypography>
+                              <input className="form-control form-control-sm text-secondary rounded-5"  name="created_start" value={formData.created_start} onChange={handleChange} type="date" />
+                              <SoftTypography variant="button" className="me-1">To:</SoftTypography>
+                              <input className="form-control form-control-sm text-secondary rounded-5"  name="created_end" value={formData.created_end} onChange={handleChange} type="date" />
+                              <SoftTypography variant="button" className="me-1">Action:</SoftTypography>
+                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="filter_action" value={formData.filter_action} onChange={handleChange} >
                                 <option value="">-- Select --</option>
-                                {minPaymenSelect && minPaymenSelect.map((min) => (
-                                <option key={min.value} value={min.value}>
-                                        {min.desc}
+                                {actionSelect && actionSelect.map((action) => (
+                                <option key={action.value} value={action.value}>
+                                        {action.desc}
                                 </option>
                                 ))}
                               </select>
-                              <SoftTypography variant="button" className="me-1">Gender:</SoftTypography>
-                              <SoftTypography variant="button" className="me-1">Max. Payment:</SoftTypography>
-                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="max_payment" value={formData.max_payment} onChange={handleChange} >
+                              <SoftTypography variant="button" className="me-1">Module:</SoftTypography>
+                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="filter_module" value={formData.filter_module} onChange={handleChange} >
                                 <option value="">-- Select --</option>
-                                {maxPaymenSelect && maxPaymenSelect.map((max) => (
-                                <option key={max.value} value={max.value}>
-                                        {max.desc}
+                                {moduleSelect && moduleSelect.map((module) => (
+                                <option key={module.value} value={module.value}>
+                                        {module.desc}
                                 </option>
                                 ))}
                               </select>
@@ -277,11 +246,9 @@ function ActiveCampus() {
                 </SoftBox>
                 </Grid>
                 }
-                
               </Grid>
             </SoftBox>
           </SoftBox>
-          }
         <Footer />
       </DashboardLayout>
       <ToastContainer
@@ -299,4 +266,4 @@ function ActiveCampus() {
   );
 }
 
-export default ActiveCampus;
+export default AdminLog;

@@ -19,27 +19,13 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
-      const [fetchclients, setFetchClients] = useState([]);
-      const client = DATA.clientid;
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-
-      useEffect(() => {
-            axios.get(apiRoutes.clientSelectRepUpdate, { params: { client } })
-            .then(response => {
-              setFetchClients(response.data.clients);
-              passToSuccessLogs(response.data, currentFileName);
-            })
-            .catch(error => {
-              passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
-            });
-      }, []);
       
       const initialState = {
-            username: DATA.username,
             clientid: DATA.clientid == null ? "" : DATA.clientid,
             client_name: DATA.client_name == null ? "" : DATA.client_name,
             client_acr: DATA.client_acr == null ? "" : DATA.client_acr,
@@ -221,11 +207,11 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           </Grid>  
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Current License Key:</SoftTypography>
-                                                <input disabled className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key} onChange={handleChange} />
+                                                <input disabled className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key.toUpperCase()} onChange={handleChange} />
                                           </Grid>  
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">New License Key:</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="new_license_key" value={formData.new_license_key} onChange={handleChange} />
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="new_license_key" value={formData.new_license_key.toUpperCase()} onChange={handleChange} />
                                           </Grid>  
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
