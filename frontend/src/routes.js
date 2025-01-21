@@ -6,7 +6,6 @@ import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
 import SupportAgentTwoToneIcon from '@mui/icons-material/SupportAgentTwoTone';
 import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
-import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import BeenhereTwoToneIcon from '@mui/icons-material/BeenhereTwoTone';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveTwoTone';
 import AccountBalanceTwoToneIcon from '@mui/icons-material/AccountBalanceTwoTone';
@@ -30,15 +29,12 @@ import Students from "layouts/students";
 import Announcements from "layouts/announcements";
 import Profile from "layouts/profile";
 import Licenses from "layouts/licenses";
-import Settings from "layouts/settings";
 import Abouts from "layouts/abouts";
-import Reports from "layouts/reports";
-import Officials from "layouts/officials";
-import DocRequest from "layouts/requests";
 import Representatives from "layouts/representatives";
 import ActiveCampus from "layouts/campuses";
 import InactiveCampus from "layouts/inactive-campuses";
 import AdminLog from "layouts/log-admin";
+import AdminSettings from "layouts/settings-admin";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -146,7 +142,7 @@ const routes = (access) => [
     key: "programs",
     route: "/programs",
     icon: <TerminalTwoToneIcon size="12px" />,
-    component: <DocRequest />,
+    component: <Blank />,
     noCollapse: true,
   },
 
@@ -270,10 +266,10 @@ const routes = (access) => [
   access == 999 && {
     type: "collapse",
     name: "Settings",
-    key: "settings",
-    route: "/settings",
+    key: "admin-settings",
+    route: "/admin-settings",
     icon: <SettingsTwoToneIcon size="12px" />,
-    component: <Settings />,
+    component: <AdminSettings />,
     noCollapse: true,
   },
   {

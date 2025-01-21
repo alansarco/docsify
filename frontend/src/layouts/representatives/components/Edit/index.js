@@ -80,6 +80,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
       };
 
       const handleCancel = () => {
+            ReloadTable();
             HandleRendering(1);
       };
             

@@ -66,6 +66,7 @@ class SignupController extends Controller
                           $otp = Str::random(6);
                           $existingOTP = OTP::where('id', $otp)->first();
                     }
+                    
                     $otpSent = Mail::to($request->email)->send(new OtpStringsEmailVerification($otp));
         
                     $newOTP = OTP::create([

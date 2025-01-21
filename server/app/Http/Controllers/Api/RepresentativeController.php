@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
+use App\Mail\AccoutApproveEmail;
 use App\Models\AdminLog;
+use App\Models\App_Info;
 use App\Models\Client;
+use Illuminate\Support\Facades\Mail;
 
 class RepresentativeController extends Controller
 {
@@ -128,6 +131,13 @@ class RepresentativeController extends Controller
                     'updated_by' => $authUser->fullname,
                 ]);
 
+            $data = $request->username;
+            $otpSent = false;
+            $adminInfo = App_Info::first();
+            if($adminInfo->notify_user_approve == 1) {
+                $otpSent = Mail::to($request->email)->send(new AccoutApproveEmail($data));
+            }
+
             if($add) {
                 AdminLog::create([
                     'module' => 'Representative Accounts',
@@ -135,6 +145,12 @@ class RepresentativeController extends Controller
                     'details' => $authUser->fullname .' addded account '. $request->username,
                     'created_by' => $authUser->fullname,
                 ]);
+                if($otpSent) {
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'School admin/representative added successfully and email notification is sent to user!'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 200,
                     'message' => 'School admin/representative added successfully!'
@@ -236,21 +252,44 @@ class RepresentativeController extends Controller
                         'updated_by' => $authUser->fullname,
                     ];
                     
+                    $pictureData = null;
                     // Check if id_picture is provided and add it to the update array
                     if ($request->hasFile('id_picture')) {
                         $file = $request->file('id_picture');
                         $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                         $updateData['id_picture'] = $pictureData;
                     }
+                    $existingKeys = User::where('username', $request->username)->first();
+                    $changes = [];
+
+                    // Compare all fields except those related to pictures
+                    foreach ($updateData as $key => $value) {
+                        if ($key !== 'id_picture' && isset($existingKeys[$key]) && $existingKeys[$key] != $value) {
+                            $changes[$key] = [
+                                'old' => $existingKeys[$key],
+                                'new' => $value
+                            ];
+                        }
+                    }
                     $update = User::where('username', $request->username)->update($updateData);
                     
                     if($update) {
-                        AdminLog::create([
-                            'module' => 'Representative Accounts',
-                            'action' => 'DELETE',
-                            'details' => $authUser->fullname .' updated account '. $request->username,
-                            'created_by' => $authUser->fullname,
-                        ]);
+                        if (!empty($changes)) {
+                            AdminLog::create([
+                                'module' => 'Representative Accounts',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
+                        else if($pictureData) {
+                            AdminLog::create([
+                                'module' => 'Representative Accounts',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
                         return response()->json([
                             'status' => 200,
                             'message' => 'School admin/representative updated successfully!'

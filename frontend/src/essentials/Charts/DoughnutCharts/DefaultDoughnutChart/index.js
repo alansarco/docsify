@@ -26,7 +26,7 @@ function DefaultDoughnutChart({ title, description, height, chart, loading, noda
           )}
 
           {useMemo(() => (
-            <SoftBox minHeight="15rem">
+            <SoftBox >
               {loading ? 
                 <AbsoluteLoading /> 
                 : !nodata ? 

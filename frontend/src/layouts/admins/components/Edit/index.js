@@ -67,6 +67,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
 
       const handleCancel = () => {
             HandleRendering(1);
+            ReloadTable();
       };
             
       const handleSubmit = async (e) => {

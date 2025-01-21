@@ -6,6 +6,8 @@ export const actionSelect = [
 export const moduleSelect = [
       { value: "Accounts", desc: "Accounts" },
       { value: "Campus", desc: "Campus" },
+      { value: "License", desc: "License" },
+      { value: "Settings", desc: "Settings" },
 ];
 
 export const minPaymenSelect = [

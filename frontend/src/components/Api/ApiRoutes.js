@@ -38,11 +38,18 @@ export const apiRoutes = {
     retrieveCampusOne: `${mainRoute}/api/campuses/retrievecampus`,
     renewCampus: `${mainRoute}/api/campuses/renewcampus`,
     
-    adminlogsRetrieve: `${mainRoute}/api/logs/adminlogs`,
-
     licenseRetrieve: `${mainRoute}/api/licenses`,
     addLicense: `${mainRoute}/api/licenses/addlicense`,
     deleteLicense: `${mainRoute}/api/licenses/deletelicense`,
+
+    adminlogsRetrieve: `${mainRoute}/api/logs/adminlogs`,
+
+    adminSettings: `${mainRoute}/api/settings/adminsettings`,
+    adminSettingsRetrieved: `${mainRoute}/api/settings/adminsettingsretrieved`,
+    updateAdminSettings: `${mainRoute}/api/settings/updatesdminsettings`,
+
+
+
 
 
 

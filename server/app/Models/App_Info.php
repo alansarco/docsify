@@ -19,16 +19,13 @@ class App_Info extends Model
         'acronym',
         'org_structure',
         'system_info',
-        'event_notif',
-        'subscription',
         'security_code',
         'email',
         'contact',
-        'requirements_link',
-        'times_subscribe',
         'logo',
-        'starts_at',
-        'expires_at',
+        'notify_campus_add',
+        'notify_campus_renew',
+        'notify_user_approve',
         'created_by'
     ];
 }

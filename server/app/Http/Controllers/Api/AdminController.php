@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
+use App\Mail\AccoutApproveEmail;
 use App\Models\AdminLog;
+use App\Models\App_Info;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -87,6 +90,15 @@ class AdminController extends Controller
 
         $acountExist = DB::table('users')->where('username', $request->username)->first();
         $emailExist = DB::table('users')->where('email', $request->email)->first();
+        $countAdmin = User::where('role', 'ADMIN')->count();
+        $adminInfo = App_Info::first();
+
+        if($countAdmin >= $adminInfo->superadmin_limit) {
+            return response()->json([
+                'message' => 'You have reached the maximum admin account!'
+            ]);
+        }
+
         $defaultPassword = Hash::make($request->contact);
 
         if(!$acountExist && !$emailExist) {
@@ -115,6 +127,12 @@ class AdminController extends Controller
                     'updated_by' => $authUser->fullname,
                 ]);
 
+            $data = $request->username;
+            $otpSent = false;
+            if($adminInfo->notify_user_approve == 1) {
+                $otpSent = Mail::to($request->email)->send(new AccoutApproveEmail($data));
+            }
+
             if($add) {
                 AdminLog::create([
                     'module' => 'Admin Accounts',
@@ -122,6 +140,12 @@ class AdminController extends Controller
                     'details' => $authUser->fullname .' added account '. $request->username,
                     'created_by' => $authUser->fullname,
                 ]);
+                if($otpSent) {
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Admin added successfully and email notification is sent to user!'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 200,
                     'message' => 'Admin added successfully!'
@@ -202,22 +226,50 @@ class AdminController extends Controller
                         'account_status' => $request->account_status,
                         'updated_by' => $authUser->fullname,
                     ];
-                    
+                    $pictureData = null;
                     // Check if id_picture is provided and add it to the update array
                     if ($request->hasFile('id_picture')) {
                         $file = $request->file('id_picture');
                         $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                         $updateData['id_picture'] = $pictureData;
                     }
+                    $existingKeys = User::where('username', $request->username)->first();
+                    $changes = [];
+
+                    // Compare all fields except those related to picturesx
+                    foreach ($updateData as $key => $value) {
+                        if ($key !== 'id_picture' && isset($existingKeys[$key]) && $existingKeys[$key] != $value) {
+                            $changes[$key] = [
+                                'old' => $existingKeys[$key],
+                                'new' => $value
+                            ];
+                        }
+                    }
+                    $userInfo = User::where('username', $request->username)->first();
+                    $data = $request->username;
+
+                    if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
+                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                    }
+
                     $update = User::where('username', $request->username)->update($updateData);
-                    
                     if($update) {
-                        AdminLog::create([
-                            'module' => 'Admin Accounts',
-                            'action' => 'UPDATE',
-                            'details' => $authUser->fullname .' updated account '. $request->username,
-                            'created_by' => $authUser->fullname,
-                        ]);
+                        if (!empty($changes)) {
+                            AdminLog::create([
+                                'module' => 'Admin Accounts',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
+                        else if($pictureData) {
+                            AdminLog::create([
+                                'module' => 'Admin Accounts',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
                         return response()->json([
                             'status' => 200,
                             'message' => 'Admin updated successfully!'

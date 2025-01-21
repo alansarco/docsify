@@ -11284,3 +11284,7 @@ textarea.form-control-lg {
   transition: 0.3s ease-in-out;
   transform: scale(1.1);
 }
+.justify-text {
+  text-align: justify !important;
+  text-indent: 2em; 
+}

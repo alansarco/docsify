@@ -47,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('dashboard')->group(function () {
         Route::get('otherStats', [DashboardController::class, 'OtherStatistics']);
-        Route::get('polls', [DashboardController::class, 'ElectionDistribution']);
+        Route::get('polls', [DashboardController::class, 'AdminNotifications']);
     });
 
     Route::prefix('admins')->group(function () {
@@ -126,8 +126,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('settings')->group(function () {
-        Route::get('/', [SettingsController::class, 'index']);
-        Route::post('updatesettings', [SettingsController::class, 'updatesettings']);
+        Route::get('adminsettings', [SettingsController::class, 'adminsettings']);
+        Route::get('adminsettingsretrieved', [SettingsController::class, 'adminsettingsretrieved']);
+        Route::post('updatesdminsettings', [SettingsController::class, 'updatesdminsettings']);
     });
 
     Route::prefix('licenses')->group(function () {

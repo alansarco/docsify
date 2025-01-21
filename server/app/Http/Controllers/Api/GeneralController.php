@@ -18,15 +18,10 @@ class GeneralController extends Controller {
 
     public function app_info() {
         try {
-            $currentDate = Carbon::now();
-
             $app_info = App_info::select('*',
                 DB::raw("TO_BASE64(org_structure) as org_structure"),
                 DB::raw("TO_BASE64(logo) as logo"),
                 )
-                ->where('subscription', 1)  
-                ->where('expires_at', '>', $currentDate)
-                ->whereNotNull('starts_at')
                 ->first();
 
             if($app_info) {
@@ -37,7 +32,7 @@ class GeneralController extends Controller {
                 ]);
             }
             return response()->json([
-                'message' => "App no longer registered, or subscription already expired!",
+                'message' => "App no longer registered!",
                 'status' => 0,
             ]);
         }

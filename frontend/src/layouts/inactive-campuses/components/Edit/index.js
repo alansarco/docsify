@@ -45,6 +45,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       };
 
       const handleCancel = () => {
+            ReloadTable();
             HandleRendering(1);
       };
             

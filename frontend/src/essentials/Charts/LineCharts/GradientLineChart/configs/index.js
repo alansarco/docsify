@@ -34,7 +34,7 @@ function configs(labels, datasets) {
         y: {
           title: {
             display: true,
-            text: 'POPULATION',
+            text: 'INCOME',
             font: {
               size: 14,
               family: typography.fontFamily,

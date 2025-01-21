@@ -11,9 +11,14 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
+use App\Mail\CampusAddedEmail;
+use App\Mail\CampusRenewEmail;
 use App\Models\AdminLog;
+use App\Models\App_Info;
 use App\Models\Client;
 use App\Models\LicenseKey;
+use App\Models\SystemIncome;
+use Illuminate\Support\Facades\Mail;
 
 class CampusController extends Controller
 {
@@ -174,6 +179,12 @@ class CampusController extends Controller
                 ]);
 
             if($add) {
+                $data = $request->clientid;
+                $adminInfo = App_Info::first();
+                $otpSent = false;
+                if($adminInfo->notify_campus_add == 1) {
+                    $otpSent = Mail::to($request->client_email)->send(new CampusAddedEmail($data));
+                }
                 AdminLog::create([
                     'module' => 'Campus',
                     'action' => 'ADD',
@@ -186,6 +197,18 @@ class CampusController extends Controller
                     'license_date_use' => Carbon::today(),
                     'updated_by' => $authUser->fullname,
                 ]);
+                SystemIncome::create([
+                    'price' => $chekLicense->license_price ?? 0,
+                    'year_sold' => date('Y'), 
+                    'sold_to' => $request->clientid,
+                    'created_by' => $authUser->fullname,
+                ]);
+                if($otpSent) {
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Campus added successfully and email notification has been sent!'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 200,
                     'message' => 'Campus added successfully!'
@@ -300,22 +323,70 @@ class CampusController extends Controller
                         $pictureBanner = file_get_contents($file->getRealPath()); // Get the file content as a string
                         $updateData['client_banner'] = $pictureBanner;
                     }
+                    $existingKeys = Client::where('clientid', $request->clientid)->first();
+                    $changes = [];
 
+                    // Compare all fields except those related to pictures
+                    foreach ($updateData as $key => $value) {
+                        if (($key !== 'client_logo' && $key !== 'client_banner') && isset($existingKeys[$key]) && $existingKeys[$key] != $value) {
+                            $changes[$key] = [
+                                'old' => $existingKeys[$key],
+                                'new' => $value
+                            ];
+                        }
+                    }
                     $update = Client::where('clientid', $request->clientid)->update($updateData);
     
                     if($update) {
-                        AdminLog::create([
-                            'module' => 'Campus',
-                            'action' => 'UPDATE',
-                            'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name,
-                            'created_by' => $authUser->fullname,
-                        ]);
+                        if (!empty($changes)) {
+                            AdminLog::create([
+                                'module' => 'Campus',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the following changes: ' . json_encode($changes),
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
+                        else if($pictureBanner || $pictureLogo) {
+                            if($pictureBanner && $pictureLogo) {
+                                AdminLog::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner and logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            else if($pictureBanner) {
+                                AdminLog::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            else if($pictureLogo) {
+                                AdminLog::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            
+                        }
                         LicenseKey::where('license_key', $request->new_license_key)
                         ->update([
                             'license_client' => $request->clientid,
                             'license_date_use' => Carbon::today(),
                             'updated_by' => $authUser->fullname,
                         ]);
+                        if($valid_license) {
+                            SystemIncome::create([
+                                'price' => $chekLicense->license_price ?? 0,
+                                'year_sold' => date('Y'), 
+                                'sold_to' => $request->clientid,
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
                         return response()->json([
                             'status' => 200,
                             'message' => 'Campus updated successfully!'
@@ -397,6 +468,12 @@ class CampusController extends Controller
                     $update = Client::where('clientid', $request->clientid)->update($updateData);
     
                     if($update) {
+                        $data = $request->clientid;
+                        $adminInfo = App_Info::first();
+                        $otpSent = false;
+                        if($adminInfo->notify_campus_renew == 1) {
+                            $otpSent = Mail::to($campusExist->client_email)->send(new CampusRenewEmail($data));
+                        }
                         AdminLog::create([
                             'module' => 'Campus',
                             'action' => 'UPDATE',
@@ -409,6 +486,18 @@ class CampusController extends Controller
                             'license_date_use' => Carbon::today(),
                             'updated_by' => $authUser->fullname,
                         ]);
+                        SystemIncome::create([
+                            'price' => $chekLicense->license_price ?? 0,
+                            'year_sold' => date('Y'), 
+                            'sold_to' => $request->clientid,
+                            'created_by' => $authUser->fullname,
+                        ]);
+                        if($otpSent) {
+                            return response()->json([
+                                'status' => 200,
+                                'message' => 'Campus license renewed successfully and email notification is sent to campus email!'
+                            ], 200);
+                        }
                         return response()->json([
                             'status' => 200,
                             'message' => 'Campus license renewed successfully!'

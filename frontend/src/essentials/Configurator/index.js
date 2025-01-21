@@ -72,10 +72,9 @@ function Configurator() {
         px={3}  
       >
         <SoftBox>
-          <SoftTypography variant="h5">Request Documents</SoftTypography>
+          <SoftTypography variant="h5">Notifications</SoftTypography>
           <SoftTypography variant="body2" color="text">
             {polls && polls.length > 0 ? "Active Request" : "No Active Request"}
-            
           </SoftTypography>
         </SoftBox>
 
@@ -97,17 +96,17 @@ function Configurator() {
       {polls && polls.length > 0 && polls.map((poll) => (
       <SoftBox key={poll.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
           <SoftBox display="flex">
-            <SoftTypography variant="h6">{poll.type}</SoftTypography>
-            <SoftBadge badgeContent={poll.req_status} variant="gradient" 
-              color={poll.status == 1 ? "success" : "warning"} size="sm" />
+            <SoftTypography variant="h6">{poll.fullname}</SoftTypography>
+            <SoftBadge badgeContent="mark as read" variant="gradient" 
+              color="info" size="sm" />
           </SoftBox>
           <SoftBox display="flex">
             <SoftTypography variant="h6" color="secondary" className="text-xxs">{poll.username}</SoftTypography>
             {/* contained */}
           </SoftBox>
           <SoftBox mt={1}>
-            <SoftTypography className="text-xxs" color="dark" ><b>Date Needed: </b>{poll.date_needed}</SoftTypography>
-            <SoftTypography className="text-xxs" color="dark" ><b>Date Requested: </b>{poll.created_date}</SoftTypography>
+            {/* <SoftTypography className="text-xxs" color="dark" ><b>Date Added: </b>{poll.created_date}</SoftTypography> */}
+            <SoftTypography className="text-xxs" color="dark" >{poll.created_date}</SoftTypography>
           </SoftBox> 
           
         </SoftBox>

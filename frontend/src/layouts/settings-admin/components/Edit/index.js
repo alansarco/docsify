@@ -1,11 +1,10 @@
 // React components
-import { Checkbox, Grid} from "@mui/material";
+import { Checkbox, Grid, Switch} from "@mui/material";
 import FixedLoading from "components/General/FixedLoading";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { statusSelect, years, genderSelect, currentDate } from "components/General/Utils";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
@@ -26,16 +25,16 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       };
       
       const initialState = {
-            clientid: DATA.clientid == null ? "" : DATA.clientid,
-            client_name: DATA.client_name == null ? "" : DATA.client_name,
-            client_acr: DATA.client_acr == null ? "" : DATA.client_acr,
-            client_email: DATA.client_email == null ? "" : DATA.client_email,
-            client_contact: DATA.client_contact == null ? "" : DATA.client_contact,
-            client_address: DATA.client_address == null ? "" : DATA.client_address,
-            license_key: DATA.license_key == null ? "" : DATA.license_key,
-            new_license_key: DATA.new_license_key == null ? "" : DATA.new_license_key,
-            client_logo: DATA.client_logo == null ? null : DATA.client_logo,
-            client_banner: DATA.client_banner == null ? null : DATA.client_banner,
+            system_id: DATA.system_id == null ? "" : DATA.system_id,
+            system_logo: DATA.logo == null ? null : DATA.logo,
+            system_contact: DATA.contact == null ? "" : DATA.contact,
+            system_email: DATA.email == null ? "" : DATA.email,
+            system_security_code: DATA.security_code == null ? "" : DATA.security_code,
+            system_admin_limit: DATA.superadmin_limit == null ? "" : DATA.superadmin_limit,
+            system_info: DATA.system_info == null ? "" : DATA.system_info,
+            notify_campus_add: DATA.notify_campus_add == 1 ? true : false,
+            notify_campus_renew: DATA.notify_campus_renew == 1 ? true : false,
+            notify_user_approve: DATA.notify_user_approve == 1 ? true : false,
             agreement: false,   
       };
 
@@ -47,7 +46,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             if (type === "checkbox") {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
-            else if (type === "file" && (name === "client_logo" || name === "client_banner")) {
+            else if (type === "file" && (name === "client_logo" || name === "client_banner" || name === "system_logo")) {
                   const file = files[0];
                   if (file && (file.type === "application/png" || 
                           file.type === "image/jpeg" ||
@@ -58,8 +57,11 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                     if(name === "client_logo") {
                           setFormData({ ...formData, client_logo: file });
                     }
-                    else {
+                    else if(name === "client_banner") {
                           setFormData({ ...formData, client_banner: file });
+                    }
+                    else {
+                          setFormData({ ...formData, system_logo: file });
                     }
                   } else {
                       toast.error("Only .png and .jpg images are allowed");
@@ -81,12 +83,12 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "clientid",
-                  "client_name",
-                  "client_acr",
-                  "client_email",
-                  "client_contact",
-                  "client_address",
+                  "system_id",
+                  "system_contact",
+                  "system_email",
+                  "system_security_code",
+                  "system_admin_limit",
+                  "system_info",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -103,26 +105,21 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                               }
                               else {  
                                     const data = new FormData();
-                                    data.append("clientid", formData.clientid);
-                                    data.append("client_name", formData.client_name);
-                                    data.append("client_acr", formData.client_acr);
-                                    data.append("client_email", formData.client_email);
-                                    data.append("client_contact", formData.client_contact);
-                                    data.append("client_address", formData.client_address);
-                                    data.append("client_logo", formData.client_logo);
-                                    data.append("client_banner", formData.client_banner);
-                                    data.append("license_key", formData.license_key);
-                                    data.append("new_license_key", formData.new_license_key);
-                                    const response = await axios.post(apiRoutes.updateCampus, data, {headers});
+                                    data.append("system_id", formData.system_id);
+                                    data.append("system_logo", formData.system_logo);
+                                    data.append("system_contact", formData.system_contact);
+                                    data.append("system_email", formData.system_email);
+                                    data.append("system_security_code", formData.system_security_code);
+                                    data.append("system_admin_limit", formData.system_admin_limit);
+                                    data.append("system_info", formData.system_info);
+                                    data.append("notify_campus_add", formData.notify_campus_add);
+                                    data.append("notify_campus_renew", formData.notify_campus_renew);
+                                    data.append("notify_user_approve", formData.notify_user_approve);
+                                    const response = await axios.post(apiRoutes.updateAdminSettings, data, {headers});
                                     if(response.data.status == 200) {
-                                          if(formData.license_key != formData.new_license_key && formData.new_license_key != '') {
-                                                setFormData((prevState) => ({
-                                                      ...prevState,
-                                                      license_key: formData.new_license_key, // Update license_key to new_license_key
-                                                }));
-                                          }
                                           toast.success(`${response.data.message}`, { autoClose: true });
                                           ReloadTable();
+                                          HandleRendering(1);
                                           UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
@@ -156,67 +153,61 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                         
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Campus Information    
-                                    </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
-                                          <input type="hidden" name="clientid" value={formData.clientid} size="small" /> 
-                                          <Grid item xs={12} md={6} lg={6} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Name:</SoftTypography>
+                                          <input type="hidden" name="system_id" value={formData.system_id} size="small" /> 
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Contact:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="client_name" value={formData.client_name} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Acronym:</SoftTypography>
+                                                <SoftInput name="system_contact" type="number" value={getN(formData.system_contact)} onChange={handleChange} size="small" />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Email:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="client_acr" value={formData.client_acr} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
+                                                <SoftInput name="system_email" type="email" value={formData.system_email} onChange={handleChange} size="small" />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Security Code:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="client_email" value={formData.client_email} onChange={handleChange} size="small" /> 
-                                          </Grid>   
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
+                                                <SoftInput name="system_security_code" value={formData.system_security_code} onChange={handleChange} size="small" />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Admin Limit:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="client_contact" value={getN(formData.client_contact)} onChange={handleChange} size="small" /> 
-                                          </Grid>   
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Address:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="client_address" value={formData.client_address} onChange={handleChange} size="small" /> 
-                                          </Grid>   
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftInput type="number" name="system_admin_limit" value={formData.system_admin_limit} onChange={handleChange} size="small" />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Logo:</SoftTypography>
                                                 <input
                                                       type="file"
-                                                      name="client_logo"
+                                                      name="system_logo"
                                                       accept="image/*"
                                                       className="form-control form-control-sm rounded-5 text-xs"
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Banner:</SoftTypography>
-                                                <input
-                                                      type="file"
-                                                      name="client_banner"
-                                                      accept="image/*"
-                                                      className="form-control form-control-sm rounded-5 text-xs"
-                                                      onChange={handleChange}
-                                                />
-                                          </Grid>  
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Current License Key:</SoftTypography>
-                                                <input disabled className="form-control form-control-sm text-secondary rounded-5"  name="license_key" value={formData.license_key.toUpperCase()} onChange={handleChange} />
-                                          </Grid>  
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">New License Key:</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  name="new_license_key" value={formData.new_license_key.toUpperCase()} onChange={handleChange} />
+                                          <Grid item xs={12} px={1}>
+                                                <SoftTypography variant="button" className="me-1">System Information:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <textarea name="system_info" value={formData.system_info} onChange={handleChange} className="form-control text-xs" rows="10"></textarea>
                                           </Grid>  
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
+                                                <Switch name="notify_campus_add" checked={formData.notify_campus_add} onChange={handleChange} />
+                                                <SoftTypography variant="button" className="me-1 ms-3">Notify campus when added? </SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(Campus will receive email notification once their institution is added to the server)</SoftTypography>
+                                          </Grid> 
+                                          <Grid item xs={12} pl={1}>
+                                                <Switch name="notify_campus_renew" checked={formData.notify_campus_renew} onChange={handleChange} />
+                                                <SoftTypography variant="button" className="me-1 ms-3">Notify campus when license renewed? </SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(Campus will receive email notification once their institution has renewed its license)</SoftTypography>
+                                          </Grid> 
+                                          <Grid item xs={12} pl={1}>
+                                                <Switch name="notify_user_approve" checked={formData.notify_user_approve} onChange={handleChange} />
+                                                <SoftTypography variant="button" className="me-1 ms-3">Notify user when account is approved? </SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(User will receive email notification once their account request has been approved)</SoftTypography>
+                                          </Grid> 
+                                          <Grid item xs={12} pl={1} mt={3}>
                                                 <Checkbox 
                                                       className={` ${formData.agreement ? '' : 'border-2 border-info'}`} 
                                                       name="agreement" 
