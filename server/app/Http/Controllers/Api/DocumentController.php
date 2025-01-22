@@ -23,6 +23,10 @@ class DocumentController extends Controller
         if($request->filter) {
             $query->where('doc_name', 'LIKE' , '%'.$request->filter.'%');
         }
+
+        if($request->status != '') {
+            $query->where('status', $request->status);
+        }
         
         $documents = $query->orderBy('created_at', 'DESC')->paginate(20);
 

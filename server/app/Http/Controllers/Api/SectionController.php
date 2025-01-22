@@ -33,6 +33,10 @@ class SectionController extends Controller
         if($request->filter) {
             $query->where('section_name', 'LIKE' , '%'.$request->filter.'%');
         }
+
+        if($request->status != '') {
+            $query->where('status', $request->status);
+        }
         
         $sections = $query->orderBy('created_at', 'DESC')->paginate(20);
 

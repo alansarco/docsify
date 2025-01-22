@@ -34,6 +34,7 @@ import { genderSelect } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTheme } from "@emotion/react";
+import { activeSelect } from "components/General/Utils";
 
 function Programs() {
     const currentFileName = "layouts/programs/index.js";
@@ -60,6 +61,7 @@ function Programs() {
 
     const initialState = {
         filter: "",
+        status: "",
     };
 
     const [formData, setFormData] = useState(initialState);
@@ -215,6 +217,17 @@ function Programs() {
                     <Grid container spacing={1} py={1} pb={2}>  
                         <Grid item xs={12}>
                             <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
+                            <SoftBox className="my-auto">
+                            <SoftTypography variant="button" className="me-1">Status:</SoftTypography>
+                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="status" value={formData.status} onChange={handleChange} >
+                                <option value="">-- Select --</option>
+                                {activeSelect && activeSelect.map((status) => (
+                                <option key={status.value} value={status.value}>
+                                  {status.desc}
+                                </option>
+                                ))}
+                            </select>
+                            </SoftBox>
                             <SoftInput 
                               className="my-3"
                               value={formData.filter}

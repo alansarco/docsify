@@ -33,6 +33,10 @@ class ProgramController extends Controller
         if($request->filter) {
             $query->where('program_name', 'LIKE' , '%'.$request->filter.'%');
         }
+
+        if($request->status != '') {
+            $query->where('status', $request->status);
+        }
         
         $programs = $query->orderBy('created_at', 'DESC')->paginate(20);
 
