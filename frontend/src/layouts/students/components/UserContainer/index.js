@@ -32,7 +32,7 @@ import { useStateContext } from "context/ContextProvider";
 import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading";
 
-function UserContainer({USER, HandleRendering, ReloadTable}) {
+function UserContainer({USER, HandleRendering, ReloadTable, SECTIONS, PROGRAMS}) {
   const currentFileName = "layouts/users/components/UserContainer/index.js";
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
@@ -89,7 +89,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
   useEffect(() => {
     if (reload) {
       setReload(true);
-      axios.get(apiRoutes.retrieveRepresentativeOne, { params: { username }, headers })
+      axios.get(apiRoutes.retrieveStudentOne, { params: { username }, headers })
         .then(response => {
           if (response.data.status === 200) {
             setUser(response.data.user);
@@ -182,7 +182,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
       </Card>
     </SoftBox>
     {menu === "profile" && <Information USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
-    {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} SECTIONS={SECTIONS} PROGRAMS={PROGRAMS} />}
     </>
   );
 }

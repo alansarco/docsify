@@ -97,7 +97,37 @@ function Table({ users, tablehead, HandleUSER, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.contact}    
+            {row.grade}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.section_name}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.program_acr}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.year_enrolled}    
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -120,17 +150,6 @@ function Table({ users, tablehead, HandleUSER, HandleRendering }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
             {row.last_online}
-          </SoftBox>
-          <SoftBox
-            className="px-2"
-            textAlign="left"
-            component="td"
-            fontSize={size.xs}
-            color="secondary" 
-            borderBottom={`${borderWidth[1]} solid ${light.main}`}
-            borderTop={`${borderWidth[1]} solid ${light.main}`}
-          >
-            {row.date_added}
           </SoftBox>
         </TableRow>
     )});

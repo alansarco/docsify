@@ -51,21 +51,6 @@ class LicenseController extends Controller
         }
     }
 
-    public function orgselect() {
-        $orgs = Document::get();
-
-            if($orgs->count() > 0) {
-                return response()->json([
-                    'orgs' => $orgs,
-                    'message' => 'Orgs retrieved!',
-                ]);
-            }   
-            else {
-                return response()->json([
-                    'message' => 'No orgs  found!'
-                ]);
-            }
-    }
     public function addlicense(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();

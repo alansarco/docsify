@@ -80,6 +80,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('updatestudent', [StudentController::class, 'updatestudent']);
         Route::get('deletestudent', [StudentController::class, 'deletestudent']);
         Route::get('retrievestudent', [StudentController::class, 'retrievestudent']);
+        Route::get('sectionselect', [StudentController::class, 'sectionselect']);
+        Route::get('programselect', [StudentController::class, 'programselect']);
     });
 
     Route::prefix('campuses')->group(function () {
@@ -98,7 +100,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('licenses')->group(function () {
         Route::post('/', [LicenseController::class, 'index']);
-        Route::get('orgselect', [LicenseController::class, 'orgselect']);
         Route::post('addlicense', [LicenseController::class, 'addlicense']);
         Route::get('deletelicense', [LicenseController::class, 'deletelicense']);
     });

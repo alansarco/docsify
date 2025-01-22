@@ -34,8 +34,7 @@ import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
-import { genderSelect } from "components/General/Utils";
-import { years } from "components/General/Utils";
+import { genderSelect, gradeSelect, years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';
@@ -55,6 +54,8 @@ function Students() {
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
     const [searchTriggered, setSearchTriggered] = useState(true);
+    const [fetchsections, setFetchSections] = useState([]);
+    const [fetchprograms, setFetchPrograms] = useState([]);
 
     const [reload, setReload] = useState(false);
 
@@ -63,8 +64,34 @@ function Students() {
         'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
     };
 
+    useEffect(() => {
+      axios.get(apiRoutes.sectionSelect, {headers})
+      .then(response => {
+        setFetchSections(response.data.sections);
+        passToSuccessLogs(response.data, currentFileName);
+      })
+      .catch(error => {
+        passToErrorLogs(`Sections not Fetched!  ${error}`, currentFileName);
+      });
+    }, []);
+
+    useEffect(() => {
+      axios.get(apiRoutes.programSelect, {headers})
+      .then(response => {
+        setFetchPrograms(response.data.programs);
+        passToSuccessLogs(response.data, currentFileName);
+      })
+      .catch(error => {
+        passToErrorLogs(`Sections not Fetched!  ${error}`, currentFileName);
+      });
+    }, []);
+
     const initialState = {
         clientid: clientprovider,
+        sections: "",
+        programs: "",
+        grade: "",
+        year_enrolled: "",
         filter: "",
         account_status: "",
         gender: "",
@@ -181,10 +208,10 @@ function Students() {
       <DashboardLayout>
         <DashboardNavbar RENDERNAV={rendering} /> 
           {USER && rendering == 2 ? 
-            <UserContainer USER={USER} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
+            <UserContainer USER={USER} HandleRendering={HandleRendering} ReloadTable={ReloadTable} SECTIONS={fetchsections} PROGRAMS={fetchprograms}/>       
           :
           rendering == 3 ?
-            <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
+            <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} SECTIONS={fetchsections} PROGRAMS={fetchprograms} />
         :
           <SoftBox p={2}>
             <SoftBox >   
@@ -197,7 +224,7 @@ function Students() {
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
                   <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Registrar
+                    <Icon>add</Icon> Add Students
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
@@ -245,6 +272,50 @@ function Students() {
                                   {gender.desc}
                                 </option>
                               ))}
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Grade:</SoftTypography>
+                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border"
+                              name="grade"
+                              value={formData.grade}
+                              onChange={handleChange}
+                              >
+                              <option value="">-- Select --</option>
+                              {gradeSelect && gradeSelect.map((grade) => (
+                                <option key={grade.value} value={grade.value}>
+                                  {grade.desc}
+                                </option>
+                              ))}
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Year Ernolled:</SoftTypography>
+                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border"
+                              name="year_enrolled"
+                              value={formData.year_enrolled}
+                              onChange={handleChange}
+                              >
+                              <option value="">-- Select --</option>
+                              {years && years.map((year) => (
+                                <option key={year} value={year}>
+                                  {year}
+                                </option>
+                              ))}
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Sections:</SoftTypography>
+                            <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="sections" value={formData.sections} onChange={handleChange} >
+                            <option value="">-- Select --</option>
+                                  {fetchsections && fetchsections.map((sec) => (
+                                  <option key={sec.section_id} value={sec.section_id}>
+                                        {sec.section_name}
+                                  </option>
+                                  ))}
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Programs:</SoftTypography>
+                            <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="programs" value={formData.programs} onChange={handleChange} >
+                            <option value="">-- Select --</option>
+                                  {fetchprograms && fetchprograms.map((prog) => (
+                                  <option key={prog.program_id} value={prog.program_id}>
+                                        {prog.program_acr}
+                                  </option>
+                                  ))}
                             </select>
                             </SoftBox>
                             <SoftInput 

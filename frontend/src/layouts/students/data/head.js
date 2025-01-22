@@ -20,7 +20,22 @@ export const tablehead = [
     align: "left",
   },
   {
-    name: "contact",
+    name: "grade",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "section",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "programs",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "year enrolled",
     padding: "px-2",
     align: "left",
   },
@@ -31,11 +46,6 @@ export const tablehead = [
   },
   {
     name: "last online",
-    padding: "px-2",
-    align: "left",
-  },
-  {
-    name: "date added",
     padding: "ps-2",
     align: "left",
   },

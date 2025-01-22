@@ -13,8 +13,9 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { getLRN, gradeSelect } from "components/General/Utils";
 
-function Add({HandleRendering, ReloadTable }) {
+function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
       const currentFileName = "layouts/representatives/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token, clientprovider} = useStateContext();  
@@ -35,6 +36,9 @@ function Add({HandleRendering, ReloadTable }) {
             contact: "",
             birthdate: "",
             email: "",
+            section: "",
+            program: "",
+            grade: "",
             id_picture: null,
             agreement: false,   
       };
@@ -84,6 +88,9 @@ function Add({HandleRendering, ReloadTable }) {
                   "contact",
                   "birthdate",
                   "address",
+                  "grade",
+                  "section",
+                  "program",
                   "email",
             ];
 
@@ -110,8 +117,11 @@ function Add({HandleRendering, ReloadTable }) {
                                     data.append("contact", formData.contact);
                                     data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
+                                    data.append("grade", formData.grade);
+                                    data.append("section", formData.section);
+                                    data.append("program", formData.program);
                                     data.append("email", formData.email);
-                                    const response = await axios.post(apiRoutes.addRegistrar, data, {headers});
+                                    const response = await axios.post(apiRoutes.addStudent, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
                                           setFormData(initialState);
@@ -145,7 +155,6 @@ function Add({HandleRendering, ReloadTable }) {
                         <SoftTypography fontWeight="bold" className="text-xs">
                               Please fill in the required fields. Rest assured that data is secured.     
                         </SoftTypography> 
-                        
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
@@ -153,9 +162,9 @@ function Add({HandleRendering, ReloadTable }) {
                                     </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Username/Employee ID:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1"> Username/LRN:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.username} onChange={handleChange} size="small"
+                                                <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={getLRN(formData.username)} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>
                                     </Grid>    
@@ -186,6 +195,42 @@ function Add({HandleRendering, ReloadTable }) {
                                                       {genderSelect && genderSelect.map((gender) => (
                                                       <option key={gender.value} value={gender.value}>
                                                             {gender.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Grade: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="grade" value={formData.grade} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {gradeSelect && gradeSelect.map((grade) => (
+                                                      <option key={grade.value} value={grade.value}>
+                                                            {grade.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Sections: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="section" value={formData.section} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {SECTIONS && SECTIONS.map((section) => (
+                                                      <option key={section.section_id} value={section.section_id}>
+                                                            {section.section_name}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Programs: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="program" value={formData.program} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {PROGRAMS && PROGRAMS.map((prog) => (
+                                                      <option key={prog.program_id} value={prog.program_id}>
+                                                            {prog.program_acr}
                                                       </option>
                                                       ))}
                                                 </select>

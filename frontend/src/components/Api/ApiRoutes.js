@@ -37,6 +37,11 @@ export const apiRoutes = {
     retrieveRegistrarOne: `${mainRoute}/api/registrars/retrieveregistrar`,
 
     studentRetrieve: `${mainRoute}/api/students`,
+    addStudent: `${mainRoute}/api/students/addstudent`,
+    sectionSelect: `${mainRoute}/api/students/sectionselect`,
+    programSelect: `${mainRoute}/api/students/programselect`,
+    retrieveStudentOne: `${mainRoute}/api/students/retrievestudent`,
+    updateStudent: `${mainRoute}/api/students/updatestudent`,
 
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,

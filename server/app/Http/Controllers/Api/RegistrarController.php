@@ -279,6 +279,14 @@ class RegistrarController extends Controller
                             ];
                         }
                     }
+
+                    $userInfo = User::where('username', $request->username)->first();
+                    $data = $request->username;
+
+                    if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
+                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                    }
+                    
                     $update = User::where('username', $request->username)->update($updateData);
                     
                     if($update) {

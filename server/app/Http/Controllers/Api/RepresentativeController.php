@@ -280,6 +280,13 @@ class RepresentativeController extends Controller
                         }
                     }
                     $update = User::where('username', $request->username)->update($updateData);
+
+                    $userInfo = User::where('username', $request->username)->first();
+                    $data = $request->username;
+
+                    if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
+                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                    }
                     
                     if($update) {
                         if (!empty($changes)) {

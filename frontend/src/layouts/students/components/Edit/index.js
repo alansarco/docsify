@@ -13,8 +13,9 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { gradeSelect, years } from "components/General/Utils";
 
-function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
+function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROGRAMS }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token, clientprovider} = useStateContext();  
@@ -23,7 +24,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-
       const initialState = {
             username: USER.username,
             clientid: clientprovider,
@@ -32,6 +32,10 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             last_name: USER.last_name == null ? "" : USER.last_name,
             address: USER.address == null ? "" : USER.address,
             gender: USER.gender == null ? "" : USER.gender,
+            grade: USER.grade == null ? "" : USER.grade,
+            section: USER.section == null ? "" : USER.section,
+            program: USER.program == null ? "" : USER.program,
+            year_enrolled: USER.year_enrolled == null ? "" : USER.year_enrolled,
             email: USER.email == null ? "" : USER.email,
             contact: USER.contact == null ? "" : USER.contact,
             birthdate: USER.birthdate == null ? "" : USER.birthdate,
@@ -85,6 +89,10 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                   "birthdate",
                   "address",
                   "email",
+                  "grade",
+                  "section",
+                  "year_enrolled",
+                  "program",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -113,10 +121,13 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("address", formData.address);
                                     data.append("email", formData.email);
                                     data.append("account_status", formData.account_status);
-                                    const response = await axios.post(apiRoutes.updateRegistrar, data, {headers});
+                                    data.append("grade", formData.grade);
+                                    data.append("section", formData.section);
+                                    data.append("program", formData.program);
+                                    data.append("year_enrolled", formData.year_enrolled);
+                                    const response = await axios.post(apiRoutes.updateStudent, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          // setFormData(initialState);
                                           ReloadTable();
                                           UpdateLoading(true);
                                     } else {
@@ -178,6 +189,55 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                                       {genderSelect && genderSelect.map((gender) => (
                                                       <option key={gender.value} value={gender.value}>
                                                             {gender.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Grade: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="grade" value={formData.grade} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {gradeSelect && gradeSelect.map((grade) => (
+                                                      <option key={grade.value} value={grade.value}>
+                                                            {grade.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Year Enrolled: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {years && years.map((year) => (
+                                                      <option key={year} value={year}>
+                                                            {year}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Sections: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="section" value={formData.section} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {SECTIONS && SECTIONS.map((section) => (
+                                                      <option key={section.section_id} value={section.section_id}>
+                                                            {section.section_name}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Programs: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="program" value={formData.program} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {PROGRAMS && PROGRAMS.map((prog) => (
+                                                      <option key={prog.program_id} value={prog.program_id}>
+                                                            {prog.program_acr}
                                                       </option>
                                                       ))}
                                                 </select>

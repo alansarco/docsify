@@ -18,6 +18,8 @@ use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Client;
 use App\Models\LogRepresentative;
+use App\Models\StudentProgram;
+use App\Models\StudentSection;
 use Illuminate\Support\Facades\Mail;
 
 class StudentController extends Controller
@@ -25,12 +27,16 @@ class StudentController extends Controller
     // Get all the list of Student
     public function index(Request $request) {
         $clientidFilter = $request->clientid ?? '';
+        $sectionFilter = $request->sections ?? '';
+        $programFilter = $request->programs ?? '';
+        $gradeFilter = $request->grade ?? '';
+        $enrolledFilter = $request->year_enrolled ?? '';
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
 
         // Call the stored procedure
-        $users = DB::select('CALL GET_USERS_REGISTRAR(?, ?, ?, ?)', [$clientidFilter, $filter, $genderFilter, $accountStatus]);
+        $users = DB::select('CALL GET_USERS_STUDENT(?, ?, ?, ?, ?, ?, ?, ?)', [$clientidFilter, $sectionFilter, $programFilter, $gradeFilter, $enrolledFilter, $filter, $genderFilter, $accountStatus]);
 
         // Convert the results into a collection
         $usersCollection = collect($users);
@@ -76,6 +82,9 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'clientid' => 'required',
             'email' => 'required|email',
+            'grade' => 'required',
+            'section' => 'required',
+            'program' => 'required',
             'username' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
@@ -119,6 +128,9 @@ class StudentController extends Controller
                     'last_name' => strtoupper($request->last_name),
                     'password' => $defaultPassword,   
                     'gender' => $request->gender,   
+                    'grade' => $request->grade,   
+                    'section' => $request->section,   
+                    'program' => $request->program,   
                     'email' => $request->email,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
@@ -126,6 +138,7 @@ class StudentController extends Controller
                     'id_picture' => $pictureData,   
                     'access_level' => 5,   
                     'birthdate' => $request->birthdate,  
+                    'year_enrolled' => date('Y'),  
                     'account_status' => 1,  
                     'created_by' => $authUser->fullname,
                     'updated_by' => $authUser->fullname,
@@ -179,7 +192,7 @@ class StudentController extends Controller
         }
     }
 
-    public function updatstudent(Request $request) {
+    public function updatestudent(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -196,6 +209,10 @@ class StudentController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'gender' => 'required',
+            'grade' => 'required',
+            'section' => 'required',
+            'program' => 'required',
+            'year_enrolled' => 'required',
             'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
             'birthdate' => 'required',   
             'address' => 'required',   
@@ -252,6 +269,10 @@ class StudentController extends Controller
                         'middle_name' => strtoupper($request->middle_name),
                         'last_name' => strtoupper($request->last_name),
                         'gender' => $request->gender,
+                        'grade' => $request->grade,
+                        'section' => $request->section,
+                        'program' => $request->program,
+                        'year_enrolled' => $request->year_enrolled,
                         'email' => $request->email,
                         'address' => $request->address,
                         'contact' => $request->contact,
@@ -279,6 +300,13 @@ class StudentController extends Controller
                             ];
                         }
                     }
+                    $userInfo = User::where('username', $request->username)->first();
+                    $data = $request->username;
+
+                    if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
+                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                    }
+
                     $update = User::where('username', $request->username)->update($updateData);
                     
                     if($update) {
@@ -363,10 +391,17 @@ class StudentController extends Controller
         }
 
         $user = User::leftJoin('clients', 'users.clientid', '=', 'clients.clientid')
+        ->leftJoin('students_section', 'users.section', '=', 'students_section.section_id')
+        ->leftJoin('students_program', 'users.program', '=', 'students_program.program_id')
         ->select('users.*',
             'clients.client_name',
             'clients.client_acr',
             'clients.clientid',
+            'students_section.section_id',
+            'students_section.section_name',
+            'students_program.program_id',
+            'students_program.program_name',
+            'students_program.program_acr',
             DB::raw("TO_BASE64(users.id_picture) as id_picture"),
             DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
             DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
@@ -390,6 +425,42 @@ class StudentController extends Controller
             return response()->json([
                 'user' => $user,
                 'message' => "Data not found!"
+            ]);
+        }
+    }
+    
+    public function sectionselect() {
+        $sections = StudentSection::select('section_id', 'section_name')->get();
+
+        if($sections) {
+            return response()->json([
+                'status' => 200,
+                'sections' => $sections,
+                'message' => 'Sections retrieved!',
+            ]);
+        }   
+        else {
+            return response()->json([
+                'sections' => $sections,
+                'message' => 'No sections  found!'
+            ]);
+        }
+    }
+
+    public function programselect() {
+        $programs = StudentProgram::select('program_id', 'program_name', 'program_acr')->get();
+
+        if($programs) {
+            return response()->json([
+                'status' => 200,
+                'programs' => $programs,
+                'message' => 'Sections retrieved!',
+            ]);
+        }   
+        else {
+            return response()->json([
+                'programs' => $programs,
+                'message' => 'No sections  found!'
             ]);
         }
     }

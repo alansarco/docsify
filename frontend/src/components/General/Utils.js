@@ -3,6 +3,7 @@ export const actionSelect = [
       { value: "DELETE", desc: "DELETE" },
       { value: "UPDATE", desc: "UPDATE" },
 ];
+
 export const moduleSelect = [
       { value: "Accounts", desc: "Accounts" },
       { value: "Campus", desc: "Campus" },
@@ -128,4 +129,20 @@ export function getN(amount) {
       }
       return amount;
 }
+
+export function getLRN(amount) {
+      // Prevent input if length is already 12
+      if (amount.length > 12) {
+          return amount.slice(0, 12); // Trim to 12 characters if exceeded
+      }
+      // Validate if it's not a number or empty
+      if (isNaN(amount) || amount === '') {
+          return '';
+      }
+      // Remove leading zero if it's not a decimal
+      if (amount.startsWith('0') && amount.length > 1 && !amount.includes('.')) {
+          return amount.slice(1);
+      }
+      return amount;
+  }
   
