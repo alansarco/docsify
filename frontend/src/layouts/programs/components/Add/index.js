@@ -25,7 +25,8 @@ function Add({HandleRendering, ReloadTable }) {
       };
       
       const initialState = {
-            section_name: "",
+            program_name: "",
+            program_acr: "",
             agreement: false,   
       };
 
@@ -51,7 +52,8 @@ function Add({HandleRendering, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "section_name",
+                  "program_name",
+                  "program_acr",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -66,7 +68,7 @@ function Add({HandleRendering, ReloadTable }) {
                                     toast.error(messages.prohibit, { autoClose: true });
                               }
                               else {  
-                                    const response = await axios.post(apiRoutes.addSection, formData, {headers});
+                                    const response = await axios.post(apiRoutes.addProgram, formData, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
                                           setFormData(initialState);
@@ -77,7 +79,7 @@ function Add({HandleRendering, ReloadTable }) {
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error adding Section!", { autoClose: true });
+                              toast.error("Error adding Program!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
@@ -102,13 +104,19 @@ function Add({HandleRendering, ReloadTable }) {
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Section Information    
+                                          Program Information    
                                     </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="section_name" value={formData.section_name.toUpperCase()} onChange={handleChange} size="small"
+                                                <SoftInput name="program_name" value={formData.program_name} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>    
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Acronym:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="program_acr" value={formData.program_acr.toUpperCase()} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>    
                                     </Grid>    

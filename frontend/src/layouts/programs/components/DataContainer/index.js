@@ -33,7 +33,7 @@ import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading";
 
 function DataContainer({DATA, HandleRendering, ReloadTable}) {
-  const currentFileName = "layouts/users/components/DataContainer/index.js";
+  const currentFileName = "layouts/programs/components/DataContainer/index.js";
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -89,7 +89,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
   useEffect(() => {
     if (reload) {
       setReload(true);
-      axios.get(apiRoutes.retrieveSectionOne, { params: { data }, headers })
+      axios.get(apiRoutes.retrieveProgramOne, { params: { data }, headers })
         .then(response => {
           if (response.data.status === 200) {
             setData(response.data.dataRetrieved);
@@ -156,10 +156,10 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
           <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                {Data.section_name}{" "}
+                {Data.program_name}{" "}
               </SoftTypography>
               <SoftTypography variant="button" color="text" fontWeight="medium">
-                {Data.section_id}{" "}
+                {Data.program_id}{" "}
               </SoftTypography>
             </SoftBox>
           </Grid>

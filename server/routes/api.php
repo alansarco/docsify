@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
@@ -91,6 +92,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrievesection', [SectionController::class, 'retrievesection']);
         Route::get('deletesection', [SectionController::class, 'deletesection']);
         Route::post('updatesection', [SectionController::class, 'updatesection']);
+    });
+    
+    Route::prefix('programs')->group(function () {
+        Route::post('/', [ProgramController::class, 'index']);
+        Route::post('addprogram', [ProgramController::class, 'addprogram']);
+        Route::get('retrieveprogram', [ProgramController::class, 'retrieveprogram']);
+        Route::get('deleteprogram', [ProgramController::class, 'deleteprogram']);
+        Route::post('updateprogram', [ProgramController::class, 'updateprogram']);
     });
 
     Route::prefix('campuses')->group(function () {

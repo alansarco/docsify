@@ -18,7 +18,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
   const handleSubmit = (row) => {
-    HandleDATA(row.section_id);
+    HandleDATA(row.program_id);
     HandleRendering(2);
   }
 
@@ -42,7 +42,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
 
   const renderRows = DATA.map((row) => {
     return (
-      <TableRow key={row.section_id}>
+      <TableRow key={row.program_id}>
           <SoftBox
             className="pe-2 text-decoration-underline cursor-pointer fw-bold"
             component="td"
@@ -57,7 +57,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
               },
             }}  
           >
-            {row.section_id}
+            {row.program_id}
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -67,7 +67,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.section_name}
+            {row.program_name}
           </SoftBox>      
           <SoftBox
             className="px-2"

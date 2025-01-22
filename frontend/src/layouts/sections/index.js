@@ -20,11 +20,11 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import DataContainer from "layouts/programs/components/DataContainer";
-import Add from "layouts/programs/components/Add";
+import DataContainer from "layouts/sections/components/DataContainer";
+import Add from "layouts/sections/components/Add";
 
-import Table from "layouts/programs/data/table";
-import { tablehead } from "layouts/programs/data/head";  
+import Table from "layouts/sections/data/table";
+import { tablehead } from "layouts/sections/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
@@ -35,8 +35,8 @@ import { statusSelect } from "components/General/Utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTheme } from "@emotion/react";
 
-function Programs() {
-    const currentFileName = "layouts/programs/index.js";
+function Sections() {
+    const currentFileName = "layouts/sections/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -260,4 +260,4 @@ function Programs() {
   );
 }
 
-export default Programs;
+export default Sections;

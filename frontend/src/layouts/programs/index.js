@@ -20,11 +20,11 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import DataContainer from "layouts/sections/components/DataContainer";
-import Add from "layouts/sections/components/Add";
+import DataContainer from "layouts/programs/components/DataContainer";
+import Add from "layouts/programs/components/Add";
 
-import Table from "layouts/sections/data/table";
-import { tablehead } from "layouts/sections/data/head";  
+import Table from "layouts/programs/data/table";
+import { tablehead } from "layouts/programs/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
@@ -35,8 +35,8 @@ import { statusSelect } from "components/General/Utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTheme } from "@emotion/react";
 
-function Sections() {
-    const currentFileName = "layouts/sections/index.js";
+function Programs() {
+    const currentFileName = "layouts/programs/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -93,9 +93,9 @@ function Sections() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.programRetrieve + '?page=' + 1, formData, {headers})
           .then(response => {
-            setFetchdata(response.data.sections);
+            setFetchdata(response.data.programs);
             passToSuccessLogs(response.data, currentFileName);
             setReload(false);
             setFetching("No data Found!")
@@ -109,9 +109,9 @@ function Sections() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.sectionRetrieve + '?page=' + page, formData, {headers})
+        axios.post(apiRoutes.programRetrieve + '?page=' + page, formData, {headers})
         .then(response => {
-        setFetchdata(response.data.sections);
+        setFetchdata(response.data.programs);
         passToSuccessLogs(response.data, currentFileName);
         setReload(false);      
         })
@@ -125,9 +125,9 @@ function Sections() {
         e.preventDefault(); 
         setReload(true);      
         try {
-            const response = await axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers});
+            const response = await axios.post(apiRoutes.programRetrieve + '?page=' + 1, formData, {headers});
             if(response.data.status == 200) {
-                setFetchdata(response.data.sections);
+                setFetchdata(response.data.programs);
             }
             else {
                 setFetchdata([]);
@@ -149,9 +149,9 @@ function Sections() {
     setReload(true);      
 
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.sectionRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.programRetrieve + '?page=' + nextPage, formData, {headers})
     .then(response => {
-      setFetchdata(response.data.sections);
+      setFetchdata(response.data.programs);
       passToSuccessLogs(response.data, currentFileName);
       setReload(false);      
     })
@@ -182,14 +182,14 @@ function Sections() {
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Section List</SoftTypography>
+                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Program List</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
                   <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Section
+                    <Icon>add</Icon> Add Program
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
@@ -260,4 +260,4 @@ function Sections() {
   );
 }
 
-export default Sections;
+export default Programs;

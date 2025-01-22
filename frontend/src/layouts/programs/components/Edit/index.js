@@ -25,8 +25,9 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       };
       
       const initialState = {
-            section_id: DATA.section_id,
-            section_name: DATA.section_name == null ? "" : DATA.section_name,
+            program_id: DATA.program_id,
+            program_name: DATA.program_name == null ? "" : DATA.program_name,
+            program_acr: DATA.program_acr == null ? "" : DATA.program_acr,
             agreement: false,   
       };
 
@@ -53,8 +54,9 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "section_id",
-                  "section_name",
+                  "program_id",
+                  "program_name",
+                  "program_acr",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -71,7 +73,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                               }
                               else {  
                                     
-                                    const response = await axios.post(apiRoutes.updateSection, formData, {headers});
+                                    const response = await axios.post(apiRoutes.updateProgram, formData, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
                                           // setFormData(initialState);
@@ -116,7 +118,13 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="section_name" value={formData.section_name.toUpperCase()} onChange={handleChange} size="small"
+                                                <SoftInput name="program_name" value={formData.program_name} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>    
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Acronym:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="program_acr" value={formData.program_acr.toUpperCase()} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>    
                                     </Grid>    

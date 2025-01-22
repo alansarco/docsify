@@ -37,7 +37,7 @@ import AdminSettings from "layouts/settings-admin";
 import Registrars from "layouts/registrars";
 import Sections from "layouts/sections";
 import LogRepresentative from "layouts/log-representative";
-import Programs from "layouts/sections";
+import Programs from "layouts/programs";
 
 // Accept access as a parameter
 const routes = (access) => [

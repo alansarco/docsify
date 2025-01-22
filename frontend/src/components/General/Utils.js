@@ -9,6 +9,7 @@ export const moduleSelect = [
       { value: "Campus", desc: "Campus" },
       { value: "License", desc: "License" },
       { value: "Sections", desc: "Sections" },
+      { value: "Programs", desc: "Programs" },
       { value: "Settings", desc: "Settings" },
 ];
 

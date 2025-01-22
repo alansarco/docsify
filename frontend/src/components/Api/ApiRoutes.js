@@ -49,6 +49,12 @@ export const apiRoutes = {
     deleteSection: `${mainRoute}/api/sections/deletesection`,
     updateSection: `${mainRoute}/api/sections/updatesection`,
 
+    programRetrieve: `${mainRoute}/api/programs`,
+    addProgram: `${mainRoute}/api/programs/addprogram`,
+    retrieveProgramOne: `${mainRoute}/api/programs/retrieveprogram`,
+    deleteProgram: `${mainRoute}/api/programs/deleteprogram`,
+    updateProgram: `${mainRoute}/api/programs/updateprogram`,
+
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
     inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,

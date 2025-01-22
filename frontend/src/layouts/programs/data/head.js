@@ -1,11 +1,11 @@
 export const tablehead = [
   {
-    name: "section id",
+    name: "program id",
     padding: "pe-2",
     align: "left",
   },
   {
-    name: "section name",
+    name: "program name",
     padding: "px-2",
     align: "left",
   },

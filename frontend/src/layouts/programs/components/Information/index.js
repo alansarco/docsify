@@ -91,7 +91,8 @@ function Information({DATA, HandleRendering, ReloadTable}) {
               <ProfileInfoCard
                 title="Section Information"
                 info={{
-                  Name: DATA.section_name ?? " ",
+                  Name: DATA.program_name ?? " ",
+                  Acronym: DATA.program_acr ?? " ",
                   Total_Students: DATA.studentCount ?? " ",
                   Updated_Date: DATA.updated_date ?? " ",
                   Updated_By: DATA.updated_by ?? " ",
