@@ -63,6 +63,7 @@ export const apiRoutes = {
     deleteLicense: `${mainRoute}/api/licenses/deletelicense`,
 
     adminlogsRetrieve: `${mainRoute}/api/logs/adminlogs`,
+    representativelogsRetrieve: `${mainRoute}/api/logs/representativelogs`,
 
     adminSettings: `${mainRoute}/api/settings/adminsettings`,
     adminSettingsRetrieved: `${mainRoute}/api/settings/adminsettingsretrieved`,

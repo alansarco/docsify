@@ -176,12 +176,14 @@ class SectionController extends Controller
         $update = StudentSection::where('section_id', $request->section_id)->update($updateData);
 
         if($update) {
-            LogRepresentative::create([
-                'module' => 'Sections',
-                'action' => 'UPDATE',
-                'details' => $authUser->fullname .' updated section '.$request->license_key,
-                'created_by' => $authUser->fullname,
-            ]);
+            if (!empty($changes)) {
+                LogRepresentative::create([
+                    'module' => 'Sections',
+                    'action' => 'UPDATE',
+                    'details' => $authUser->fullname .' updated section '.$request->section_id. ' with the following changes: ' . json_encode($changes),
+                    'created_by' => $authUser->fullname,
+                ]);
+            }
             return response()->json([
                 'status' => 200,
                 'message' => 'Section updated successfully!'

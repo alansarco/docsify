@@ -36,6 +36,7 @@ import LogAdmin from "layouts/log-admin";
 import AdminSettings from "layouts/settings-admin";
 import Registrars from "layouts/registrars";
 import Sections from "layouts/sections";
+import LogRepresentative from "layouts/log-representative";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -242,7 +243,7 @@ const routes = (access) => [
     key: "representative-logs",
     route: "/representative-logs",
     icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <LogRepresentative />,
     noCollapse: true,
   },
   access == 10 && {

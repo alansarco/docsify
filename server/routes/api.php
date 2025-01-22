@@ -105,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('logs')->group(function () {
         Route::post('adminlogs', [LogController::class, 'adminlogs']);
+        Route::post('representativelogs', [LogController::class, 'representativelogs']);
     });
 
     Route::prefix('licenses')->group(function () {
