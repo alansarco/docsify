@@ -13,10 +13,9 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
-import { useLocation, useNavigate } from "react-router-dom";
 
-function Edit({USER, UpdateLoading}) {
-      const currentFileName = "layouts/profile/components/Edit/index.js";
+function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
+      const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 
@@ -24,20 +23,10 @@ function Edit({USER, UpdateLoading}) {
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-
-      const location = useLocation();
-      const navigate = useNavigate();
       
-      const handleCancel = () => {
-            navigate(location.state?.from);
-      };
-            
       const initialState = {
-            username: USER.username,
-            address: USER.address == null ? "" : USER.address,
-            email: USER.email == null ? "" : USER.email,
-            contact: USER.contact == null ? "" : USER.contact,
-            account_status: USER.account_status == null ? "" : USER.account_status, 
+            section_id: DATA.section_id,
+            section_name: DATA.section_name == null ? "" : DATA.section_name,
             agreement: false,   
       };
 
@@ -49,34 +38,23 @@ function Edit({USER, UpdateLoading}) {
             if (type === "checkbox") {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
-            else if (type === "file" && name === "id_picture") {
-                  const file = files[0];
-                  if (file && (file.type === "application/png" || 
-                          file.type === "image/jpeg" ||
-                          file.name.endsWith(".jpg") ||
-                          file.name.endsWith(".jpeg") ||
-                          file.name.endsWith(".png")
-                    )) {
-                      setFormData({ ...formData, id_picture: file });
-                  } else {
-                      toast.error("Only .png and .jpg images are allowed");
-                      e.target.value = null;
-                  }
-            }  
             else {
                   setFormData({ ...formData, [name]: value });
             }
       };
 
+      const handleCancel = () => {
+            HandleRendering(1);
+            ReloadTable();
+      };
+            
       const handleSubmit = async (e) => {
             e.preventDefault(); 
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "username",
-                  "contact",
-                  "address",
-                  "email",
+                  "section_id",
+                  "section_name",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -92,15 +70,12 @@ function Edit({USER, UpdateLoading}) {
                                     toast.error(messages.prohibit, { autoClose: true });
                               }
                               else {  
-                                    const data = new FormData();
-                                    data.append("username", formData.username);
-                                    data.append("id_picture", formData.id_picture);
-                                    data.append("contact", formData.contact);
-                                    data.append("address", formData.address);
-                                    data.append("email", formData.email);
-                                    const response = await axios.post(apiRoutes.updateProfile, data, {headers});
+                                    
+                                    const response = await axios.post(apiRoutes.updateSection, formData, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
+                                          // setFormData(initialState);
+                                          ReloadTable();
                                           UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
@@ -108,7 +83,7 @@ function Edit({USER, UpdateLoading}) {
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error updating profile!", { autoClose: true });
+                              toast.error("Error updating section!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
@@ -134,37 +109,17 @@ function Edit({USER, UpdateLoading}) {
                         
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Personal Information    
+                              <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
+                                          Section Information    
                                     </SoftTypography>
-                                    <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} lg={6} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
-                                          </Grid>
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
-                                          </Grid> 
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
-                                                <input
-                                                      type="file"
-                                                      name="id_picture"
-                                                      accept="image/*"
-                                                      className="form-control form-control-sm rounded-5 text-xs"
-                                                      onChange={handleChange}
-                                                />
-                                          </Grid>  
-                                    </Grid>  
+                                                <SoftTypography variant="button" className="me-1"> Name:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="section_name" value={formData.section_name.toUpperCase()} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>    
+                                    </Grid>    
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 

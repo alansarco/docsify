@@ -138,7 +138,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error adding Admin!", { autoClose: true });
+                              toast.error("Error updating representative!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);

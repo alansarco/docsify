@@ -72,7 +72,7 @@ function Table({ DATA, tablehead, ReloadTable }) {
               })  
               .catch(error => {
                 setSearchTriggered(false);
-                toast.error("Cant delete organization!", { autoClose: true });
+                toast.error("Cant delete licenses!", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }
@@ -151,6 +151,16 @@ function Table({ DATA, tablehead, ReloadTable }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
             {row.license_date_use}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.created_by}    
           </SoftBox>  
           <SoftBox
             className="px-2"

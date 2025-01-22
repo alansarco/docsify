@@ -72,7 +72,7 @@ function Information({DATA, LICENSE, HandleRendering, ReloadTable}) {
               })  
               .catch(error => {
                 setDeleteUser(false);
-                toast.error("Cant delete user", { autoClose: true });
+                toast.error("Cant delete campus", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }

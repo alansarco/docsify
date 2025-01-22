@@ -14,6 +14,8 @@ class StudentProgram extends Model
     protected $table = "students_program";
 
     protected $fillable = [
+        'program_id',
+        'clientid',
         'program_name',
         'program_acr',
         'created_by',

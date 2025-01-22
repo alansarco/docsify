@@ -72,7 +72,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
               })  
               .catch(error => {
                 setDeleteUser(false);
-                toast.error("Cant delete user", { autoClose: true });
+                toast.error("Cant delete representative", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }

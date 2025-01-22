@@ -20,11 +20,11 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import UserContainer from "layouts/admins/components/UserContainer";
-import Add from "layouts/admins/components/Add";
+import UserContainer from "layouts/sections/components/UserContainer";
+import Add from "layouts/sections/components/Add";
 
-import Table from "layouts/admins/data/table";
-import { tablehead } from "layouts/admins/data/head";  
+import Table from "layouts/sections/data/table";
+import { tablehead } from "layouts/sections/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
@@ -35,8 +35,8 @@ import { statusSelect } from "components/General/Utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTheme } from "@emotion/react";
 
-function Admins() {
-    const currentFileName = "layouts/admins/index.js";
+function Sections() {
+    const currentFileName = "layouts/sections/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -60,8 +60,6 @@ function Admins() {
 
     const initialState = {
         filter: "",
-        account_status: "",
-        gender: "",
     };
 
     const [formData, setFormData] = useState(initialState);
@@ -79,13 +77,13 @@ function Admins() {
         }
     };
 
-    const [USER, setUSER] = useState(); 
+    const [DATA, setDATA] = useState(); 
     const [rendering, setRendering] = useState(1);
     const [fetchdata, setFetchdata] = useState([]);
     const tableHeight = DynamicTableHeight();  
 
-    const HandleUSER = (user) => {
-        setUSER(user);
+    const HandleDATA = (data) => {
+      setDATA(data);
     };
 
     const HandleRendering = (rendering) => {
@@ -95,9 +93,9 @@ function Admins() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.adminRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers})
           .then(response => {
-            setFetchdata(response.data.users);
+            setFetchdata(response.data.sections);
             passToSuccessLogs(response.data, currentFileName);
             setReload(false);
             setFetching("No data Found!")
@@ -111,9 +109,9 @@ function Admins() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.adminRetrieve + '?page=' + page, formData, {headers})
+        axios.post(apiRoutes.sectionRetrieve + '?page=' + page, formData, {headers})
         .then(response => {
-        setFetchdata(response.data.users);
+        setFetchdata(response.data.sections);
         passToSuccessLogs(response.data, currentFileName);
         setReload(false);      
         })
@@ -127,9 +125,9 @@ function Admins() {
         e.preventDefault(); 
         setReload(true);      
         try {
-            const response = await axios.post(apiRoutes.adminRetrieve + '?page=' + 1, formData, {headers});
+            const response = await axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers});
             if(response.data.status == 200) {
-                setFetchdata(response.data.users);
+                setFetchdata(response.data.sections);
             }
             else {
                 setFetchdata([]);
@@ -151,9 +149,9 @@ function Admins() {
     setReload(true);      
 
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.adminRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.sectionRetrieve + '?page=' + nextPage, formData, {headers})
     .then(response => {
-      setFetchdata(response.data.users);
+      setFetchdata(response.data.sections);
       passToSuccessLogs(response.data, currentFileName);
       setReload(false);      
     })
@@ -174,24 +172,24 @@ function Admins() {
       {reload && <FixedLoading />} 
       <DashboardLayout>
         <DashboardNavbar RENDERNAV={rendering} /> 
-          {USER && rendering == 2 ? 
-            <UserContainer USER={USER} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
+          {DATA && rendering == 2 ? 
+            <UserContainer DATA={DATA} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
           :
           rendering == 3 ?
             <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
-        :
+          :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Admin List</SoftTypography>
+                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Section List</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
                   <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Admin
+                    <Icon>add</Icon> Add Section
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
@@ -199,7 +197,7 @@ function Admins() {
                 <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
-                      <Table table="sm" HandleUSER={HandleUSER} HandleRendering={HandleRendering} users={fetchdata.data} tablehead={tablehead} /> :
+                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
@@ -217,30 +215,6 @@ function Admins() {
                     <Grid container spacing={1} py={1} pb={2}>  
                         <Grid item xs={12}>
                             <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
-                            <SoftBox className="my-auto">
-                            <SoftTypography variant="button" className="me-1">Account Status:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                <option value="">-- Select --</option>
-                                {statusSelect && statusSelect.map((status) => (
-                                <option key={status.value} value={status.value}>
-                                        {status.desc}
-                                </option>
-                                ))}
-                            </select>
-                            <SoftTypography variant="button" className="me-1">Gender:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border"
-                              name="gender"
-                              value={formData.gender}
-                              onChange={handleChange}
-                              >
-                              <option value="">-- Select --</option>
-                              {genderSelect && genderSelect.map((gender) => (
-                                <option key={gender.value} value={gender.value}>
-                                  {gender.desc}
-                                </option>
-                              ))}
-                            </select>
-                            </SoftBox>
                             <SoftInput 
                               className="my-3"
                               value={formData.filter}
@@ -286,4 +260,4 @@ function Admins() {
   );
 }
 
-export default Admins;
+export default Sections;

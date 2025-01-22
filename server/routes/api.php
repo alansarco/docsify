@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
 use App\Http\Controllers\Api\RepresentativeController;
+use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrievestudent', [StudentController::class, 'retrievestudent']);
         Route::get('sectionselect', [StudentController::class, 'sectionselect']);
         Route::get('programselect', [StudentController::class, 'programselect']);
+    });
+
+    Route::prefix('sections')->group(function () {
+        Route::post('/', [SectionController::class, 'index']);
+        Route::post('addsection', [SectionController::class, 'addsection']);
+        Route::get('retrievesection', [SectionController::class, 'retrievesection']);
+        Route::get('deletesection', [SectionController::class, 'deletesection']);
+        Route::post('updatesection', [SectionController::class, 'updatesection']);
     });
 
     Route::prefix('campuses')->group(function () {

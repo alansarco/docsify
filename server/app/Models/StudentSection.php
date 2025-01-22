@@ -14,6 +14,8 @@ class StudentSection extends Model
     protected $table = "students_section";
 
     protected $fillable = [
+        'section_id',
+        'clientid',
         'section_name',
         'created_by',
         'updated_by'

@@ -73,14 +73,16 @@ class LicenseController extends Controller
         }
 
         // Generate a unique 15-character license key
+        // Generate a unique 15-character license key
         do {
             $GeneratedLicense = Str::upper(Str::random(15)); // Generate a random string of 15 characters
-        } while (LicenseKey::where('license_key', $GeneratedLicense)->exists());
+        } while (DB::table('license_keys')->where('license_key', $GeneratedLicense)->exists());
 
         $addLicense = LicenseKey::create([
             'license_key' => $GeneratedLicense,
             'license_price' => $request->license_price,
             'license_duration' => $request->license_duration,
+            'created_by' => $authUser->fullname,
         ]);
 
         if($addLicense) {

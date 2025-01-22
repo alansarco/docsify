@@ -35,6 +35,7 @@ import InactiveCampus from "layouts/inactive-campuses";
 import LogAdmin from "layouts/log-admin";
 import AdminSettings from "layouts/settings-admin";
 import Registrars from "layouts/registrars";
+import Sections from "layouts/sections";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -133,7 +134,7 @@ const routes = (access) => [
     key: "sections",
     route: "/sections",
     icon: <AccountBalanceTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <Sections />,
     noCollapse: true,
   },
   access == 30 && {

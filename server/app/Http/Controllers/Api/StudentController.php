@@ -430,7 +430,12 @@ class StudentController extends Controller
     }
     
     public function sectionselect() {
-        $sections = StudentSection::select('section_id', 'section_name')->get();
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        $sections = StudentSection::select('section_id', 'section_name')
+            ->where('clientid', $authUser->clientid)
+            ->get();
 
         if($sections) {
             return response()->json([
@@ -448,7 +453,12 @@ class StudentController extends Controller
     }
 
     public function programselect() {
-        $programs = StudentProgram::select('program_id', 'program_name', 'program_acr')->get();
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        $programs = StudentProgram::select('program_id', 'program_name', 'program_acr')
+            ->where('clientid', $authUser->clientid)
+            ->get();
 
         if($programs) {
             return response()->json([

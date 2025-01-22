@@ -25,6 +25,11 @@ export const tablehead = [
     align: "left",
   },
   {
+    name: "created by",
+    padding: "px-2",
+    align: "left",
+  },
+  {
     name: "date added",
     padding: "px-2",
     align: "left",

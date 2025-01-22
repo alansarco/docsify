@@ -132,7 +132,7 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error adding Registrar!", { autoClose: true });
+                              toast.error("Error adding student!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
