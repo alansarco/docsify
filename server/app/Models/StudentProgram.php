@@ -18,6 +18,7 @@ class StudentProgram extends Model
         'clientid',
         'program_name',
         'program_acr',
+        'status',
         'created_by',
         'updated_by'
     ];

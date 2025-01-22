@@ -13,6 +13,7 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { activeSelect } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
@@ -28,6 +29,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             program_id: DATA.program_id,
             program_name: DATA.program_name == null ? "" : DATA.program_name,
             program_acr: DATA.program_acr == null ? "" : DATA.program_acr,
+            status: DATA.status == null ? "" : DATA.status,
             agreement: false,   
       };
 
@@ -57,6 +59,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                   "program_id",
                   "program_name",
                   "program_acr",
+                  "status",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -127,6 +130,18 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 <SoftInput name="program_acr" value={formData.program_acr.toUpperCase()} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>    
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Status: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="status" value={formData.status} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {activeSelect && activeSelect.map((active) => (
+                                                      <option key={active.value} value={active.value}>
+                                                            {active.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
                                     </Grid>    
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>

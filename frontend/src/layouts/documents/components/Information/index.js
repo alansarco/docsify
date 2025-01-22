@@ -19,9 +19,9 @@ import axios from "axios";
 
 function Information({DATA, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/programs/components/Information/index.js";
+  const currentFileName = "layouts/users/components/UserContainer/index.js";
 
-  const program_id = DATA.program_id;
+  const doc_id = DATA.doc_id;
   const {token, role, access} = useStateContext();  
   const YOUR_ACCESS_TOKEN = token; 
   const headers = {
@@ -44,7 +44,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Program?',
+      title: 'Delete Section?',
       text: "Are you sure you want to delete this data? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
@@ -58,7 +58,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteProgram, { params: { program_id }, headers })
+            axios.get(apiRoutes.deleteDocument, { params: { doc_id }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -72,7 +72,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
               })  
               .catch(error => {
                 setDeleteUser(false);
-                toast.error("Cant delete section", { autoClose: true });
+                toast.error("Cant delete document", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }
@@ -91,9 +91,9 @@ function Information({DATA, HandleRendering, ReloadTable}) {
               <ProfileInfoCard
                 title="Section Information"
                 info={{
-                  Name: DATA.program_name ?? " ",
-                  Acronym: DATA.program_acr ?? " ",
-                  Total_Students: DATA.studentCount ?? " ",
+                  Name: DATA.doc_name ?? " ",
+                  Request_Limit_per_Year: DATA.doc_limit ?? " ",
+                  Day_to_Process: DATA.days_process ?? " ",
                   Status: DATA.status == "1" ? "Active" : "Inactive",
                   Updated_Date: DATA.updated_date ?? " ",
                   Updated_By: DATA.updated_by ?? " ",

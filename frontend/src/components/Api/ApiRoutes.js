@@ -54,6 +54,12 @@ export const apiRoutes = {
     retrieveProgramOne: `${mainRoute}/api/programs/retrieveprogram`,
     deleteProgram: `${mainRoute}/api/programs/deleteprogram`,
     updateProgram: `${mainRoute}/api/programs/updateprogram`,
+    
+    documentRetreive: `${mainRoute}/api/documents`,
+    addDocument: `${mainRoute}/api/documents/adddocument`,
+    retrieveDocumentOne: `${mainRoute}/api/documents/retrievedocument`,
+    deleteDocument: `${mainRoute}/api/documents/deletedocument`,
+    updateDocument: `${mainRoute}/api/documents/updatedocument`,
 
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,

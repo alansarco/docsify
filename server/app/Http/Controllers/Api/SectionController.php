@@ -79,6 +79,7 @@ class SectionController extends Controller
         $addsection = StudentSection::create([
             'section_id' => $GeneratedID,
             'clientid' => $authUser->clientid,
+            'status' => 1,
             'section_name' => strtoupper($request->section_name),
             'created_by' => $authUser->fullname
         ]);
@@ -148,6 +149,7 @@ class SectionController extends Controller
 
         $validator = Validator::make($request->all(), [
             'section_name' => 'required',
+            'status' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -157,6 +159,7 @@ class SectionController extends Controller
         }
         $updateData = [
             'section_name' => strtoupper($request->section_name),
+            'status' => $request->status,
             'updated_by' => $authUser->fullname,
         ];
 

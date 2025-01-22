@@ -8,6 +8,7 @@ export const moduleSelect = [
       { value: "Accounts", desc: "Accounts" },
       { value: "Campus", desc: "Campus" },
       { value: "License", desc: "License" },
+      { value: "Documents", desc: "Documents" },
       { value: "Sections", desc: "Sections" },
       { value: "Programs", desc: "Programs" },
       { value: "Settings", desc: "Settings" },
@@ -53,6 +54,11 @@ export const genderSelect = [
 export const statusSelect = [
       { value: 1, desc: "Verified" },
       { value: 0, desc: "Not Verified" },
+];
+
+export const activeSelect = [
+      { value: 1, desc: "Active" },
+      { value: 0, desc: "Inactive" },
 ];
 
 export const reportSelectStatus = [
@@ -129,6 +135,11 @@ export function getN(amount) {
       if (amount.startsWith('0') && amount.length > 1 && !amount.includes('.')) {
           return amount.slice(1);
       }
+      return amount;
+}
+
+export function getNumber(amount) {
+      if (isNaN(amount) || amount === '') return ''; 
       return amount;
 }
 

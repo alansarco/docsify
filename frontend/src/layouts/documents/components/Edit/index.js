@@ -13,6 +13,7 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { getNumber } from "components/General/Utils";
 import { activeSelect } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
@@ -26,8 +27,10 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       };
       
       const initialState = {
-            section_id: DATA.section_id,
-            section_name: DATA.section_name == null ? "" : DATA.section_name,
+            doc_id: DATA.doc_id,
+            doc_name: DATA.doc_name == null ? "" : DATA.doc_name,
+            doc_limit: DATA.doc_limit == null ? "" : DATA.doc_limit,
+            days_process: DATA.days_process == null ? "" : DATA.days_process,
             status: DATA.status == null ? "" : DATA.status,
             agreement: false,   
       };
@@ -55,8 +58,10 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "section_id",
-                  "section_name",
+                  "doc_id",
+                  "doc_name",
+                  "doc_limit",
+                  "days_process",
                   "status",
             ];
 
@@ -74,7 +79,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                               }
                               else {  
                                     
-                                    const response = await axios.post(apiRoutes.updateSection, formData, {headers});
+                                    const response = await axios.post(apiRoutes.updateDocument, formData, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
                                           // setFormData(initialState);
@@ -119,7 +124,19 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="section_name" value={formData.section_name.toUpperCase()} onChange={handleChange} size="small"
+                                                <SoftInput name="doc_name" value={formData.doc_name} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>    
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Request Limit per Year:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="doc_limit" value={getNumber(formData.doc_limit)} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>    
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Days to Process:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="days_process" value={getNumber(formData.days_process)} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>    
                                           <Grid item xs={12} md={6} lg={2} px={1}>
@@ -134,7 +151,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                       ))}
                                                 </select>
                                           </Grid>
-                                    </Grid>    
+                                    </Grid>     
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 

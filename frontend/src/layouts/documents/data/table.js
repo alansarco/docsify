@@ -18,7 +18,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
   const handleSubmit = (row) => {
-    HandleDATA(row.program_id);
+    HandleDATA(row.doc_id);
     HandleRendering(2);
   }
 
@@ -42,7 +42,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
 
   const renderRows = DATA.map((row) => {
     return (
-      <TableRow key={row.program_id}>
+      <TableRow key={row.doc_id}>
           <SoftBox
             className="pe-2 text-decoration-underline cursor-pointer fw-bold"
             component="td"
@@ -57,7 +57,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
               },
             }}  
           >
-            {row.program_id}
+            {row.doc_id}
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -67,7 +67,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.program_name}
+            {row.doc_name}
           </SoftBox>      
           <SoftBox
             className="px-2"
@@ -77,7 +77,17 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.studentCount}    
+            {row.doc_limit}    
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.days_process}    
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -89,7 +99,7 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`} 
           >
             <SoftTypography color={row.status == "1" ? "info" : "primary"} sx={{ fontSize: "1rem" }}>{row.status == "1" ? <CheckIcon /> : "x"}</SoftTypography>
-          </SoftBox> 
+          </SoftBox>  
           <SoftBox
             className="px-2"
             component="td"

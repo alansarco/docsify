@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StudentSection extends Model
+class Document extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "students_section";
+    protected $table = "documents";
 
     protected $fillable = [
-        'section_id',
+        'doc_id',
         'clientid',
-        'section_name',
+        'doc_name',
+        'doc_limit',
+        'days_process',
         'status',
         'created_by',
         'updated_by'

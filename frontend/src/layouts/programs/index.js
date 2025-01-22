@@ -101,7 +101,7 @@ function Programs() {
             setFetching("No data Found!")
           })
           .catch(error => {
-            passToErrorLogs(`Admins Data not Fetched!  ${error}`, currentFileName);
+            passToErrorLogs(`Document Data not Fetched!  ${error}`, currentFileName);
             setReload(false);
           });
         setSearchTriggered(false);

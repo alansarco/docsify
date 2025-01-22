@@ -1,16 +1,21 @@
 export const tablehead = [
   {
-    name: "section id",
+    name: "document id",
     padding: "pe-2",
     align: "left",
   },
   {
-    name: "section name",
+    name: "document name",
     padding: "px-2",
     align: "left",
   },
   {
-    name: "no. of students",
+    name: "request limit (year)",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "processing time (days)",
     padding: "px-2",
     align: "left",
   },
@@ -21,7 +26,7 @@ export const tablehead = [
   },
   {
     name: "date added",
-    padding: "px-2",
+    padding: "ps-2",
     align: "left",
   },
   // {

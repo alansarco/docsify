@@ -10,48 +10,38 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Utilities\Utils;
-use App\Models\LogAdmin;
-use App\Models\Client;
 use App\Models\LogRepresentative;
-use App\Models\StudentProgram;
+use App\Models\Document;
 use Illuminate\Support\Str;
 
-class ProgramController extends Controller
+class DocumentController extends Controller
 {
     public function index(Request $request) {
-        $query = StudentProgram::select('*',
-            DB::raw("CAST((
-                SELECT COUNT(*)
-                FROM users
-                WHERE 
-                    users.program = students_program.program_id
-                    AND users.role = 'USER'
-                    AND users.account_status = 1
-            ) AS CHAR) AS studentCount"),
+        $query = Document::select('*',
             DB::raw("DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p') AS date_added"));
 
         if($request->filter) {
-            $query->where('program_name', 'LIKE' , '%'.$request->filter.'%');
+            $query->where('doc_name', 'LIKE' , '%'.$request->filter.'%');
         }
         
-        $programs = $query->orderBy('created_at', 'DESC')->paginate(20);
+        $documents = $query->orderBy('created_at', 'DESC')->paginate(20);
 
-        if($programs) {
+        if($documents) {
             return response()->json([
                 'status' => 200,
-                'programs' => $programs,
-                'message' => 'Programs retrieved!',
+                'documents' => $documents,
+                'message' => 'Documents retrieved!',
             ]);
         }   
         else {
             return response()->json([
-                'programs' => $programs,
-                'message' => 'No programs found!'
+                'documents' => $documents,
+                'message' => 'No documents found!'
             ]);
         }
     }
 
-    public function addprogram(Request $request) {
+    public function adddocument(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -62,9 +52,9 @@ class ProgramController extends Controller
         }
 
         $validator = Validator::make($request->all(), [ 
-            'program_name' => 'required',
-            'program_acr' => 'required',
-            'status' => 'required',
+            'doc_name' => 'required',
+            'doc_limit' => 'required',
+            'days_process' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -76,27 +66,28 @@ class ProgramController extends Controller
         // Generate a unique 10-character id
         do {
             $GeneratedID = Str::upper(Str::random(10)); // Generate a random string of 15 characters
-        } while (DB::table('students_program')->where('program_id', $GeneratedID)->exists());
+        } while (DB::table('documents')->where('doc_id', $GeneratedID)->exists());
 
-        $addprogram = StudentProgram::create([
-            'program_id' => $GeneratedID,
+        $add = Document::create([
+            'doc_id' => $GeneratedID,
             'clientid' => $authUser->clientid,
-            'program_name' => $request->program_name,
-            'program_acr' => strtoupper($request->program_acr),
-            'status' => $request->status,
+            'doc_name' => strtoupper($request->doc_name),
+            'doc_limit' => $request->doc_limit,
+            'days_process' => $request->days_process,
+            'status' => 1,
             'created_by' => $authUser->fullname
         ]);
 
-        if($addprogram) {
+        if($add) {
             LogRepresentative::create([
-                'module' => 'Programs',
+                'module' => 'Documents',
                 'action' => 'ADD',
-                'details' => $authUser->fullname .' added new program ' .$GeneratedID. ' - ' .$request->program_name,
+                'details' => $authUser->fullname .' added new document ' .$GeneratedID. ' - ' .$request->doc_name,
                 'created_by' => $authUser->fullname,
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => 'Program added successfully!'
+                'message' => 'Document added successfully!'
             ], 200);
         }
         return response()->json([
@@ -104,34 +95,26 @@ class ProgramController extends Controller
         ]);
     }
 
-    public function retrieveprogram(Request $request) {
+    public function retrievedocument(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
 
-        $dataRetrieved = StudentProgram::leftJoin('clients', 'students_program.clientid', 'clients.clientid')
-            ->select('students_program.*',
-            DB::raw("CAST((
-                SELECT COUNT(*)
-                FROM users
-                WHERE 
-                    users.program = students_program.program_id
-                    AND users.role = 'USER'
-                    AND users.account_status = 1
-            ) AS CHAR) AS studentCount"),
-            DB::raw("DATE_FORMAT(students_program.created_at, '%M %d, %Y %h:%i %p') AS created_date"),
-            DB::raw("DATE_FORMAT(students_program.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"),
+        $dataRetrieved = Document::leftJoin('clients', 'documents.clientid', 'clients.clientid')
+            ->select('documents.*',
+            DB::raw("DATE_FORMAT(documents.created_at, '%M %d, %Y %h:%i %p') AS created_date"),
+            DB::raw("DATE_FORMAT(documents.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"),
             DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
             DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
             )
-            ->where('students_program.clientid', $authUser->clientid)
-            ->where('students_program.program_id', $request->data)
+            ->where('documents.clientid', $authUser->clientid)
+            ->where('documents.doc_id', $request->data)
             ->first();
         
         if($dataRetrieved) {
             return response()->json([
                 'status' => 200,
                 'dataRetrieved' => $dataRetrieved,
-                'message' => 'Program data retrieved!',
+                'message' => 'Document data retrieved!',
             ]);
         }
         return response()->json([
@@ -140,7 +123,7 @@ class ProgramController extends Controller
         ]);
     }
 
-    public function updateprogram(Request $request) {
+    public function updatedocument(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -151,9 +134,10 @@ class ProgramController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'program_id' => 'required',
-            'program_name' => 'required',
-            'program_acr' => 'required',
+            'doc_id' => 'required',
+            'doc_name' => 'required',
+            'doc_limit' => 'required',
+            'days_process' => 'required',
             'status' => 'required',
         ]);
 
@@ -163,13 +147,14 @@ class ProgramController extends Controller
             ]);
         }
         $updateData = [
-            'program_name' => $request->program_name,
-            'program_acr' => strtoupper($request->program_acr),
+            'doc_name' => strtoupper($request->doc_name),
+            'doc_limit' => $request->doc_limit,
+            'days_process' => $request->days_process,
             'status' => $request->status,
             'updated_by' => $authUser->fullname,
         ];
 
-        $existingKeys = StudentProgram::where('program_id', $request->program_id)->first();
+        $existingKeys = Document::where('doc_id', $request->doc_id)->first();
         $changes = [];
 
         // Compare all fields except those related to pictures
@@ -182,20 +167,20 @@ class ProgramController extends Controller
             }
         }
 
-        $update = StudentProgram::where('program_id', $request->program_id)->update($updateData);
+        $update = Document::where('doc_id', $request->doc_id)->update($updateData);
 
         if($update) {
             if (!empty($changes)) {
                 LogRepresentative::create([
-                    'module' => 'Programs',
+                    'module' => 'Documents',
                     'action' => 'UPDATE',
-                    'details' => $authUser->fullname .' updated program '.$request->program_id. ' with the following changes: ' . json_encode($changes),
+                    'details' => $authUser->fullname .' updated document '.$request->doc_id. ' with the following changes: ' . json_encode($changes),
                     'created_by' => $authUser->fullname,
                 ]);
             }
             return response()->json([
                 'status' => 200,
-                'message' => 'Program updated successfully!'
+                'message' => 'Document updated successfully!'
             ], 200);
         }
         return response()->json([
@@ -203,7 +188,7 @@ class ProgramController extends Controller
         ]);
     }
 
-    public function deleteprogram(Request $request) {
+    public function deletedocument(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -213,18 +198,18 @@ class ProgramController extends Controller
             ]);
         }
 
-        $delete = StudentProgram::where('program_id', $request->program_id)->delete();
+        $delete = Document::where('doc_id', $request->doc_id)->delete();
         
         if($delete) {
             LogRepresentative::create([
-                'module' => 'Programs',
+                'module' => 'Documents',
                 'action' => 'DELETE',
-                'details' => $authUser->fullname .' deleted program '.$request->license_key,
+                'details' => $authUser->fullname .' deleted document '.$request->license_key,
                 'created_by' => $authUser->fullname,
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => 'Program deleted successfully!'
+                'message' => 'Document deleted successfully!'
             ], 200);
         }
         return response()->json([

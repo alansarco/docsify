@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\LicenseController;
 use App\Http\Controllers\Api\GeneralController;
 use App\Http\Controllers\Api\LoginController;
@@ -100,6 +101,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrieveprogram', [ProgramController::class, 'retrieveprogram']);
         Route::get('deleteprogram', [ProgramController::class, 'deleteprogram']);
         Route::post('updateprogram', [ProgramController::class, 'updateprogram']);
+    });
+
+    Route::prefix('documents')->group(function () {
+        Route::post('/', [DocumentController::class, 'index']);
+        Route::post('adddocument', [DocumentController::class, 'adddocument']);
+        Route::get('retrievedocument', [DocumentController::class, 'retrievedocument']);
+        Route::get('deletedocument', [DocumentController::class, 'deletedocument']);
+        Route::post('updatedocument', [DocumentController::class, 'updatedocument']);
     });
 
     Route::prefix('campuses')->group(function () {

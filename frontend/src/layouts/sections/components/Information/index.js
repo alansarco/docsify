@@ -92,6 +92,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
                 title="Section Information"
                 info={{
                   Name: DATA.section_name ?? " ",
+                  Status: DATA.status == "1" ? "Active" : "Inactive",
                   Total_Students: DATA.studentCount ?? " ",
                   Updated_Date: DATA.updated_date ?? " ",
                   Updated_By: DATA.updated_by ?? " ",

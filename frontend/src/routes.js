@@ -38,6 +38,7 @@ import Registrars from "layouts/registrars";
 import Sections from "layouts/sections";
 import LogRepresentative from "layouts/log-representative";
 import Programs from "layouts/programs";
+import Documents from "layouts/documents";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -127,7 +128,7 @@ const routes = (access) => [
     key: "documents",
     route: "/documents",
     icon: <ArticleTwoToneIcon size="12px" />,
-    component: <Announcements />,
+    component: <Documents />,
     noCollapse: true,
   },
   access == 30 && {
