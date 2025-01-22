@@ -32,8 +32,8 @@ import { useStateContext } from "context/ContextProvider";
 import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading";
 
-function UserContainer({DATA, HandleRendering, ReloadTable}) {
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+function DataContainer({DATA, HandleRendering, ReloadTable}) {
+  const currentFileName = "layouts/users/components/DataContainer/index.js";
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -185,4 +185,4 @@ function UserContainer({DATA, HandleRendering, ReloadTable}) {
   );
 }
 
-export default UserContainer;
+export default DataContainer;

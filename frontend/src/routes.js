@@ -37,6 +37,7 @@ import AdminSettings from "layouts/settings-admin";
 import Registrars from "layouts/registrars";
 import Sections from "layouts/sections";
 import LogRepresentative from "layouts/log-representative";
+import Programs from "layouts/sections";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -144,7 +145,7 @@ const routes = (access) => [
     key: "programs",
     route: "/programs",
     icon: <TerminalTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <Programs />,
     noCollapse: true,
   },
 
