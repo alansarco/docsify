@@ -44,8 +44,8 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Resident?',
-      text: "Are you sure you want to delete this data? You won't be able to revert this!",
+      title: 'Delete Representative?',
+      text: "Are you sure you want to delete this account? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',  
@@ -58,7 +58,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.accountDelete, { params: { username }, headers })
+            axios.get(apiRoutes.deleteRegistrar, { params: { username }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -91,29 +91,43 @@ function Information({USER, HandleRendering, ReloadTable}) {
               <ProfileInfoCard
                 title="Personal Information"
                 info={{
-                  Firstname: USER.name,
+                  Firstname: USER.first_name,
                   Middle_Name: USER.middle_name,
                   Lastname: USER.last_name,
-                  Gender: USER.gender == null ? " " : USER.gender,
-                  Birthdate: USER.birthday == null ? " " : USER.birthday,
-                  Contact_Number: USER.contact == null ? " " : USER.contact,
-                  Address: USER.address == null ? " " : `${USER.address || ""} ${USER.default_address || ""}`,
-                  Status: USER.status == "1" ? "Verified" : "Not Verified",
-                  Year_Residency: USER.year_enrolled == null ? " " : USER.year_enrolled,
-                  Last_Online: USER.last_online,
+                  Age: USER.age ?? " ",
+                  Gender: USER.gender ?? " ",
+                  Birthdate: USER.birthday ?? " ",
+                  Email: USER.email ?? " ",
+                  Contact_Number: USER.contact ?? " ",
+                  Address: USER.address ?? " ",
+                  Status: USER.account_status == "1" ? "Verified" : "Not Verified",
+                  Last_Online: USER.last_online ?? "None",
                 }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={6}>
-              <ProfileInfoCard
-                  title="Other Information"
-                  info={{
-                  Updated_Date: USER.created_date == null ? " " : USER.created_date,
-                  Updated_By: USER.updated_by == null ? " " : USER.updated_by,
-                  Created_Date: USER.created_date == null ? " " : USER.created_date,
-                  Created_by: USER.created_by == null ? " " : USER.created_by,
-                  }}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <ProfileInfoCard
+                      title="Campus Information"
+                      info={{
+                      Campus_Name: USER.client_name ?? " ",
+                      Short_Name: USER.client_acr ?? " ",                      
+                      }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <ProfileInfoCard
+                      title="Other Information"
+                      info={{
+                      Updated_Date: USER.created_date ?? " ",
+                      Updated_By: USER.updated_by ?? " ",
+                      Created_Date: USER.created_date ?? " ",
+                      Created_by: USER.created_by ?? " ",
+                      }}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">

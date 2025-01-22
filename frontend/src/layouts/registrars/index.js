@@ -23,25 +23,23 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import UserContainer from "layouts/students/components/UserContainer";
-import Add from "layouts/students/components/Add";
+import UserContainer from "layouts/registrars/components/UserContainer";
+import Add from "layouts/registrars/components/Add";
 
-import Table from "layouts/students/data/table";
-import { tablehead } from "layouts/students/data/head";  
+import Table from "layouts/registrars/data/table";
+import { tablehead } from "layouts/registrars/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
-import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import { genderSelect } from "components/General/Utils";
-import { years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';
 
-function Students() {
-    const currentFileName = "layouts/students/index.js";
+function Registrars() {
+    const currentFileName = "layouts/stduents/index.js";
     const {token, access, updateTokenExpiration, clientprovider} = useStateContext();
     updateTokenExpiration();
     if (!token) {
@@ -101,7 +99,7 @@ function Students() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.studentRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.registrarRetrieve + '?page=' + 1, formData, {headers})
           .then(response => {
             setFetchdata(response.data.users);
             passToSuccessLogs(response.data, currentFileName);
@@ -117,7 +115,7 @@ function Students() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.studentRetrieve + '?page=' + page, formData, {headers})
+        axios.post(apiRoutes.registrarRetrieve + '?page=' + page, formData, {headers})
         .then(response => {
         setFetchdata(response.data.users);
         passToSuccessLogs(response.data, currentFileName);
@@ -133,7 +131,7 @@ function Students() {
         e.preventDefault(); 
         setReload(true);      
         try {
-            const response = await axios.post(apiRoutes.studentRetrieve + '?page=' + 1, formData, {headers});
+            const response = await axios.post(apiRoutes.registrarRetrieve + '?page=' + 1, formData, {headers});
             if(response.data.status == 200) {
                 setFetchdata(response.data.users);
             }
@@ -157,7 +155,7 @@ function Students() {
     setReload(true);      
 
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.studentRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.registrarRetrieve + '?page=' + nextPage, formData, {headers})
     .then(response => {
       setFetchdata(response.data.users);
       passToSuccessLogs(response.data, currentFileName);
@@ -292,4 +290,4 @@ function Students() {
   );
 }
 
-export default Students;
+export default Registrars;

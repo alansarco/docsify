@@ -21,7 +21,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
 import logo from "assets/images/logo.png";
-import bgImage from "assets/images/brgy.jpg";
+import bgImage from "assets/images/banner.jpg";
 import Information from "../Information";
 import Edit from "../Edit";
 import { apiRoutes } from "components/Api/ApiRoutes";
@@ -89,7 +89,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
   useEffect(() => {
     if (reload) {
       setReload(true);
-      axios.get(apiRoutes.accountRetrieveOne, { params: { username }, headers })
+      axios.get(apiRoutes.retrieveRepresentativeOne, { params: { username }, headers })
         .then(response => {
           if (response.data.status === 200) {
             setUser(response.data.user);
@@ -125,7 +125,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
             `${linearGradient(
               rgba(gradients.info.main, 0.3),
               rgba(gradients.info.state, 0.2)
-            )}, url(${bgImage})`, 
+            )}, url(${User.client_banner ? `data:image/jpg;base64,${encodeURIComponent(User.client_banner)}` : bgImage})`,
           backgroundSize: "cover",
           backgroundPosition: "50%",
           overflow: "hidden",
@@ -156,7 +156,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
           <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                {User.name}{" "}
+                {User.first_name}{" "}
                 {User.middle_name}{" "}
                 {User.last_name}{" "}
               </SoftTypography>

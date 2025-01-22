@@ -398,7 +398,7 @@ class UsersController extends Controller
         $authUser = Auth::user();
 
         $checkpass = new Utils;
-        $checkpass = $checkpass->checkPassword($request->password);
+        $checkpass = $checkpass->checkPassword($request->newpass);
         if($checkpass) return $checkpass;
 
         $validator = Validator::make($request->all(), [

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Admin;
-use App\Models\AdminLog;
+use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Calendar;
 use Carbon\Carbon;
@@ -125,7 +125,7 @@ class SettingsController extends Controller
 
                 if($update) {
                     if (!empty($changes)) {
-                        AdminLog::create([
+                        LogAdmin::create([
                             'module' => 'Admin Settings',
                             'action' => 'UPDATE',
                             'details' => $authUser->fullname . ' updated admin settings with the following changes: ' . json_encode($changes),
@@ -133,7 +133,7 @@ class SettingsController extends Controller
                         ]);
                     }
                     else if($pictureLogo) {
-                        AdminLog::create([
+                        LogAdmin::create([
                             'module' => 'Admin Settings',
                             'action' => 'UPDATE',
                             'details' => $authUser->fullname . ' updated admin settings with changes in logo',

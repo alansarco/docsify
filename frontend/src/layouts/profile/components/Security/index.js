@@ -93,7 +93,7 @@ function Security() {
             {submitPass && <FixedLoading />}
             <SoftBox mt={5} mb={3} px={2}>      
                   <SoftBox mb={5} p={4} className="shadow-sm rounded-4 bg-white">
-                        <SoftTypography fontWeight="medium" color="success" textGradient>
+                        <SoftTypography fontWeight="medium" color="info" textGradient>
                               Change Password!
                         </SoftTypography>
                         <SoftBox mt={2}>
@@ -104,7 +104,7 @@ function Security() {
                                                 <SoftTypography variant="span" className="text-danger text-xs"> *</SoftTypography>
                                           </Grid>
                                           <Grid item xs={12} md={4} px={1}>
-                                                <SoftInput name="newpass" type="password" value={formData.newpass} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="newpass"  value={formData.newpass} onChange={handleChange} size="small" /> 
                                           </Grid>
                                     </Grid>
                                     <Grid container mt={2} spacing={0} alignItems="center">
@@ -116,21 +116,21 @@ function Security() {
                                                 <SoftInput name="confirmpass" type="password" value={formData.confirmpass} onChange={handleChange} size="small" /> 
                                           </Grid>
                                     </Grid>
-                                    <SoftTypography mt={2} fontWeight="medium" px={1} className=" text-xs text-success">
+                                    <SoftTypography mt={2} fontWeight="medium" px={1} className=" text-xs text-info">
                                           Note:
                                           <SoftTypography variant="span" className=" ms-2 text-xs text-secondary">Use your new password the next time you login.</SoftTypography>
                                     </SoftTypography> 
                                     <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
-                                                      <SoftButton onClick={handleCancel} className="mx-2 w-100" size="small" color="light">
+                                                      <SoftButton onClick={handleCancel} className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="light">
                                                             Back
                                                       </SoftButton>
                                                 </SoftBox>
                                           </Grid>
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
-                                                      <SoftButton variant="gradient" type="submit" className="mx-2 w-100" size="small" color="success">
+                                                      <SoftButton variant="gradient" type="submit" className="x-2 w-100 text-xxs px-3 rounded-pill" size="small" color="info">
                                                             Update
                                                       </SoftButton>
                                                 </SoftBox>

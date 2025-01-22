@@ -5,7 +5,7 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { accessSelect, years, genderSelect, currentDate } from "components/General/Utils";
+import { statusSelect, getN, genderSelect, currentDate } from "components/General/Utils";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
@@ -14,28 +14,28 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
-function Add({HandleRendering, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Add/index.js";
+function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
+      const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
-      const {token} = useStateContext();  
+      const {token, clientprovider} = useStateContext();  
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-      
+
       const initialState = {
-            username: '',
-            name: '',
-            middle_name: "",
-            last_name: "",
-            id_picture: null,
-            gender: '',
-            address: '',
-            access_level: '',
-            contact: '',
-            birthdate: '',
-            year_enrolled: '', 
+            username: USER.username,
+            clientid: clientprovider,
+            first_name: USER.first_name == null ? "" : USER.first_name,
+            middle_name: USER.middle_name == null ? "" : USER.middle_name,
+            last_name: USER.last_name == null ? "" : USER.last_name,
+            address: USER.address == null ? "" : USER.address,
+            gender: USER.gender == null ? "" : USER.gender,
+            email: USER.email == null ? "" : USER.email,
+            contact: USER.contact == null ? "" : USER.contact,
+            birthdate: USER.birthdate == null ? "" : USER.birthdate,
+            account_status: USER.account_status == null ? "" : USER.account_status, 
             agreement: false,   
       };
 
@@ -48,20 +48,26 @@ function Add({HandleRendering, ReloadTable }) {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
             else if (type === "file" && name === "id_picture") {
-                const file = files[0];
-                if (file && (file.type === "application/png" || file.name.endsWith(".png"))) {
-                    setFormData({ ...formData, id_picture: file });
-                } else {
-                    toast.error("Only .png and .jpg images are allowed");
-                    e.target.value = null;
-                }
-            } 
+                  const file = files[0];
+                  if (file && (file.type === "application/png" || 
+                          file.type === "image/jpeg" ||
+                          file.name.endsWith(".jpg") ||
+                          file.name.endsWith(".jpeg") ||
+                          file.name.endsWith(".png")
+                    )) {
+                      setFormData({ ...formData, id_picture: file });
+                  } else {
+                      toast.error("Only .png and .jpg images are allowed");
+                      e.target.value = null;
+                  }
+            }  
             else {
                   setFormData({ ...formData, [name]: value });
             }
       };
 
       const handleCancel = () => {
+            ReloadTable();
             HandleRendering(1);
       };
             
@@ -70,20 +76,19 @@ function Add({HandleRendering, ReloadTable }) {
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                 "username", 
-                  "name", 
+                  "clientid",
+                  "username",
+                  "first_name",
                   "last_name",
-                  "id_picture",
-                  "address",
                   "gender",
-                  "access_level",
                   "contact",
                   "birthdate",
-                  "year_enrolled",
+                  "address",
+                  "email",
             ];
-            console.log(formData);
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
+
             if (emptyRequiredFields.length === 0) {
                   if(!formData.agreement) {
                         toast.warning(messages.agreement, { autoClose: true });
@@ -96,9 +101,9 @@ function Add({HandleRendering, ReloadTable }) {
                               }
                               else {  
                                     const data = new FormData();
+                                    data.append("clientid", formData.clientid);
                                     data.append("username", formData.username);
-                                    data.append("password", formData.password);
-                                    data.append("name", formData.name);
+                                    data.append("first_name", formData.first_name);
                                     data.append("middle_name", formData.middle_name);
                                     data.append("last_name", formData.last_name);
                                     data.append("id_picture", formData.id_picture);
@@ -106,20 +111,21 @@ function Add({HandleRendering, ReloadTable }) {
                                     data.append("contact", formData.contact);
                                     data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
-                                    data.append("year_enrolled", formData.year_enrolled);
-                                    data.append("access_level", formData.access_level);
-                                    const response = await axios.post(apiRoutes.accountStore, data, {headers});
+                                    data.append("email", formData.email);
+                                    data.append("account_status", formData.account_status);
+                                    const response = await axios.post(apiRoutes.updateRegistrar, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          setFormData(initialState);
+                                          // setFormData(initialState);
                                           ReloadTable();
+                                          UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
                                     }
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error adding Resident!", { autoClose: true });
+                              toast.error("Error adding Admin!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
@@ -142,45 +148,29 @@ function Add({HandleRendering, ReloadTable }) {
                         <SoftTypography fontWeight="bold" className="text-xs">
                               Please fill in the required fields. Rest assured that data is secured.     
                         </SoftTypography> 
+                        
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Account Information    
-                                    </SoftTypography>
-                                    <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} sm={6} md={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Email:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="username" type="email" value={formData.username} onChange={handleChange} size="small"
-                                                 /> 
-                                                 
-                                          </Grid> 
-                                    </Grid>    
                                     <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                           Personal Information    
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="name" value={formData.name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
                                           </Grid>     
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Middle Name:</SoftTypography>
                                                 <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" /> 
                                           </Grid>     
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Last Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} sm={6} md={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Password:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="password" value={formData.password} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} sm={6} lg={2} px={1}>
+                                          </Grid>         
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Gender: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="gender" value={formData.gender} onChange={handleChange} >
@@ -192,24 +182,13 @@ function Add({HandleRendering, ReloadTable }) {
                                                       ))}
                                                 </select>
                                           </Grid>
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={formData.contact} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid>
-                                          <Grid item xs={12} sm={6} md={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> House No./Purok/ Street: </SoftTypography>
+                                          <Grid item xs={12} lg={6} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                           </Grid>
-                                          <Grid item xs={12} md={8} lg={4}px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input
                                                       type="file"
                                                       name="id_picture"
@@ -218,26 +197,29 @@ function Add({HandleRendering, ReloadTable }) {
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Year Residency: </SoftTypography>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {years && years.map((year) => (
-                                                      <option key={year} value={year}>
-                                                            {year}
-                                                      </option>
-                                                      ))}
-                                                </select>
+                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={5} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
                                           </Grid>
                                           <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Access level: </SoftTypography>
+                                                <SoftTypography variant="button" className="me-1"> Account Status: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="access_level" value={formData.access_level} onChange={handleChange} >
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="account_status" value={formData.account_status} onChange={handleChange} >
                                                       <option value=""></option>
-                                                      {accessSelect && accessSelect.map((access) => (
-                                                      <option key={access.value} value={access.value}>
-                                                            {access.desc}
+                                                      {statusSelect && statusSelect.map((status) => (
+                                                      <option key={status.value} value={status.value}>
+                                                            {status.desc}
                                                       </option>
                                                       ))}
                                                 </select>
@@ -267,7 +249,7 @@ function Add({HandleRendering, ReloadTable }) {
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
                                                       <SoftButton variant="gradient" type="submit" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="info">
-                                                            Save
+                                                            Update
                                                       </SoftButton>
                                                 </SoftBox>
                                           </Grid>
@@ -280,4 +262,4 @@ function Add({HandleRendering, ReloadTable }) {
       );
 }
 
-export default Add;
+export default Edit;

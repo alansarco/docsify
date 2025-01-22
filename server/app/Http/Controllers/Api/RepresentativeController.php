@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
 use App\Mail\AccoutApproveEmail;
-use App\Models\AdminLog;
+use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Client;
 use Illuminate\Support\Facades\Mail;
@@ -90,6 +90,14 @@ class RepresentativeController extends Controller
             ]);
         }
 
+        $validity = new Utils;
+        $valid_client = $validity->checkclient_validity($request->clientid);
+        if(!$valid_client) {
+            return response()->json([
+                'message' => 'Campus license has already expired or the subscription has not yet started!'
+            ]);
+        }
+
         $acountExist = DB::table('users')->where('username', $request->username)->first();
         $emailExist = DB::table('users')->where('email', $request->email)->first();
         $defaultPassword = Hash::make($request->contact);
@@ -139,9 +147,9 @@ class RepresentativeController extends Controller
             }
 
             if($add) {
-                AdminLog::create([
+                LogAdmin::create([
                     'module' => 'Representative Accounts',
-                    'action' => 'DELETE',
+                    'action' => 'ADD',
                     'details' => $authUser->fullname .' addded account '. $request->username,
                     'created_by' => $authUser->fullname,
                 ]);
@@ -275,7 +283,7 @@ class RepresentativeController extends Controller
                     
                     if($update) {
                         if (!empty($changes)) {
-                            AdminLog::create([
+                            LogAdmin::create([
                                 'module' => 'Representative Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
@@ -283,7 +291,7 @@ class RepresentativeController extends Controller
                             ]);
                         }
                         else if($pictureData) {
-                            AdminLog::create([
+                            LogAdmin::create([
                                 'module' => 'Representative Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
@@ -328,7 +336,7 @@ class RepresentativeController extends Controller
         $delete = User::where('username', $request->username)->delete();
 
         if($delete) {
-            AdminLog::create([
+            LogAdmin::create([
                 'module' => 'Representative Accounts',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted account '. $request->username,

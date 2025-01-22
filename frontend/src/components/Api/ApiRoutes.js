@@ -30,6 +30,15 @@ export const apiRoutes = {
     clientSelectRep: `${mainRoute}/api/clientselectrep`,
     clientSelectRepUpdate: `${mainRoute}/api/clientselectrepupdate`,
 
+    registrarRetrieve: `${mainRoute}/api/registrars`,
+    addRegistrar: `${mainRoute}/api/registrars/addregistrar`,
+    updateRegistrar: `${mainRoute}/api/registrars/updateregistrar`,
+    deleteRegistrar: `${mainRoute}/api/registrars/deleteregistrar`,
+    retrieveRegistrarOne: `${mainRoute}/api/registrars/retrieveregistrar`,
+
+    studentRetrieve: `${mainRoute}/api/students`,
+
+
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
     inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,
     addCampus: `${mainRoute}/api/campuses/addcampus`,
@@ -47,6 +56,10 @@ export const apiRoutes = {
     adminSettings: `${mainRoute}/api/settings/adminsettings`,
     adminSettingsRetrieved: `${mainRoute}/api/settings/adminsettingsretrieved`,
     updateAdminSettings: `${mainRoute}/api/settings/updatesdminsettings`,
+
+    profileRetrieved: `${mainRoute}/api/profile/profileretrieve`,
+    updateProfile: `${mainRoute}/api/profile/updateprofile`,
+    personalChangePass: `${mainRoute}/api/profile/personalchangepass`,
 
 
 
@@ -88,7 +101,7 @@ export const apiRoutes = {
     accountStore: `${mainRoute}/api/accounts/store`,
     accountDelete: `${mainRoute}/api/accounts/delete`,
     accountUpdate: `${mainRoute}/api/accounts/update`,
-    personalChangePass: `${mainRoute}/api/accounts/personalchangepass`,
+    accountChangePass: `${mainRoute}/api/accounts/personalchangepass`,
     uploadExcel: `${mainRoute}/api/accounts/uploadexcel`,
 
     requestRetrieve: `${mainRoute}/api/requests`,
@@ -98,7 +111,7 @@ export const apiRoutes = {
     suffixRetrieve: `${mainRoute}/api/suffix`,
 
     otherStatsRetrieve: `${mainRoute}/api/dashboard/otherStats`,
-    pollsRetrieve: `${mainRoute}/api/dashboard/polls`,
+    adminNotifsRetrieve: `${mainRoute}/api/dashboard/adminnotifs`,
 
     retrieveSettings: `${mainRoute}/api/settings`,
     updateSettings: `${mainRoute}/api/settings/updatesettings`,

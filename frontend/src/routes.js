@@ -23,7 +23,6 @@ import ForgotPassword from "layouts/authentication/sign-in/forgot-password";
 
 import Dashboard from "layouts/dashboard";
 import Admins from "layouts/admins";
-import Users from "layouts/users";
 import Blank from "layouts/blank";
 import Students from "layouts/students";
 import Announcements from "layouts/announcements";
@@ -33,8 +32,9 @@ import Abouts from "layouts/abouts";
 import Representatives from "layouts/representatives";
 import ActiveCampus from "layouts/campuses";
 import InactiveCampus from "layouts/inactive-campuses";
-import AdminLog from "layouts/log-admin";
+import LogAdmin from "layouts/log-admin";
 import AdminSettings from "layouts/settings-admin";
+import Registrars from "layouts/registrars";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -74,7 +74,7 @@ const routes = (access) => [
     key: "registrars",
     route: "/registrars",
     icon: <SupervisorAccountTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <Registrars />,
     noCollapse: true,
   },
   // access >= 10 && access <= 30 && {
@@ -133,7 +133,7 @@ const routes = (access) => [
     key: "sections",
     route: "/sections",
     icon: <AccountBalanceTwoToneIcon size="12px" />,
-    component: <Reports />,
+    component: <Blank />,
     noCollapse: true,
   },
   access == 30 && {
@@ -232,7 +232,7 @@ const routes = (access) => [
     key: "admin-logs",
     route: "/admin-logs",
     icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <AdminLog />,
+    component: <LogAdmin />,
     noCollapse: true,
   },
   access == 30 && {
@@ -293,8 +293,8 @@ const routes = (access) => [
   {
     type: "",
     name: "Profile",
-    key: "change-password",
-    route: "/change-password",
+    key: "profile",
+    route: "/profile",
     icon: <InfoTwoToneIcon size="12px" />,
     component: <Profile />,
     noCollapse: true,

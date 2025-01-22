@@ -37,7 +37,7 @@ class Utils
 
     public function getAuthUser() {
         $authUser = User::select('username', 'role', 'access_level', 'clientid',
-            DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), '', IFNULL(last_name, '')) as fullname"))
+            DB::raw("CONCAT(IFNULL(username, ''), ' - ', IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), '', IFNULL(last_name, '')) as fullname"))
             ->where('username', Auth::user()->username)
             ->first();
 

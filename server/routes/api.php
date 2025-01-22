@@ -5,18 +5,18 @@ use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\DocRequestController;
 use App\Http\Controllers\Api\LicenseController;
 use App\Http\Controllers\Api\GeneralController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\LogController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
-use App\Http\Controllers\Api\OfficialController;
-use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RepresentativeController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('dashboard')->group(function () {
         Route::get('otherStats', [DashboardController::class, 'OtherStatistics']);
-        Route::get('polls', [DashboardController::class, 'AdminNotifications']);
+        Route::get('adminnotifs', [DashboardController::class, 'AdminNotifications']);
     });
 
     Route::prefix('admins')->group(function () {
@@ -66,6 +66,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrieverepresentative', [RepresentativeController::class, 'retrieverepresentative']);
     });
 
+    Route::prefix('registrars')->group(function () {
+        Route::post('/', [RegistrarController::class, 'index']);
+        Route::post('addregistrar', [RegistrarController::class, 'addregistrar']);
+        Route::post('updateregistrar', [RegistrarController::class, 'updateregistrar']);
+        Route::get('deleteRegistrar', [RegistrarController::class, 'deleteRegistrar']);
+        Route::get('retrieveregistrar', [RegistrarController::class, 'retrieveregistrar']);
+    });
+
+    Route::prefix('students')->group(function () {
+        Route::post('/', [StudentController::class, 'index']);
+        Route::post('addstudent', [StudentController::class, 'addstudent']);
+        Route::post('updatestudent', [StudentController::class, 'updatestudent']);
+        Route::get('deletestudent', [StudentController::class, 'deletestudent']);
+        Route::get('retrievestudent', [StudentController::class, 'retrievestudent']);
+    });
+
     Route::prefix('campuses')->group(function () {
         Route::post('active', [CampusController::class, 'active']);
         Route::post('inactive', [CampusController::class, 'inactive']);
@@ -78,6 +94,25 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('logs')->group(function () {
         Route::post('adminlogs', [LogController::class, 'adminlogs']);
+    });
+
+    Route::prefix('licenses')->group(function () {
+        Route::post('/', [LicenseController::class, 'index']);
+        Route::get('orgselect', [LicenseController::class, 'orgselect']);
+        Route::post('addlicense', [LicenseController::class, 'addlicense']);
+        Route::get('deletelicense', [LicenseController::class, 'deletelicense']);
+    });
+
+    Route::prefix('settings')->group(function () {
+        Route::get('adminsettings', [SettingsController::class, 'adminsettings']);
+        Route::get('adminsettingsretrieved', [SettingsController::class, 'adminsettingsretrieved']);
+        Route::post('updatesdminsettings', [SettingsController::class, 'updatesdminsettings']);
+    });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('profileretrieve', [ProfileController::class, 'profileretrieve']);
+        Route::post('updateprofile', [ProfileController::class, 'updateprofile']);
+        Route::post('personalchangepass', [ProfileController::class, 'personalchangepass']);
     });
 
     Route::prefix('accounts')->group(function () {
@@ -103,50 +138,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('deleteannouncement', [AnnouncementController::class, 'deleteannouncement']);
 
     });
-
-    Route::prefix('reports')->group(function () {
-        Route::get('/', [ReportController::class, 'index']);
-        Route::get('retrieve', [ReportController::class, 'retrieve']);
-        Route::post('submitcomment', [ReportController::class, 'submitcomment']);
-        Route::post('addreport', [ReportController::class, 'addreport']);
-        Route::post('updatereport', [ReportController::class, 'updatereport']);
-        Route::get('deletereport', [ReportController::class, 'deletereport']);
-        Route::get('resolvereport', [ReportController::class, 'resolvereport']);
-        Route::get('reopenreport', [ReportController::class, 'reopenreport']);
-
-    });
-
-    Route::prefix('officials')->group(function () {
-        Route::get('/', [OfficialController::class, 'index']);
-        Route::get('retrieve', [OfficialController::class, 'retrieve']);
-        Route::post('addofficial', [OfficialController::class, 'addofficial']);
-        Route::post('updateofficial', [OfficialController::class, 'updateofficial']);
-        Route::get('deleteofficial', [OfficialController::class, 'deleteofficial']);
-
-    });
-
-    Route::prefix('settings')->group(function () {
-        Route::get('adminsettings', [SettingsController::class, 'adminsettings']);
-        Route::get('adminsettingsretrieved', [SettingsController::class, 'adminsettingsretrieved']);
-        Route::post('updatesdminsettings', [SettingsController::class, 'updatesdminsettings']);
-    });
-
-    Route::prefix('licenses')->group(function () {
-        Route::post('/', [LicenseController::class, 'index']);
-        Route::get('orgselect', [LicenseController::class, 'orgselect']);
-        Route::post('addlicense', [LicenseController::class, 'addlicense']);
-        Route::get('deletelicense', [LicenseController::class, 'deletelicense']);
-    });
-
-    Route::prefix('document-requests')->group(function () {
-        Route::get('/', [DocRequestController::class, 'index']);
-        Route::get('docselect', [DocRequestController::class, 'docselect']);
-        Route::post('addrequest', [DocRequestController::class, 'addrequest']);
-        Route::get('deleterequest', [DocRequestController::class, 'deleterequest']);
-        Route::get('finishedrequest', [DocRequestController::class, 'finishedrequest']);
-        Route::get('claimedrequest', [DocRequestController::class, 'claimedrequest']);
-        Route::get('availabledate', [DocRequestController::class, 'availabledate']);
-    });
-
 
 });

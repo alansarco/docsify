@@ -13,7 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
 use App\Mail\CampusAddedEmail;
 use App\Mail\CampusRenewEmail;
-use App\Models\AdminLog;
+use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Client;
 use App\Models\LicenseKey;
@@ -185,7 +185,7 @@ class CampusController extends Controller
                 if($adminInfo->notify_campus_add == 1) {
                     $otpSent = Mail::to($request->client_email)->send(new CampusAddedEmail($data));
                 }
-                AdminLog::create([
+                LogAdmin::create([
                     'module' => 'Campus',
                     'action' => 'ADD',
                     'details' => $authUser->fullname .' added campus '.$request->clientid. '-'.$request->client_name,
@@ -339,7 +339,7 @@ class CampusController extends Controller
     
                     if($update) {
                         if (!empty($changes)) {
-                            AdminLog::create([
+                            LogAdmin::create([
                                 'module' => 'Campus',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the following changes: ' . json_encode($changes),
@@ -348,7 +348,7 @@ class CampusController extends Controller
                         }
                         else if($pictureBanner || $pictureLogo) {
                             if($pictureBanner && $pictureLogo) {
-                                AdminLog::create([
+                                LogAdmin::create([
                                     'module' => 'Campus',
                                     'action' => 'UPDATE',
                                     'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner and logo',
@@ -356,7 +356,7 @@ class CampusController extends Controller
                                 ]);
                             }
                             else if($pictureBanner) {
-                                AdminLog::create([
+                                LogAdmin::create([
                                     'module' => 'Campus',
                                     'action' => 'UPDATE',
                                     'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner',
@@ -364,7 +364,7 @@ class CampusController extends Controller
                                 ]);
                             }
                             else if($pictureLogo) {
-                                AdminLog::create([
+                                LogAdmin::create([
                                     'module' => 'Campus',
                                     'action' => 'UPDATE',
                                     'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus logo',
@@ -474,7 +474,7 @@ class CampusController extends Controller
                         if($adminInfo->notify_campus_renew == 1) {
                             $otpSent = Mail::to($campusExist->client_email)->send(new CampusRenewEmail($data));
                         }
-                        AdminLog::create([
+                        LogAdmin::create([
                             'module' => 'Campus',
                             'action' => 'UPDATE',
                             'details' => $authUser->fullname .' updated/renew license for campus '.$campusExist->clientid. '-'.$campusExist->client_name,
@@ -535,7 +535,7 @@ class CampusController extends Controller
         $delete = Client::where('clientid', $request->clientid)->delete();
 
         if($delete) {
-            AdminLog::create([
+            LogAdmin::create([
                 'module' => 'Campus',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted campus '. $request->clientid,

@@ -6,22 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RequestDoc extends Model
+class LogAdmin extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
-    protected $table = "requests";
+    protected $table = 'logs_admin';
 
     protected $fillable = [
-        'username',
-        'document', 
-        'date_needed', 
-        'purpose', 
-        'type', 
-        'contact', 
-        'status', 
-        'created_by',
-        'updated_by',
+        'id',
+        'module',
+        'action',
+        'details',
+        'created_by'
     ];
 }

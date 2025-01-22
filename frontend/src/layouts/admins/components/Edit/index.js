@@ -86,7 +86,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
-            console.log('DATA: ', emptyRequiredFields)
 
             if (emptyRequiredFields.length === 0) {
                   if(!formData.agreement) {

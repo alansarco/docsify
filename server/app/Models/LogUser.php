@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AdminLog extends Model
+class LogUser extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'admin_logs';
+    protected $table = 'logs_user';
 
     protected $fillable = [
         'id',

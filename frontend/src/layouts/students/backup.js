@@ -16,7 +16,7 @@ import DashboardNavbar from "essentials/Navbars";
 import Footer from "essentials/Footer";
 
 // Data
-  import { Grid, useMediaQuery } from "@mui/material";
+  import { Grid } from "@mui/material";
 import { DynamicTableHeight } from "components/General/TableHeight";
 
 import React, { useEffect, useState } from "react";
@@ -34,15 +34,14 @@ import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
+import UploadStudents from "layouts/students/components/UploadStudents";
 import { genderSelect } from "components/General/Utils";
 import { years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
-import { useTheme } from "@emotion/react";
-import TuneIcon from '@mui/icons-material/Tune';
 
-function Students() {
+function Studentss() {
     const currentFileName = "layouts/students/index.js";
-    const {token, access, updateTokenExpiration, clientprovider} = useStateContext();
+    const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {
         return <Navigate to="/authentication/sign-in" />
@@ -51,7 +50,6 @@ function Students() {
         return <Navigate to="/not-found" />
     }
     
-    const [showFilter, setShowFilter] = useState(false);
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
     const [searchTriggered, setSearchTriggered] = useState(true);
@@ -64,17 +62,13 @@ function Students() {
     };
 
     const initialState = {
-        clientid: clientprovider,
         filter: "",
         account_status: "",
         gender: "",
+        year: "",
     };
 
     const [formData, setFormData] = useState(initialState);
-
-    const HandleClear = (user) => {
-      setFormData(initialState);
-    };
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -101,7 +95,7 @@ function Students() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.studentRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.residentsRetrieve + '?page=' + 1, formData, {headers})
           .then(response => {
             setFetchdata(response.data.users);
             passToSuccessLogs(response.data, currentFileName);
@@ -109,7 +103,7 @@ function Students() {
             setFetching("No data Found!")
           })
           .catch(error => {
-            passToErrorLogs(`Representatives Data not Fetched!  ${error}`, currentFileName);
+            passToErrorLogs(`Stuents Data not Fetched!  ${error}`, currentFileName);
             setReload(false);
           });
         setSearchTriggered(false);
@@ -117,7 +111,7 @@ function Students() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.studentRetrieve + '?page=' + page, formData, {headers})
+        axios.post(apiRoutes.residentsRetrieve + '?page=' + page, formData, {headers})
         .then(response => {
         setFetchdata(response.data.users);
         passToSuccessLogs(response.data, currentFileName);
@@ -133,7 +127,7 @@ function Students() {
         e.preventDefault(); 
         setReload(true);      
         try {
-            const response = await axios.post(apiRoutes.studentRetrieve + '?page=' + 1, formData, {headers});
+            const response = await axios.post(apiRoutes.residentsRetrieve + '?page=' + 1, formData, {headers});
             if(response.data.status == 200) {
                 setFetchdata(response.data.users);
             }
@@ -157,7 +151,7 @@ function Students() {
     setReload(true);      
 
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.studentRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.residentsRetrieve + '?page=' + nextPage, formData, {headers})
     .then(response => {
       setFetchdata(response.data.users);
       passToSuccessLogs(response.data, currentFileName);
@@ -172,8 +166,6 @@ function Students() {
   const renderPaginationLinks = () => (
     <CustomPagination fetchdata={fetchdata} fetchNextPrevTasks={fetchNextPrevTasks} />
   )
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
     <> 
@@ -186,60 +178,54 @@ function Students() {
           rendering == 3 ?
             <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
         :
+          rendering == 4 ?
+            <UploadStudents HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
+        :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Registrar List</SoftTypography>
+                  <SoftTypography className="text-uppercase text-secondary" variant="h6" >Residents List</SoftTypography>
                 </SoftBox>
+                {access == 999 && role === "ADMIN" &&
                 <SoftBox display="flex" >
-                  <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
-                    <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
+                  <SoftButton onClick={() => setRendering(4)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="warning" size="small" >
+                    <CloudUploadTwoToneIcon size="15px" className="me-1" /> upload excel
                   </SoftButton>
-                  <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Registrar
+                  <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="info" size="small" >
+                    <Icon>add</Icon> Add Residents
                   </SoftButton>
                 </SoftBox>
+                }
               </SoftBox>
-              <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
-                <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
-                  <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
-                    {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
-                      <Table table="sm" HandleUSER={HandleUSER} HandleRendering={HandleRendering} users={fetchdata.data} tablehead={tablehead} /> :
-                      <>
-                      <SoftBox className="d-flex" height="100%">
-                        <SoftTypography variant="h6" className="m-auto text-secondary">   
-                        {fetchdata && fetchdata.data && fetchdata.data.length < 1 ? "No data Found" : fetching}                    
-                        </SoftTypography>
-                      </SoftBox>
-                      </>
-                    }
-                  </SoftBox>
-                  {fetchdata && fetchdata.data && fetchdata.data.length > 0 && <SoftBox>{renderPaginationLinks()}</SoftBox>}
-                </Grid>
-                {showFilter &&
-                <Grid item xs={12} lg={3} mb={3}>
-                <SoftBox component="form" role="form" className="ms-lg-3 px-3 px-4 mt-2 rounded-5 bg-white shadow" onSubmit={handleSubmit}>
+              <Card className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
+                <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                     <Grid container spacing={1} py={1} pb={2}>  
-                        <Grid item xs={12}>
-                            <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
+                        <Grid item xs={12} lg={8} className="d-block d-md-flex">
+                            <SoftTypography variant="button" className="me-2 my-auto">Filter Result:</SoftTypography>
                             <SoftBox className="my-auto">
-                            <SoftTypography variant="button" className="me-1">Account Status:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                <option value="">-- Select --</option>
+                            <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
+                                <option value="">-- Year of Residency --</option>
+                                {years && years.map((year) => (
+                                <option key={year} value={year}>
+                                        {year}
+                                </option>
+                                ))}
+                            </select>
+                            <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="account_status" value={formData.account_status} onChange={handleChange} >
+                                <option value="">-- Account Status --</option>
                                 {statusSelect && statusSelect.map((status) => (
                                 <option key={status.value} value={status.value}>
                                         {status.desc}
                                 </option>
                                 ))}
                             </select>
-                            <SoftTypography variant="button" className="me-1">Gender:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border"
+                            <select className="form-select-sm text-secondary rounded-5 cursor-pointer border span"
                               name="gender"
                               value={formData.gender}
                               onChange={handleChange}
                               >
-                              <option value="">-- Select --</option>
+                              <option value="">-- Gender --</option>
                               {genderSelect && genderSelect.map((gender) => (
                                 <option key={gender.value} value={gender.value}>
                                   {gender.desc}
@@ -247,31 +233,39 @@ function Students() {
                               ))}
                             </select>
                             </SoftBox>
-                            <SoftInput 
-                              className="my-3"
-                              value={formData.filter}
-                              onChange={handleChange}
-                              placeholder="Search here..." name="filter" size="small"
-                            />
-                            <Grid container display="flex" justifyContent="end">
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton onClick={HandleClear}  className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="secondary" size="small" >
-                                  clear
+                        </Grid>   
+                        <Grid item xs={12} lg={4}>  
+                            <SoftBox className="px-md-0 px-2" display="flex" margin="0" justifyContent="end">
+                                <SoftInput 
+                                    value={formData.filter}
+                                    onChange={handleChange}
+                                    placeholder="Search here..." name="filter" size="small"
+                                    icon={{
+                                        component: 'search',
+                                        direction: 'right',
+                                    }}
+                                />
+                                <SoftButton className="px-3 rounded-0 rounded-right" variant="gradient" color="info" size="medium" iconOnly type="submit">
+                                    <Icon>search</Icon>
                                 </SoftButton>
-                              </Grid>
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="info" size="small" type="submit">
-                                  search
-                                </SoftButton>
-                              </Grid>
-                            </Grid>
+                            </SoftBox>
                         </Grid>
                     </Grid>
                 </SoftBox>
-                </Grid>
-                }
-                
-              </Grid>
+                <SoftBox className="shadow-none table-container px-md-1 px-3 bg-gray rounded-5" height={tableHeight} minHeight={50}>
+                  {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
+                    <Table table="sm" HandleUSER={HandleUSER} HandleRendering={HandleRendering} users={fetchdata.data} tablehead={tablehead} /> :
+                    <>
+                    <SoftBox className="d-flex" height="100%">
+                      <SoftTypography variant="h6" className="m-auto text-secondary">   
+                      {fetchdata && fetchdata.data && fetchdata.data.users.length < 1 ? "No data Found" : fetching}                    
+                      </SoftTypography>
+                    </SoftBox>
+                    </>
+                  }
+                </SoftBox>
+                {fetchdata && fetchdata.data && fetchdata.data.length > 0 && <SoftBox>{renderPaginationLinks()}</SoftBox>}
+              </Card>
             </SoftBox>
           </SoftBox>
           }
@@ -292,4 +286,4 @@ function Students() {
   );
 }
 
-export default Students;
+export default Studentss;

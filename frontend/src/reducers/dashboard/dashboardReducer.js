@@ -6,8 +6,8 @@ const initialState = {
   loadAuthUser: true,
   otherStats: [],
   loadOtherStats: true,
-  polls: [],
-  loadPolls: true,
+  adminnotifs: [],
+  loadAdminNotifs: true,
   errormessage: "Something went wrong!",
 };
 
@@ -41,18 +41,18 @@ const dashboardReducer = (state = initialState, action) => {
         loadOtherStats: false,
       };
 
-    case actionTypes.FETCH_SALES:
+    case actionTypes.FETCH_ADMIN_NOTIFS:
       return {
         ...state,
-        polls: action.data.polls,
-        loadPolls: false,
+        adminnotifs: action.data.adminnotifs,
+        loadAdminNotifs: false,
       };
 
-    case actionTypes.FETCH_SALES_FAIL:
+    case actionTypes.FETCH_ADMIN_NOTIFS_FAIL:
       return {
         ...state,
-        errormessage: "Error fetching polls data, please check your internet connection",
-        loadPolls: false,
+        errormessage: "Error fetching admin notifications, please check your internet connection",
+        loadAdminNotifs: false,
       };
 
     default:

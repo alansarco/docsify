@@ -66,13 +66,12 @@ function DashboardNavbar(props) {
   }
   const render = props.RENDERNAV;
 
-  const {authUser, polls} = useDashboardData({
+  const {authUser, adminnotifs} = useDashboardData({
     authUser: true, 
-    polls: true, 
+    adminnotifs: true, 
     render: render
   });
-  // const notifs = polls.filter(poll => poll.status !== "archive").length;
-  let notifs = polls.length;
+  let notifs = adminnotifs.length;
 
   useEffect(() => {
     const updateTimestamps = () => {
@@ -133,9 +132,8 @@ function DashboardNavbar(props) {
     'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
   };
   const handlePassword = () => {
-    navigate("/change-password", { state: { from: location } });
+    navigate("/profile", { state: { from: location } });
   }
-
   const handleLogout = async (e) => {
     setSubmitLogout(true);
     handleCloseMenu();
@@ -182,7 +180,7 @@ function DashboardNavbar(props) {
     >
       <AccountItems
         color="secondary"
-        description="Change Password?"
+        description="Manage Account?"
         image={
           <Icon fontSize="small" sx={{ color: ({ palette: { white } }) => white.main }}>
             account_circle

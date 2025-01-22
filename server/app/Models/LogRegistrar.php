@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReportComment extends Model
+class LogRegistrar extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
-    protected $table = "comments";
+    protected $table = 'logs_registrar';
 
     protected $fillable = [
-        'report_id',
-        'name',
-        'comment', 
-        'created_by',
+        'id',
+        'module',
+        'action',
+        'details',
+        'created_by'
     ];
 }

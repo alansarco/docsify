@@ -1,6 +1,5 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
 // React components
 import SoftBox from "components/SoftBox";
@@ -11,22 +10,18 @@ import Icon from "@mui/material/Icon";
 import DashboardLayout from "essentials/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "essentials/Navbars";
 import Footer from "essentials/Footer";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import typography from "assets/theme/base/typography";
 // React base styles
 
 // Data
 import DefaultDoughnutChart from "essentials/Charts/DoughnutCharts/DefaultDoughnutChart";
-import TimelineList from "essentials/Timeline/TimelineList";
-import TimelineItem from "essentials/Timeline/TimelineItem";
 
 import React, { useState } from "react";
 import { useDashboardData } from 'layouts/dashboard/data/dashboardRedux';
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
 import GradientLineChart from "essentials/Charts/LineCharts/GradientLineChart";
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
 
 function Dashboard() {
   const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
@@ -102,6 +97,7 @@ function Dashboard() {
                       <GradientLineChart
                         title="Income Growth"
                         currentincome={currentincome}
+                        total_income={otherStats.data7}
                         description={
                           <SoftBox display="flex" alignItems="center">
                             <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>

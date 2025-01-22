@@ -26,7 +26,7 @@ import colors from "assets/theme/base/colors";
 import AbsoluteLoading from "components/General/AbsoluteLoading";
 import { formatCurrency } from "components/General/Utils";
 
-function GradientLineChart({ title, description, height, chart, loading, currentincome }) {
+function GradientLineChart({ title, description, height, chart, loading, currentincome, total_income }) {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState({});
   const { data, options } = chartData;
@@ -60,7 +60,10 @@ function GradientLineChart({ title, description, height, chart, loading, current
         <SoftBox px={description ? 1 : 0} pt={description ? 1 : 0}>
           {title && (
             <SoftBox mb={1}>
-              <SoftTypography variant="h6">{title} <span className="text-info  text-gradient">({formatCurrency(currentincome)})</span></SoftTypography>
+              <SoftTypography variant="h6">{title} <span className="text-info text-gradient">({formatCurrency(currentincome)})</span></SoftTypography>
+              <SoftTypography variant="h6" className="text-xxs">Total Income 
+                <span className="text-success text-gradient"> ({formatCurrency(total_income)})</span>
+              </SoftTypography>
             </SoftBox>
           )}
           <SoftBox mb={2}>

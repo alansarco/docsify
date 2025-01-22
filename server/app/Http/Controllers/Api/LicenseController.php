@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Utilities\Utils;
-use App\Models\AdminLog;
+use App\Models\LogAdmin;
 use App\Models\Client;
 use Illuminate\Support\Str;
 
@@ -99,7 +99,7 @@ class LicenseController extends Controller
         ]);
 
         if($addLicense) {
-            AdminLog::create([
+            LogAdmin::create([
                 'module' => 'License',
                 'action' => 'ADD',
                 'details' => $authUser->fullname .' added new license '.$GeneratedLicense,
@@ -128,7 +128,7 @@ class LicenseController extends Controller
         if(!$checkLicenseUsed) {
             $delete = LicenseKey::where('license_key', $request->license_key)->delete();
             if($delete) {
-                AdminLog::create([
+                LogAdmin::create([
                     'module' => 'License',
                     'action' => 'DELETE',
                     'details' => $authUser->fullname .' deleted license '.$request->license_key,

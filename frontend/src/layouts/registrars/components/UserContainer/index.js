@@ -13,9 +13,8 @@ import SoftTypography from "components/SoftTypography";
 import SoftAvatar from "components/SoftAvatar";
 
 // React icons
-import Settings from "essentials/Icons/Settings";
-import Document from "essentials/Icons/Document";
 import Cube from "essentials/Icons/Cube";
+import Document from "essentials/Icons/Document";
 
 // React base styles
 import breakpoints from "assets/theme/base/breakpoints";
@@ -24,25 +23,19 @@ import breakpoints from "assets/theme/base/breakpoints";
 import logo from "assets/images/logo.png";
 import bgImage from "assets/images/banner.jpg";
 import Information from "../Information";
-import Security from "../Security";
 import Edit from "../Edit";
-import { useStateContext } from "context/ContextProvider";
-import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import axios from "axios";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import { passToErrorLogs } from "components/Api/Gateway";
+import { useStateContext } from "context/ContextProvider";
 import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading";
 
-function ProfileContainer() {
+function UserContainer({USER, HandleRendering, ReloadTable}) {
+  const currentFileName = "layouts/users/components/UserContainer/index.js";
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
-
-  const {authUser, polls} = useDashboardData({
-    authUser: true, 
-    polls: false, 
-  });
 
   const [menu, setMenu] = useState("profile");
 
@@ -50,15 +43,9 @@ function ProfileContainer() {
     setMenu("profile");
     setTabValue(0);
   };
-
   const setEdit = () => {
     setMenu("edit");
     setTabValue(1);
-  };
-
-  const setSettings = () => {
-    setMenu("security");
-    setTabValue(2);
   };
 
   useEffect(() => {
@@ -83,43 +70,49 @@ function ProfileContainer() {
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
-  const {token, role, user} = useStateContext();
+  const {token, role, access} = useStateContext();
   const YOUR_ACCESS_TOKEN = token; 
   const headers = {
     'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
   };
-  
-  const [User, setUser] = useState([]);
-  const currentFileName = "layouts/profile/components/ProfileContainer/index.js";
-  const [reload, setReload] = useState(true);
-  const username = user;
 
-  useEffect(() => {
-    if (reload) {
-      setReload(true);
-      axios.get(apiRoutes.profileRetrieved, { params: { username }, headers })
-        .then(response => {
-          if (response.data.status === 200) {
-            setUser(response.data.user);
-          } else {
-            toast.error(`${response.data.message}`, { autoClose: true });
-          }
-          passToSuccessLogs(response.data, currentFileName);
-          setReload(false);
-        })  
-        .catch(error => {
-          passToErrorLogs(`Users not Fetched!  ${error}`, currentFileName);
-          setReload(false);
-        });
-    }
-  }, [reload]);
+  const [User, setUser] = useState([]);
+  const [haveAccount, setHaveAccount] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [reload, setReload] = useState(true);
+  const username = USER;
 
   const UpdateLoading = (reloading) => {
     setReload(reloading);
   };
 
+  useEffect(() => {
+    if (reload) {
+      setReload(true);
+      axios.get(apiRoutes.retrieveRegistrarOne, { params: { username }, headers })
+        .then(response => {
+          if (response.data.status === 200) {
+            setUser(response.data.user);
+            setHaveAccount(response.data.haveAccount)  
+          } else {
+            toast.error(`${response.data.message}`, { autoClose: true });
+          }
+          passToSuccessLogs(response.data, currentFileName);
+          setReload(false);
+          setIsLoading(false);
+        })  
+        .catch(error => {
+          passToErrorLogs(`Users not Fetched!  ${error}`, currentFileName);
+          setReload(false);
+          setIsLoading(false);
+        });
+    }
+  }, [reload]);
+
+
   return (
     <>
+    {isLoading && <FixedLoading /> }
     <SoftBox position="relative" mt={3}>
       <SoftBox
         display="flex"
@@ -182,18 +175,16 @@ function ProfileContainer() {
               >
                 <Tab label="Information" onClick={setProfile} icon={<Cube />} />
                 <Tab label="Edit" onClick={setEdit} icon={<Document />} />
-                <Tab label="Security" onClick={setSettings} icon={<Settings />} />
               </Tabs> 
             </AppBar>
           </Grid>
         </Grid>
       </Card>
     </SoftBox>
-    {menu === "profile" && <Information USER={User}  reload={reload} />}
-    {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User}  />}
-    {menu === "security" && <Security USER={User}  />}
+    {menu === "profile" && <Information USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
     </>
   );
 }
 
-export default ProfileContainer;
+export default UserContainer;

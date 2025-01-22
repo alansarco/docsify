@@ -36,7 +36,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { actionSelect, moduleSelect } from "components/General/Utils";
 import { toast } from "react-toastify";
 
-function AdminLog() {
+function LogAdmin() {
     const currentFileName = "layouts/log-admin/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
@@ -266,4 +266,4 @@ function AdminLog() {
   );
 }
 
-export default AdminLog;
+export default LogAdmin;

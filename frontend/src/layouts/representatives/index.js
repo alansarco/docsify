@@ -1,6 +1,3 @@
-// @mui material components
-import Card from "@mui/material/Card";
-
 // React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
@@ -33,9 +30,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
-import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import { genderSelect } from "components/General/Utils";
-import { years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';

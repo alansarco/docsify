@@ -75,7 +75,6 @@ function SignIn() {
       try {
         const response = await axios.post(apiRoutes.login, formData);
         let token = response.data.access_token;
-        console.log("USER: ", response.data.user)
         passToSuccessLogs(response.data.message, currentFileName);
         if (token) {
           setToken(token);

@@ -50,20 +50,20 @@ export function useDashboardData(fetchData) {
     }
   }, [fetchData.otherStats, dispatch]); // Include dashboardData as a dependency if needed
 
-  //Fetch Polls Data
+  //Fetch Admin Notifs Data
   useEffect(() => {
-    if(fetchData.polls || fetchData.render == 1) {
-      axios.get(apiRoutes.pollsRetrieve, {headers})
+    if(fetchData.adminnotifs || fetchData.render == 1) {
+      axios.get(apiRoutes.adminNotifsRetrieve, {headers})
       .then(response => {
-        dispatch(actions.fetchPolls(response.data));
+        dispatch(actions.fetchAdminNotifs(response.data));
         passToSuccessLogs(response.data, currentFileName);
       })
       .catch(error => {
-        dispatch(actions.fetchPollsFail(error.error));
-        passToErrorLogs(`Polls Data not Fetched!  ${error}`, currentFileName);
+        dispatch(actions.fetchAdminNotifsFail(error.error));
+        passToErrorLogs(`Admin Notifs Data not Fetched!  ${error}`, currentFileName);
       });
     }
-  }, [fetchData.polls, fetchData.render, dispatch]); // Include dashboardData as a dependency if needed
+  }, [fetchData.adminNotifs, fetchData.render, dispatch]); // Include dashboardData as a dependency if needed
 
   
 

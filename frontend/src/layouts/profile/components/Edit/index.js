@@ -13,41 +13,30 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+function Edit({USER, UpdateLoading}) {
+      const currentFileName = "layouts/profile/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
-      const [fetchclients, setFetchClients] = useState([]);
-      const client = USER.clientid;
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
 
-      useEffect(() => {
-            axios.get(apiRoutes.clientSelectRepUpdate, { params: { client } })
-            .then(response => {
-              setFetchClients(response.data.clients);
-              passToSuccessLogs(response.data, currentFileName);
-            })
-            .catch(error => {
-              passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
-            });
-      }, []);
+      const location = useLocation();
+      const navigate = useNavigate();
       
+      const handleCancel = () => {
+            navigate(location.state?.from);
+      };
+            
       const initialState = {
             username: USER.username,
-            clientid: USER.clientid == null ? "" : USER.clientid,
-            first_name: USER.first_name == null ? "" : USER.first_name,
-            middle_name: USER.middle_name == null ? "" : USER.middle_name,
-            last_name: USER.last_name == null ? "" : USER.last_name,
             address: USER.address == null ? "" : USER.address,
-            gender: USER.gender == null ? "" : USER.gender,
             email: USER.email == null ? "" : USER.email,
             contact: USER.contact == null ? "" : USER.contact,
-            birthdate: USER.birthdate == null ? "" : USER.birthdate,
             account_status: USER.account_status == null ? "" : USER.account_status, 
             agreement: false,   
       };
@@ -79,23 +68,13 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             }
       };
 
-      const handleCancel = () => {
-            ReloadTable();
-            HandleRendering(1);
-      };
-            
       const handleSubmit = async (e) => {
             e.preventDefault(); 
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "clientid",
                   "username",
-                  "first_name",
-                  "last_name",
-                  "gender",
                   "contact",
-                  "birthdate",
                   "address",
                   "email",
             ];
@@ -114,23 +93,14 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                               }
                               else {  
                                     const data = new FormData();
-                                    data.append("clientid", formData.clientid);
                                     data.append("username", formData.username);
-                                    data.append("first_name", formData.first_name);
-                                    data.append("middle_name", formData.middle_name);
-                                    data.append("last_name", formData.last_name);
                                     data.append("id_picture", formData.id_picture);
-                                    data.append("gender", formData.gender);
                                     data.append("contact", formData.contact);
-                                    data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
                                     data.append("email", formData.email);
-                                    data.append("account_status", formData.account_status);
-                                    const response = await axios.post(apiRoutes.updateRepresentative, data, {headers});
+                                    const response = await axios.post(apiRoutes.updateProfile, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          // setFormData(initialState);
-                                          ReloadTable();
                                           UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
@@ -164,59 +134,26 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                         
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                              <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
-                                          Account Information    
-                                    </SoftTypography>
-                                    <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Campus:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
-                                                <option value="">--- Select Campus ---</option>
-                                                      {fetchclients && fetchclients.map((school) => (
-                                                      <option key={school.clientid} value={school.clientid}>
-                                                            {school.client_name}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid> 
-                                    </Grid>    
                                     <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                           Personal Information    
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Middle Name:</SoftTypography>
-                                                <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" /> 
-                                          </Grid>     
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Last Name:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" /> 
-                                          </Grid>         
-                                          <Grid item xs={12} md={6} lg={2} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Gender: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="gender" value={formData.gender} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {genderSelect && genderSelect.map((gender) => (
-                                                      <option key={gender.value} value={gender.value}>
-                                                            {gender.desc}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid>
                                           <Grid item xs={12} lg={6} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                           </Grid>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
+                                          </Grid> 
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
                                                 <input
@@ -227,33 +164,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={5} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid>
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Account Status: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {statusSelect && statusSelect.map((status) => (
-                                                      <option key={status.value} value={status.value}>
-                                                            {status.desc}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid>
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>

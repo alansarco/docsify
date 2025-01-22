@@ -10,7 +10,6 @@ import SoftBox from "components/SoftBox";
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import SoftButton from "components/SoftButton";
 import { useStateContext } from "context/ContextProvider";
 import axios from "axios";
@@ -21,7 +20,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading"; 
 import { formatCurrency } from "components/General/Utils";
-
+import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 
 function Table({ DATA, tablehead, ReloadTable }) {
   const currentFileName = "layouts/organizations/data/table.js";
@@ -173,8 +172,8 @@ function Table({ DATA, tablehead, ReloadTable }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
             {!row.license_client && 
-            <SoftButton onClick={() => handleDelete(row.license_key)} className="text-xxs py-0 px-3 rounded-pill" variant="gradient" color="primary" size="small">
-              <DeleteTwoToneIcon /> delete
+            <SoftButton onClick={() => handleDelete(row.license_key)} className="text-xxs py-0 rounded-pill" variant="gradient" color="primary" size="medium" iconOnly>
+              <DeleteForeverTwoToneIcon />
             </SoftButton>  
             }
           </SoftBox>  

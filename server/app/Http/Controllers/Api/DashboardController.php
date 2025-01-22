@@ -28,6 +28,8 @@ class DashboardController extends Controller
             $currentYear--;
         }
 
+        $income = SystemIncome::sum('price');
+
         $activeclients = Client::where('subscription_end', '>=', $today)->count();
         $inactiveclients = Client::where('subscription_end', '<', $today)->count();
 
@@ -43,6 +45,7 @@ class DashboardController extends Controller
             'data4' => $data4,
             'data5' => $activeclients,
             'data6' => $inactiveclients,
+            'data7' => $income,
             'totalIncome' => $totalIncome,
         ];
 
@@ -65,7 +68,7 @@ class DashboardController extends Controller
         if($adminnotifs) {
             return response()->json([
                 'message' => 'Admin notifications retrieved!',
-                'polls' => $adminnotifs,
+                'adminnotifs' => $adminnotifs,
             ]);
         }
         return response()->json([

@@ -108,6 +108,12 @@ class LoginController extends Controller {
         $userInfo = User::select('*', 
             DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"),
             DB::raw("TO_BASE64(id_picture) as id_picture"),
+            DB::raw("TO_BASE64(id_picture) as id_picture"),
+            DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
+            DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
+            DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),
+            DB::raw("CONCAT(DATE_FORMAT(updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+            DB::raw("CONCAT(TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE())) AS age"),
             DB::raw("DATE_FORMAT(last_online, '%M %d, %Y') as last_online")
         )
         ->where('username', $authUser->username)

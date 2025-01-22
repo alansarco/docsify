@@ -20,12 +20,12 @@ export const fetchOtherStatsFail = (error) => ({
   error,
 });
 
-export const fetchPolls = (data) => ({
-  type: actionTypes.FETCH_SALES,
+export const fetchAdminNotifs = (data) => ({
+  type: actionTypes.FETCH_ADMIN_NOTIFS,
   data,
 });
 
-export const fetchPollsFail = (error) => ({
-  type: actionTypes.FETCH_SALES_FAIL,
+export const fetchAdminNotifsFail = (error) => ({
+  type: actionTypes.FETCH_ADMIN_NOTIFS_FAIL,
   error,
 });

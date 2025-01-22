@@ -32,34 +32,19 @@ import { useStateContext } from "context/ContextProvider";
 function Configurator() {
   const [controller, dispatch] = useSoftUIController();
   const { openConfigurator} = controller;
-  const [disabled, setDisabled] = useState(false);
   const {user, access} = useStateContext();
   
-  const {polls} = useDashboardData({
-    // polls: true, 
+  let {adminnotifs} = useDashboardData({
+    // adminnotifs: true, 
   });
+
   const navigate = useNavigate(); 
   
   const handleViewRequest = () => {
-    // setOpenConfigurator(dispatch, false); 
+    setOpenConfigurator(dispatch, false); 
     // navigate("/ongoing");  
   };
-  // Use the useEffect hook to change the button state for the sidenav type based on window size.
-  useEffect(() => {
-    // A function that sets the disabled state of the buttons for the sidenav type.
-    function handleDisabled() {
-      return window.innerWidth > 1200 ? setDisabled(false) : setDisabled(true);
-    }
-
-    // The event listener that's calling the handleDisabled function when resizing the window.
-    window.addEventListener("resize", handleDisabled);
-
-    // Call the handleDisabled function to set the state with the initial value.
-    handleDisabled();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleDisabled);
-  }, []);
+  
   const handleCloseConfigurator = () => setOpenConfigurator(dispatch, false); 
   return (
     <ConfiguratorRoot variant="permanent" ownerState={{ openConfigurator }}>
@@ -74,7 +59,7 @@ function Configurator() {
         <SoftBox>
           <SoftTypography variant="h5">Notifications</SoftTypography>
           <SoftTypography variant="body2" color="text">
-            {polls && polls.length > 0 ? "Active Request" : "No Active Request"}
+            {adminnotifs && adminnotifs.length > 0 ? "Active Request" : "No Active Request"}
           </SoftTypography>
         </SoftBox>
 
@@ -93,25 +78,23 @@ function Configurator() {
         </Icon>
       </SoftBox>
       <Divider />
-      {polls && polls.length > 0 && polls.map((poll) => (
-      <SoftBox key={poll.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
+      {adminnotifs && adminnotifs.length > 0 && adminnotifs.map((adminnotif) => (
+      <SoftBox key={adminnotif.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
           <SoftBox display="flex">
-            <SoftTypography variant="h6">{poll.fullname}</SoftTypography>
-            <SoftBadge badgeContent="mark as read" variant="gradient" 
-              color="info" size="sm" />
+            <SoftTypography variant="h6">{adminnotif.fullname}</SoftTypography>
+            {/* <SoftBadge badgeContent="mark as read" variant="gradient" color="info" size="sm" /> */}
           </SoftBox>
           <SoftBox display="flex">
-            <SoftTypography variant="h6" color="secondary" className="text-xxs">{poll.username}</SoftTypography>
+            <SoftTypography variant="h6" color="secondary" className="text-xxs">{adminnotif.username}</SoftTypography>
             {/* contained */}
           </SoftBox>
           <SoftBox mt={1}>
-            {/* <SoftTypography className="text-xxs" color="dark" ><b>Date Added: </b>{poll.created_date}</SoftTypography> */}
-            <SoftTypography className="text-xxs" color="dark" >{poll.created_date}</SoftTypography>
+            {/* <SoftTypography className="text-xxs" color="dark" ><b>Date Added: </b>{adminnotif.created_date}</SoftTypography> */}
+            <SoftTypography className="text-xxs" color="dark" >{adminnotif.created_date}</SoftTypography>
           </SoftBox> 
           
         </SoftBox>
        ))}
-           
     </ConfiguratorRoot>
   );
 }

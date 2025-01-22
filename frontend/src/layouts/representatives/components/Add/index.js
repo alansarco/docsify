@@ -164,7 +164,7 @@ function Add({HandleRendering, ReloadTable }) {
                                     </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Username:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1"> Username/Employee ID:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.username} onChange={handleChange} size="small"
                                                 /> 

@@ -5,8 +5,8 @@ import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import { statusSelect, getN, genderSelect, currentDate } from "components/General/Utils";
-import { useEffect, useState } from "react";
+import { getN, genderSelect, currentDate } from "components/General/Utils";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { messages } from "components/General/Messages";
 import { useStateContext } from "context/ContextProvider";
@@ -14,41 +14,28 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
-function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+function Add({HandleRendering, ReloadTable }) {
+      const currentFileName = "layouts/representatives/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
-      const {token} = useStateContext();  
-      const [fetchclients, setFetchClients] = useState([]);
-      const client = USER.clientid;
+      const {token, clientprovider} = useStateContext();  
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
-
-      useEffect(() => {
-            axios.get(apiRoutes.clientSelectRepUpdate, { params: { client } })
-            .then(response => {
-              setFetchClients(response.data.clients);
-              passToSuccessLogs(response.data, currentFileName);
-            })
-            .catch(error => {
-              passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
-            });
-      }, []);
       
       const initialState = {
-            username: USER.username,
-            clientid: USER.clientid == null ? "" : USER.clientid,
-            first_name: USER.first_name == null ? "" : USER.first_name,
-            middle_name: USER.middle_name == null ? "" : USER.middle_name,
-            last_name: USER.last_name == null ? "" : USER.last_name,
-            address: USER.address == null ? "" : USER.address,
-            gender: USER.gender == null ? "" : USER.gender,
-            email: USER.email == null ? "" : USER.email,
-            contact: USER.contact == null ? "" : USER.contact,
-            birthdate: USER.birthdate == null ? "" : USER.birthdate,
-            account_status: USER.account_status == null ? "" : USER.account_status, 
+            clientid: clientprovider,
+            username: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            address: "",
+            gender: "",
+            contact: "",
+            birthdate: "",
+            email: "",
+            id_picture: null,
             agreement: false,   
       };
 
@@ -61,26 +48,25 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                 setFormData({ ...formData, [name]: !formData[name] });
             } 
             else if (type === "file" && name === "id_picture") {
-                  const file = files[0];
-                  if (file && (file.type === "application/png" || 
-                          file.type === "image/jpeg" ||
-                          file.name.endsWith(".jpg") ||
-                          file.name.endsWith(".jpeg") ||
-                          file.name.endsWith(".png")
-                    )) {
-                      setFormData({ ...formData, id_picture: file });
-                  } else {
-                      toast.error("Only .png and .jpg images are allowed");
-                      e.target.value = null;
-                  }
-            }  
+                const file = files[0];
+                if (file && (file.type === "application/png" || 
+                        file.type === "image/jpeg" ||
+                        file.name.endsWith(".jpg") ||
+                        file.name.endsWith(".jpeg") ||
+                        file.name.endsWith(".png")
+                  )) {
+                    setFormData({ ...formData, id_picture: file });
+                } else {
+                    toast.error("Only .png and .jpg images are allowed");
+                    e.target.value = null;
+                }
+            } 
             else {
                   setFormData({ ...formData, [name]: value });
             }
       };
 
       const handleCancel = () => {
-            ReloadTable();
             HandleRendering(1);
       };
             
@@ -93,6 +79,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                   "username",
                   "first_name",
                   "last_name",
+                  "id_picture",
                   "gender",
                   "contact",
                   "birthdate",
@@ -101,7 +88,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
-
             if (emptyRequiredFields.length === 0) {
                   if(!formData.agreement) {
                         toast.warning(messages.agreement, { autoClose: true });
@@ -125,20 +111,18 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
                                     data.append("email", formData.email);
-                                    data.append("account_status", formData.account_status);
-                                    const response = await axios.post(apiRoutes.updateRepresentative, data, {headers});
+                                    const response = await axios.post(apiRoutes.addRegistrar, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          // setFormData(initialState);
+                                          setFormData(initialState);
                                           ReloadTable();
-                                          UpdateLoading(true);
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
                                     }
                                     passToSuccessLogs(response.data, currentFileName);
                               }
                         } catch (error) { 
-                              toast.error("Error adding Admin!", { autoClose: true });
+                              toast.error("Error adding Registrar!", { autoClose: true });
                               passToErrorLogs(error, currentFileName);
                         }     
                         setSubmitProfile(false);
@@ -164,24 +148,18 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                         
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                              <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
+                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                           Account Information    
                                     </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Campus:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1"> Username/Employee ID:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
-                                                <option value="">--- Select Campus ---</option>
-                                                      {fetchclients && fetchclients.map((school) => (
-                                                      <option key={school.clientid} value={school.clientid}>
-                                                            {school.client_name}
-                                                      </option>
-                                                      ))}
-                                                </select>
-                                          </Grid> 
+                                                <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.username} onChange={handleChange} size="small"
+                                                /> 
+                                          </Grid>
                                     </Grid>    
-                                    <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
+                                    <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                           Personal Information    
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
@@ -219,6 +197,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input
                                                       type="file"
                                                       name="id_picture"
@@ -241,18 +220,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid>
-                                          <Grid item xs={12} sm={6} md={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Account Status: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {statusSelect && statusSelect.map((status) => (
-                                                      <option key={status.value} value={status.value}>
-                                                            {status.desc}
-                                                      </option>
-                                                      ))}
-                                                </select>
                                           </Grid>
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
@@ -279,7 +246,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
                                                       <SoftButton variant="gradient" type="submit" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="info">
-                                                            Update
+                                                            Save
                                                       </SoftButton>
                                                 </SoftBox>
                                           </Grid>
@@ -292,4 +259,4 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
       );
 }
 
-export default Edit;
+export default Add;

@@ -16,18 +16,21 @@ use App\Http\Controllers\Utilities\Utils;
 use App\Mail\AccoutApproveEmail;
 use App\Models\LogAdmin;
 use App\Models\App_Info;
+use App\Models\Client;
+use App\Models\LogRepresentative;
 use Illuminate\Support\Facades\Mail;
 
-class AdminController extends Controller
+class RegistrarController extends Controller
 {
-    // Get all the list of admins
+    // Get all the list of registrars
     public function index(Request $request) {
+        $clientidFilter = $request->clientid ?? '';
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
 
         // Call the stored procedure
-        $users = DB::select('CALL GET_USERS_ADMIN(?, ?, ?)', [$filter, $genderFilter, $accountStatus]);
+        $users = DB::select('CALL GET_USERS_REGISTRAR(?, ?, ?, ?)', [$clientidFilter, $filter, $genderFilter, $accountStatus]);
 
         // Convert the results into a collection
         $usersCollection = collect($users);
@@ -50,27 +53,28 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 200,
                 'users' => $paginatedUsers,
-                'message' => 'Admins retrieved!',
+                'message' => 'School Registrar retrieved!',
             ], 200);
         } else {
             return response()->json([
-                'message' => 'No Admin Accounts found!',
+                'message' => 'No School Registrar Accounts found!',
                 'users' => $paginatedUsers
             ]);
         }
     }
 
-    public function addadmin(Request $request) {
+    public function addregistrar(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
-
-        if(Auth::user()->role !== "ADMIN" || Auth::user()->role < 999) {
+        
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
 
         $validator = Validator::make($request->all(), [
+            'clientid' => 'required',
             'email' => 'required|email',
             'username' => 'required',
             'first_name' => 'required',
@@ -88,17 +92,16 @@ class AdminController extends Controller
             ]);
         }
 
-        $acountExist = DB::table('users')->where('username', $request->username)->first();
-        $emailExist = DB::table('users')->where('email', $request->email)->first();
-        $countAdmin = User::where('role', 'ADMIN')->count();
-        $adminInfo = App_Info::first();
-
-        if($countAdmin >= $adminInfo->superadmin_limit) {
+        $validity = new Utils;
+        $valid_client = $validity->checkclient_validity($request->clientid);
+        if(!$valid_client) {
             return response()->json([
-                'message' => 'You have reached the maximum admin account!'
+                'message' => 'Campus license has already expired or the subscription has not yet started!'
             ]);
         }
 
+        $acountExist = DB::table('users')->where('username', $request->username)->first();
+        $emailExist = DB::table('users')->where('email', $request->email)->first();
         $defaultPassword = Hash::make($request->contact);
 
         if(!$acountExist && !$emailExist) {
@@ -109,6 +112,7 @@ class AdminController extends Controller
                     $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                 }
                 $add = User::create([
+                    'clientid' => $request->clientid,
                     'username' => $request->username,
                     'first_name' => strtoupper($request->first_name),
                     'middle_name' => strtoupper($request->middle_name),
@@ -118,9 +122,9 @@ class AdminController extends Controller
                     'email' => $request->email,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
-                    'role' => 'ADMIN',   
+                    'role' => 'REGISTRAR',   
                     'id_picture' => $pictureData,   
-                    'access_level' => 999,   
+                    'access_level' => 10,   
                     'birthdate' => $request->birthdate,  
                     'account_status' => 1,  
                     'created_by' => $authUser->fullname,
@@ -129,26 +133,27 @@ class AdminController extends Controller
 
             $data = $request->username;
             $otpSent = false;
+            $adminInfo = App_Info::first();
             if($adminInfo->notify_user_approve == 1) {
                 $otpSent = Mail::to($request->email)->send(new AccoutApproveEmail($data));
             }
 
             if($add) {
-                LogAdmin::create([
-                    'module' => 'Admin Accounts',
+                LogRepresentative::create([
+                    'module' => 'Registrar Accounts',
                     'action' => 'ADD',
-                    'details' => $authUser->fullname .' added account '. $request->username,
+                    'details' => $authUser->fullname .' addded account '. $request->username,
                     'created_by' => $authUser->fullname,
                 ]);
                 if($otpSent) {
                     return response()->json([
                         'status' => 200,
-                        'message' => 'Admin added successfully and email notification is sent to user!'
+                        'message' => 'School registrar added successfully and email notification is sent to user!'
                     ], 200);
                 }
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Admin added successfully!'
+                    'message' => 'School registrar added successfully!'
                 ], 200);
             }
             else {
@@ -174,11 +179,11 @@ class AdminController extends Controller
         }
     }
 
-    public function updateadmin(Request $request) {
+    public function updateregistrar(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
-        if($authUser->role !== "ADMIN" || $authUser->access_level < 999) {
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);
@@ -187,6 +192,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'username' => 'required',
+            'clientid' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'gender' => 'required',
@@ -202,6 +208,14 @@ class AdminController extends Controller
             ]);
         }
         else {
+            $validity = new Utils;
+            $valid_client = $validity->checkclient_validity($request->clientid);
+            if(!$valid_client) {
+                return response()->json([
+                    'message' => 'Campus license has already expired or the subscription has not yet started!'
+                ]);
+            }
+
             $emailExist = DB::table('users')->where('email', $request->email)->whereNot('username', $request->username)->first();
             if($emailExist) {
                 return response()->json([
@@ -213,7 +227,26 @@ class AdminController extends Controller
 
             if($user) {
                 try {
+                    $updated = Client::where('clientid', $request->clientid)
+                    ->where(function ($query) {
+                        $query->whereNull('client_representative') 
+                            ->orWhere('client_representative', '');
+                    })
+                    ->update([
+                        'client_representative' => $request->username,
+                        'updated_by' => $authUser->fullname,
+                    ]);
+                    if ($updated) {
+                        Client::where('clientid', '!=',$request->clientid)
+                        ->where('client_representative', $request->username)
+                        ->update([
+                            'client_representative' => null,
+                            'updated_by' => $authUser->fullname,
+                        ]);
+                    }
+
                     $updateData = [
+                        'clientid' => $request->clientid,
                         'username' => $request->username,
                         'first_name' => strtoupper($request->first_name),
                         'middle_name' => strtoupper($request->middle_name),
@@ -226,6 +259,7 @@ class AdminController extends Controller
                         'account_status' => $request->account_status,
                         'updated_by' => $authUser->fullname,
                     ];
+                    
                     $pictureData = null;
                     // Check if id_picture is provided and add it to the update array
                     if ($request->hasFile('id_picture')) {
@@ -236,7 +270,7 @@ class AdminController extends Controller
                     $existingKeys = User::where('username', $request->username)->first();
                     $changes = [];
 
-                    // Compare all fields except those related to picturesx
+                    // Compare all fields except those related to pictures
                     foreach ($updateData as $key => $value) {
                         if ($key !== 'id_picture' && isset($existingKeys[$key]) && $existingKeys[$key] != $value) {
                             $changes[$key] = [
@@ -245,26 +279,20 @@ class AdminController extends Controller
                             ];
                         }
                     }
-                    $userInfo = User::where('username', $request->username)->first();
-                    $data = $request->username;
-
-                    if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
-                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
-                    }
-
                     $update = User::where('username', $request->username)->update($updateData);
+                    
                     if($update) {
                         if (!empty($changes)) {
-                            LogAdmin::create([
-                                'module' => 'Admin Accounts',
+                            LogRepresentative::create([
+                                'module' => 'Registrar Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
                                 'created_by' => $authUser->fullname,
                             ]);
                         }
                         else if($pictureData) {
-                            LogAdmin::create([
-                                'module' => 'Admin Accounts',
+                            LogRepresentative::create([
+                                'module' => 'Registrar Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
                                 'created_by' => $authUser->fullname,
@@ -272,7 +300,7 @@ class AdminController extends Controller
                         }
                         return response()->json([
                             'status' => 200,
-                            'message' => 'Admin updated successfully!'
+                            'message' => 'School registrar updated successfully!'
                         ], 200);
                     }
                     else {
@@ -288,14 +316,14 @@ class AdminController extends Controller
             }
             else {
                 return response()->json([
-                    'message' => 'Admin not found!'
+                    'message' => 'School registrar not found!'
                 ]);
             }
         }
     }
 
     // Delete 
-    public function deleteadmin(Request $request) {
+    public function deleteregistrar(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -304,44 +332,51 @@ class AdminController extends Controller
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
+        
         $delete = User::where('username', $request->username)->delete();
 
         if($delete) {
-            LogAdmin::create([
-                'module' => 'Admin Accounts',
+            LogRepresentative::create([
+                'module' => 'Registar Accounts',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted account '. $request->username,
                 'created_by' => $authUser->fullname,
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => 'Admin deleted successfully!'
+                'message' => 'School registrar deleted successfully!'
             ], 200);
         }
         else {
             return response()->json([
-                'message' => 'Admin not found!'
+                'message' => 'School registrar not found!'
             ]);
         }
     }
-
+    
     // retrieve specific user's information
-    public function retrieveadmin(Request $request) {
+    public function retrieveregistrar(Request $request) {
         $account = User::where('username', $request->username)->first();
         $haveAccount = false;
         if($account) {
             $haveAccount = true;
         }
 
-        $user = User::select('*',
-            DB::raw("TO_BASE64(id_picture) as id_picture"),
-            DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
-            DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
-            DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),
-            DB::raw("CONCAT(DATE_FORMAT(updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+        $user = User::leftJoin('clients', 'users.clientid', '=', 'clients.clientid')
+        ->select('users.*',
+            'clients.client_name',
+            'clients.client_acr',
+            'clients.clientid',
+            DB::raw("TO_BASE64(users.id_picture) as id_picture"),
+            DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+            DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
+            DB::raw("CONCAT(DATE_FORMAT(users.birthdate, '%M %d, %Y')) as birthday"),
+            DB::raw("CONCAT(DATE_FORMAT(users.last_online, '%M %d, %Y %h:%i %p')) as last_online"),
+            DB::raw("CONCAT(DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p')) as created_date"),
+            DB::raw("CONCAT(DATE_FORMAT(users.updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
             DB::raw("CONCAT(TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE())) AS age")
         )
-        ->where('username', $request->username)->first();
+        ->where('users.username', $request->username)->first();
 
         if($user) {
             return response()->json([
