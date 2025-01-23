@@ -90,9 +90,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROG
                   "address",
                   "email",
                   "grade",
-                  "section",
                   "year_enrolled",
-                  "program",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -220,7 +218,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROG
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Sections: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="section" value={formData.section} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {SECTIONS && SECTIONS.map((section) => (
@@ -232,7 +229,6 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROG
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Programs: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="program" value={formData.program} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {PROGRAMS && PROGRAMS.map((prog) => (

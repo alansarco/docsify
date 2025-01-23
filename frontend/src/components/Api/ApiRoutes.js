@@ -79,7 +79,12 @@ export const apiRoutes = {
 
     adminSettings: `${mainRoute}/api/settings/adminsettings`,
     adminSettingsRetrieved: `${mainRoute}/api/settings/adminsettingsretrieved`,
-    updateAdminSettings: `${mainRoute}/api/settings/updatesdminsettings`,
+    updateAdminSettings: `${mainRoute}/api/settings/updateadminsettings`,
+
+    representativeSettings: `${mainRoute}/api/settings/representativesettings`,
+    representativeSettingsRetrieved: `${mainRoute}/api/settings/representativesettingsretrieved`,
+    updateRepresentativeSettings: `${mainRoute}/api/settings/updaterepresentativesettings`,
+
 
     profileRetrieved: `${mainRoute}/api/profile/profileretrieve`,
     updateProfile: `${mainRoute}/api/profile/updateprofile`,

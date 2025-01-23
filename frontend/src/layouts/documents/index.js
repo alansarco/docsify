@@ -36,7 +36,7 @@ import { activeSelect } from "components/General/Utils";
 
 function Documents() {
     const currentFileName = "layouts/documents/index.js";
-    const {token, access, updateTokenExpiration, role} = useStateContext();
+    const {token, access, updateTokenExpiration} = useStateContext();
     updateTokenExpiration();
     if (!token) {
         return <Navigate to="/authentication/sign-in" />

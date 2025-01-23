@@ -280,7 +280,16 @@ class RepresentativeController extends Controller
                         }
                     }
                     $update = User::where('username', $request->username)->update($updateData);
-
+                    
+                    if($request->account_status != 1) {
+                        DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
+                        User::where('username', $request->username)->update(['clientid' => null]);
+                        Client::where('clientid', $request->clientid)->update(['client_representative' => null]);
+                    }
+                    if($request->clientid != $user->clientid) {
+                        DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
+                    }
+                    
                     $userInfo = User::where('username', $request->username)->first();
                     $data = $request->username;
 

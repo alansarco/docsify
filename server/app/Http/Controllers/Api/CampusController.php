@@ -298,7 +298,6 @@ class CampusController extends Controller
                         'client_email' => $request->client_email,   
                         'client_contact' => $request->client_contact,   
                         'client_address' => $request->client_address,   
-                        'created_by' => $authUser->fullname,
                         'updated_by' => $authUser->fullname,
                     ];
                     $pictureLogo = null;

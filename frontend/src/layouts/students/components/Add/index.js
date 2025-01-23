@@ -90,8 +90,6 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                   "birthdate",
                   "address",
                   "grade",
-                  "section",
-                  "program",
                   "email",
             ];
 
@@ -214,7 +212,6 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Sections: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="section" value={formData.section} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {SECTIONS && SECTIONS
@@ -229,7 +226,6 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Programs: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="program" value={formData.program} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {PROGRAMS && PROGRAMS

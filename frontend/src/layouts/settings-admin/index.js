@@ -152,19 +152,19 @@ function AdminSettings() {
                                 <Grid container>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Contact</SoftTypography>
-                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.contact}</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.contact || " "}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Email</SoftTypography>
-                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.email}</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.email || " "}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Security Code</SoftTypography>
-                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.security_code}</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.security_code || " "}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Admin Limit</SoftTypography>
-                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.superadmin_limit}</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.superadmin_limit || " "}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Notify Campus when Added</SoftTypography>
@@ -182,7 +182,7 @@ function AdminSettings() {
                               </Grid>
                               <Grid item xs={12} mt={3}>
                                 <SoftTypography variant="h6" color="dark" >System Information</SoftTypography>
-                                <SoftTypography variant="h6" className="text-secondary fw-normal justify-text">{item.system_info}</SoftTypography>
+                                <SoftTypography variant="h6" className="text-secondary fw-normal justify-text">{item.system_info || " "}</SoftTypography>
                               </Grid>
                             </Grid>
                           </SoftBox>

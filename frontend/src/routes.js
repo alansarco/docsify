@@ -39,6 +39,7 @@ import Sections from "layouts/sections";
 import LogRepresentative from "layouts/log-representative";
 import Programs from "layouts/programs";
 import Documents from "layouts/documents";
+import RepresentativeSettings from "layouts/settings-representative";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -271,9 +272,19 @@ const routes = (access) => [
     type: "collapse",
     name: "Settings",
     key: "admin-settings",
-    route: "/admin-settings",
+    route: "/settings",
     icon: <SettingsTwoToneIcon size="12px" />,
     component: <AdminSettings />,
+    noCollapse: true,
+  },
+
+  access == 30 && {
+    type: "collapse",
+    name: "Settings",
+    key: "representative-settings",
+    route: "/settings",
+    icon: <SettingsTwoToneIcon size="12px" />,
+    component: <RepresentativeSettings />,
     noCollapse: true,
   },
   {

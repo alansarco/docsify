@@ -228,24 +228,6 @@ class RegistrarController extends Controller
 
             if($user) {
                 try {
-                    $updated = Client::where('clientid', $request->clientid)
-                    ->where(function ($query) {
-                        $query->whereNull('client_representative') 
-                            ->orWhere('client_representative', '');
-                    })
-                    ->update([
-                        'client_representative' => $request->username,
-                        'updated_by' => $authUser->fullname,
-                    ]);
-                    if ($updated) {
-                        Client::where('clientid', '!=',$request->clientid)
-                        ->where('client_representative', $request->username)
-                        ->update([
-                            'client_representative' => null,
-                            'updated_by' => $authUser->fullname,
-                        ]);
-                    }
-
                     $updateData = [
                         'clientid' => $request->clientid,
                         'username' => $request->username,
@@ -289,7 +271,10 @@ class RegistrarController extends Controller
                     }
                     
                     $update = User::where('username', $request->username)->update($updateData);
-                    
+                    if($request->account_status != 1) {
+                        DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
+                    }
+
                     if($update) {
                         if (!empty($changes)) {
                             LogRepresentative::create([

@@ -135,7 +135,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('settings')->group(function () {
         Route::get('adminsettings', [SettingsController::class, 'adminsettings']);
         Route::get('adminsettingsretrieved', [SettingsController::class, 'adminsettingsretrieved']);
-        Route::post('updatesdminsettings', [SettingsController::class, 'updatesdminsettings']);
+        Route::post('updateadminsettings', [SettingsController::class, 'updateadminsettings']);
+
+        Route::get('representativesettings', [SettingsController::class, 'representativesettings']);
+        Route::get('representativesettingsretrieved', [SettingsController::class, 'representativesettingsretrieved']);
+        Route::post('updaterepresentativesettings', [SettingsController::class, 'updaterepresentativesettings']);
     });
 
     Route::prefix('profile')->group(function () {

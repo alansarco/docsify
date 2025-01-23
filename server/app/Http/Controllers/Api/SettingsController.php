@@ -12,6 +12,10 @@ use App\Models\Admin;
 use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Calendar;
+use App\Models\Client;
+use App\Models\LicenseKey;
+use App\Models\LogRepresentative;
+use App\Models\SystemIncome;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +66,7 @@ class SettingsController extends Controller
     }
 
     // update admin settings's information
-    public function updatesdminsettings(Request $request) {
+    public function updateadminsettings(Request $request) {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
@@ -158,4 +162,287 @@ class SettingsController extends Controller
         }
     }
 
+    // Get all the list of system info
+    public function representativesettings() {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        $settings = Client::leftJoin('users', 'clients.client_representative', 'users.username')
+            ->select('clients.*', 'users.username as representative_id',
+                DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+                DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.request_timeout, '%h:%i %p')) as request_timeout"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.subscription_start, '%M %d, %Y')) as format_subscription_start"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.subscription_end, '%M %d, %Y')) as format_subscription_end"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.created_at, '%M %d, %Y %h:%i %p')) as created_date"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+                DB::raw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.middle_name, ''), ' ', COALESCE(users.last_name, '')) AS representative_name"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM users
+                    WHERE 
+                        users.clientid = clients.clientid
+                        AND users.role = 'USER'
+                        AND users.account_status = 1
+                ) AS CHAR) AS studentCount"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM license_keys
+                    WHERE 
+                        license_keys.license_client = clients.clientid
+                ) AS CHAR) AS licenseCount"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM users
+                    WHERE 
+                        users.clientid = clients.clientid
+                        AND users.role = 'REGISTRAR'
+                        AND users.account_status = 1
+                ) AS CHAR) AS registrarCount"),
+        )
+
+        ->where('clients.clientid', $authUser->clientid)
+        ->paginate(1);
+
+        if($settings) {
+            return response()->json([
+                'status' => 200,
+                'settings' => $settings,
+                'message' => 'System settings retrieved!',
+            ]);
+        }
+        return response()->json([
+            'settings' => $settings,
+            'message' => 'Error loading system settings!',
+        ]);
+    }
+
+    // Get all the list of system info
+    public function representativesettingsretrieved() {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        $settings = Client::leftJoin('users', 'clients.client_representative', 'users.username')
+            ->select('clients.*', 'users.username as representative_id',
+                DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
+                DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.subscription_start, '%M %d, %Y')) as format_subscription_start"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.subscription_end, '%M %d, %Y')) as format_subscription_end"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.created_at, '%M %d, %Y %h:%i %p')) as created_date"),
+                DB::raw("CONCAT(DATE_FORMAT(clients.updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
+                DB::raw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.middle_name, ''), ' ', COALESCE(users.last_name, '')) AS representative_name"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM users
+                    WHERE 
+                        users.clientid = clients.clientid
+                        AND users.role = 'USER'
+                        AND users.account_status = 1
+                ) AS CHAR) AS studentCount"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM license_keys
+                    WHERE 
+                        license_keys.license_client = clients.clientid
+                ) AS CHAR) AS licenseCount"),
+                DB::raw("CAST((
+                    SELECT COUNT(*)
+                    FROM users
+                    WHERE 
+                        users.clientid = clients.clientid
+                        AND users.role = 'REGISTRAR'
+                        AND users.account_status = 1
+                ) AS CHAR) AS registrarCount"),
+        )
+
+        ->where('clients.clientid', $authUser->clientid)
+        ->first();
+
+        if($settings) {
+            return response()->json([
+                'status' => 200,
+                'settings' => $settings,
+                'message' => 'System settings retrieved!',
+            ]);
+        }
+        return response()->json([
+            'settings' => $settings,
+            'message' => 'Error loading system settings!',
+        ]);
+    }
+
+
+    public function updaterepresentativesettings(Request $request) {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'clientid' => 'required',
+            'client_name' => 'required',
+            'client_acr' => 'required',
+            'client_email' => 'required|email',
+            'client_contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+            'client_address' => 'required',
+            'request_limit' => 'required',
+            'request_timeout' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message' => $validator->messages()->all()
+            ]);
+        }
+        else {
+            
+            $today = Carbon::today();
+            $campusExist = DB::table('clients')->where('clientid', $request->clientid)->first();
+            $expiredLicense = DB::table('clients')
+                ->where('subscription_end', '<', $today)
+                ->where('clientid', $request->clientid)->first();
+            $emailExist = DB::table('clients')->where('client_email', $request->client_email)->whereNot('clientid', $request->clientid)->first();
+
+            if($campusExist && !$emailExist && !$expiredLicense) {
+                try {
+                    $updateData = [
+                        'client_name' => $request->client_name,   
+                        'client_acr' => $request->client_acr,   
+                        'client_email' => $request->client_email,   
+                        'client_contact' => $request->client_contact,   
+                        'client_address' => $request->client_address,   
+                        'request_limit' => $request->request_limit,   
+                        'request_timeout' => $request->request_timeout,   
+                        'updated_by' => $authUser->fullname,
+                    ];
+                    $pictureLogo = null;
+                    $pictureBanner = null;
+                    // Check if client_logo is provided and add it to the update array
+                    if ($request->hasFile('client_logo')) {
+                        $file = $request->file('client_logo');
+                        $pictureLogo = file_get_contents($file->getRealPath()); // Get the file content as a string
+                        $updateData['client_logo'] = $pictureLogo;
+                    }
+
+                    // Check if client_banner is provided and add it to the update array
+                    if ($request->hasFile('client_banner')) {
+                        $file = $request->file('client_banner');
+                        $pictureBanner = file_get_contents($file->getRealPath()); // Get the file content as a string
+                        $updateData['client_banner'] = $pictureBanner;
+                    }
+                    $existingKeys = Client::where('clientid', $request->clientid)->first();
+                    $changes = [];
+
+                    // Compare all fields except those related to pictures
+                    foreach ($updateData as $key => $value) {
+                        if (($key !== 'client_logo' && $key !== 'client_banner') && isset($existingKeys[$key]) && $existingKeys[$key] != $value) {
+                            $changes[$key] = [
+                                'old' => $existingKeys[$key],
+                                'new' => $value
+                            ];
+                        }
+                    }
+                    $update = Client::where('clientid', $request->clientid)->update($updateData);
+    
+                    if($update) {
+                        if (!empty($changes)) {
+                            LogAdmin::create([
+                                'module' => 'Campus',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the following changes: ' . json_encode($changes),
+                                'created_by' => $authUser->fullname,
+                            ]);
+                            LogRepresentative::create([
+                                'clientid' => $request->clientid,
+                                'module' => 'Campus',
+                                'action' => 'UPDATE',
+                                'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the following changes: ' . json_encode($changes),
+                                'created_by' => $authUser->fullname,
+                            ]);
+                        }
+                        else if($pictureBanner || $pictureLogo) {
+                            if($pictureBanner && $pictureLogo) {
+                                LogAdmin::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner and logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                                LogRepresentative::create([
+                                    'clientid' => $request->clientid,
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner and logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            else if($pictureBanner) {
+                                LogAdmin::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                                LogRepresentative::create([
+                                    'clientid' => $request->clientid,
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus banner',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            else if($pictureLogo) {
+                                LogAdmin::create([
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                                LogRepresentative::create([
+                                    'clientid' => $request->clientid,
+                                    'module' => 'Campus',
+                                    'action' => 'UPDATE',
+                                    'details' => $authUser->fullname .' updated campus '.$request->clientid. '-'.$request->client_name.' with the changes on campus logo',
+                                    'created_by' => $authUser->fullname,
+                                ]);
+                            }
+                            
+                        }
+                        return response()->json([
+                            'status' => 200,
+                            'message' => 'Campus updated successfully!'
+                        ], 200);
+                    }
+                    else {
+                        return response()->json([
+                            'message' => 'Something went wrong!'
+                        ]);
+                    }
+                } catch (Exception $e) {
+                    return response()->json([
+                        'message' => $e->getMessage()
+                    ]);
+                }
+            }
+            else if($emailExist) {
+                return response()->json([
+                    'message' => 'Email already taken!'
+                ]);
+            }
+            else if($expiredLicense) {
+                return response()->json([
+                    'message' => 'License already expired!'
+                ]);
+            }
+            else {
+                return response()->json([
+                    'message' => 'Campus not exist!'
+                ]);
+            }
+        }
+    }
 }
