@@ -14,6 +14,7 @@ class LogUser extends Model
 
     protected $fillable = [
         'id',
+        'clientid',
         'module',
         'action',
         'details',

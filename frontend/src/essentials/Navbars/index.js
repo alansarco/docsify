@@ -236,18 +236,16 @@ function DashboardNavbar(props) {
                 </IconButton>
                 </>
               }
-              {access == 999 && 
-                <>
-                <IconButton
-                  size="medium"
-                  color="inherit"
-                  onClick={handleConfiguratorOpen}  
-                >
-                  <NotificationsIcon />
-                  {notifs > 0 && <SoftTypography className="fw-bold bg-danger text-white rounded-circle notif"> {notifs} </SoftTypography>}
-                </IconButton>
-                </>
-              }
+              <>
+              <IconButton
+                size="medium"
+                color="inherit"
+                onClick={handleConfiguratorOpen}  
+              >
+                <NotificationsIcon />
+                {notifs > 0 && <SoftTypography className="fw-bold bg-danger text-white rounded-circle notif"> {notifs} </SoftTypography>}
+              </IconButton>
+              </>
               
               <IconButton
                 size="medium"

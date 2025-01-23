@@ -153,6 +153,7 @@ class StudentController extends Controller
 
             if($add) {
                 LogRepresentative::create([
+                    'clientid' => $authUser->clientid,
                     'module' => 'Student Accounts',
                     'action' => 'ADD',
                     'details' => $authUser->fullname .' addded account '. $request->username,
@@ -312,6 +313,7 @@ class StudentController extends Controller
                     if($update) {
                         if (!empty($changes)) {
                             LogRepresentative::create([
+                                'clientid' => $authUser->clientid,
                                 'module' => 'Student Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
@@ -320,6 +322,7 @@ class StudentController extends Controller
                         }
                         else if($pictureData) {
                             LogRepresentative::create([
+                                'clientid' => $authUser->clientid,
                                 'module' => 'Student Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
@@ -365,6 +368,7 @@ class StudentController extends Controller
 
         if($delete) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Student Accounts',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted account '. $request->username,
@@ -433,7 +437,7 @@ class StudentController extends Controller
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
 
-        $sections = StudentSection::select('section_id', 'section_name')
+        $sections = StudentSection::select('section_id', 'section_name', 'status')
             ->where('clientid', $authUser->clientid)
             ->get();
 
@@ -456,7 +460,7 @@ class StudentController extends Controller
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
-        $programs = StudentProgram::select('program_id', 'program_name', 'program_acr')
+        $programs = StudentProgram::select('program_id', 'program_name', 'program_acr', 'status')
             ->where('clientid', $authUser->clientid)
             ->get();
 

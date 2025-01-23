@@ -154,6 +154,24 @@ function Students() {
         setReload(false);      
         console.error('Error fetching data for the next page:', error);
         });
+
+        axios.get(apiRoutes.sectionSelect, {headers})
+        .then(response => {
+          setFetchSections(response.data.sections);
+          passToSuccessLogs(response.data, currentFileName);
+        })
+        .catch(error => {
+          passToErrorLogs(`Sections not Fetched!  ${error}`, currentFileName);
+        });
+
+        axios.get(apiRoutes.programSelect, {headers})
+        .then(response => {
+          setFetchPrograms(response.data.programs);
+          passToSuccessLogs(response.data, currentFileName);
+        })
+        .catch(error => {
+          passToErrorLogs(`Programs not Fetched!  ${error}`, currentFileName);
+        });
     }
 
     const handleSubmit = async (e) => {

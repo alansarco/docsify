@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utilities\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -51,6 +52,10 @@ class LogController extends Controller
     }
 
     public function representativelogs(Request $request) {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        $filterClient = $authUser->clientid;
         $filter = $request->filter ?? '';
         $filterModule = $request->filter_module ?? '';
         $filterAction = $request->filter_action ?? '';
@@ -58,7 +63,7 @@ class LogController extends Controller
         $startsAt = $request->created_start ?? '';
 
         // Call the stored procedure
-        $getlogs = DB::select('CALL GET_LOGS_REPRESENTATIVE(?, ?, ?, ?, ?)', [$filter, $filterModule, $filterAction, $endsAt, $startsAt]);
+        $getlogs = DB::select('CALL GET_LOGS_REPRESENTATIVE(?, ?, ?, ?, ?, ?)', [$filterClient, $filter, $filterModule, $filterAction, $endsAt, $startsAt]);
 
         // Convert the results into a collection
         $campusCollection = collect($getlogs);

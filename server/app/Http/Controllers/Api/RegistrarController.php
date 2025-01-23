@@ -140,6 +140,7 @@ class RegistrarController extends Controller
 
             if($add) {
                 LogRepresentative::create([
+                    'clientid' => $authUser->clientid,
                     'module' => 'Registrar Accounts',
                     'action' => 'ADD',
                     'details' => $authUser->fullname .' addded account '. $request->username,
@@ -292,6 +293,7 @@ class RegistrarController extends Controller
                     if($update) {
                         if (!empty($changes)) {
                             LogRepresentative::create([
+                                'clientid' => $authUser->clientid,
                                 'module' => 'Registrar Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname .' updated account '. $request->username .' with the following changes: ' . json_encode($changes),
@@ -300,6 +302,7 @@ class RegistrarController extends Controller
                         }
                         else if($pictureData) {
                             LogRepresentative::create([
+                                'clientid' => $authUser->clientid,
                                 'module' => 'Registrar Accounts',
                                 'action' => 'UPDATE',
                                 'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
@@ -345,6 +348,7 @@ class RegistrarController extends Controller
 
         if($delete) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Registar Accounts',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted account '. $request->username,

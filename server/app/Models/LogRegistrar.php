@@ -14,6 +14,7 @@ class LogRegistrar extends Model
 
     protected $fillable = [
         'id',
+        'clientid',
         'module',
         'action',
         'details',

@@ -14,6 +14,7 @@ class LogRepresentative extends Model
 
     protected $fillable = [
         'id',
+        'clientid',
         'module',
         'action',
         'details',

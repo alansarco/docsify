@@ -71,6 +71,7 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
       };
 
       const handleCancel = () => {
+            ReloadTable();
             HandleRendering(1);
       };
             
@@ -216,11 +217,14 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="section" value={formData.section} onChange={handleChange} >
                                                       <option value=""></option>
-                                                      {SECTIONS && SECTIONS.map((section) => (
-                                                      <option key={section.section_id} value={section.section_id}>
+                                                      {SECTIONS && SECTIONS
+                                                            .filter((section) => section.status === "1") // Filter sections with status = 1
+                                                            .map((section) => (
+                                                            <option key={section.section_id} value={section.section_id}>
                                                             {section.section_name}
-                                                      </option>
-                                                      ))}
+                                                            </option>
+                                                            ))
+                                                      }
                                                 </select>
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={4} px={1}>
@@ -228,11 +232,14 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="program" value={formData.program} onChange={handleChange} >
                                                       <option value=""></option>
-                                                      {PROGRAMS && PROGRAMS.map((prog) => (
-                                                      <option key={prog.program_id} value={prog.program_id}>
+                                                      {PROGRAMS && PROGRAMS
+                                                            .filter((prog) => prog.status === "1") // Filter sections with status = 1
+                                                            .map((prog) => (
+                                                            <option key={prog.program_id} value={prog.program_id}>
                                                             {prog.program_acr}
-                                                      </option>
-                                                      ))}
+                                                            </option>
+                                                            ))
+                                                      }
                                                 </select>
                                           </Grid>
                                           <Grid item xs={12} lg={6} px={1}>

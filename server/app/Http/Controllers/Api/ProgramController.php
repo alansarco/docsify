@@ -38,6 +38,10 @@ class ProgramController extends Controller
             $query->where('status', $request->status);
         }
         
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        $query->where('clientid', $authUser->clientid);
+
         $programs = $query->orderBy('created_at', 'DESC')->paginate(20);
 
         if($programs) {
@@ -93,6 +97,7 @@ class ProgramController extends Controller
 
         if($addprogram) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Programs',
                 'action' => 'ADD',
                 'details' => $authUser->fullname .' added new program ' .$GeneratedID. ' - ' .$request->program_name,
@@ -191,6 +196,7 @@ class ProgramController extends Controller
         if($update) {
             if (!empty($changes)) {
                 LogRepresentative::create([
+                    'clientid' => $authUser->clientid,
                     'module' => 'Programs',
                     'action' => 'UPDATE',
                     'details' => $authUser->fullname .' updated program '.$request->program_id. ' with the following changes: ' . json_encode($changes),
@@ -221,6 +227,7 @@ class ProgramController extends Controller
         
         if($delete) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Programs',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted program '.$request->license_key,

@@ -37,6 +37,10 @@ class SectionController extends Controller
         if($request->status != '') {
             $query->where('status', $request->status);
         }
+
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        $query->where('clientid', $authUser->clientid);
         
         $sections = $query->orderBy('created_at', 'DESC')->paginate(20);
 
@@ -90,6 +94,7 @@ class SectionController extends Controller
 
         if($addsection) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Sections',
                 'action' => 'ADD',
                 'details' => $authUser->fullname .' added new section ' .$GeneratedID. ' - ' .$request->section_name,
@@ -185,6 +190,7 @@ class SectionController extends Controller
         if($update) {
             if (!empty($changes)) {
                 LogRepresentative::create([
+                    'clientid' => $authUser->clientid,
                     'module' => 'Sections',
                     'action' => 'UPDATE',
                     'details' => $authUser->fullname .' updated section '.$request->section_id. ' with the following changes: ' . json_encode($changes),
@@ -215,6 +221,7 @@ class SectionController extends Controller
         
         if($delete) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Sections',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted section '.$request->license_key,

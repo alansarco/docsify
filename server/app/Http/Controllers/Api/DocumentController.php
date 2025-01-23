@@ -27,7 +27,11 @@ class DocumentController extends Controller
         if($request->status != '') {
             $query->where('status', $request->status);
         }
-        
+
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        $query->where('clientid', $authUser->clientid);
+
         $documents = $query->orderBy('created_at', 'DESC')->paginate(20);
 
         if($documents) {
@@ -84,6 +88,7 @@ class DocumentController extends Controller
 
         if($add) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Documents',
                 'action' => 'ADD',
                 'details' => $authUser->fullname .' added new document ' .$GeneratedID. ' - ' .$request->doc_name,
@@ -176,6 +181,7 @@ class DocumentController extends Controller
         if($update) {
             if (!empty($changes)) {
                 LogRepresentative::create([
+                    'clientid' => $authUser->clientid,
                     'module' => 'Documents',
                     'action' => 'UPDATE',
                     'details' => $authUser->fullname .' updated document '.$request->doc_id. ' with the following changes: ' . json_encode($changes),
@@ -206,6 +212,7 @@ class DocumentController extends Controller
         
         if($delete) {
             LogRepresentative::create([
+                'clientid' => $authUser->clientid,
                 'module' => 'Documents',
                 'action' => 'DELETE',
                 'details' => $authUser->fullname .' deleted document '.$request->license_key,
