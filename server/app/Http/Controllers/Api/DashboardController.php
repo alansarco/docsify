@@ -68,9 +68,16 @@ class DashboardController extends Controller
             DB::raw("IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) as queue"),
             DB::raw("IFNULL(SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END), 0) as processing"),
             DB::raw("IFNULL(SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END), 0) as releasing"),
-            DB::raw("IFNULL(SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END), 0) as completed"),
-            DB::raw("IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) as rejected"),
-            DB::raw("IFNULL(SUM(CASE WHEN status >= 0 AND status < 6 THEN 1 ELSE 0 END), 0) as maximum")
+            DB::raw("IFNULL(SUM(CASE WHEN status = 4 AND DATE(date_completed) = '$today' THEN 1 ELSE 0 END), 0) as completed"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 5 AND DATE(date_completed) = '$today' THEN 1 ELSE 0 END), 0) as rejected"),
+            DB::raw("
+                IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) +
+                IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) +
+                IFNULL(SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END), 0) +
+                IFNULL(SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END), 0) +
+                IFNULL(SUM(CASE WHEN status = 4 AND DATE(date_completed) = '$today' THEN 1 ELSE 0 END), 0) +
+                IFNULL(SUM(CASE WHEN status = 5 AND DATE(date_completed) = '$today' THEN 1 ELSE 0 END), 0) as maximum
+            ")
         )
         ->where('clientid', $authUser->clientid)
         ->first();
@@ -106,6 +113,10 @@ class DashboardController extends Controller
             DB::raw("DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p') AS created_date"))
             ->where('account_status', '!=', 1)
             ->where('notify_indicator', '!=', 1)
+            ->where(function ($query) {
+                $query->where('role', 'REPRESENTATIVE')
+                      ->orWhere('role', 'ADMIN');
+            })
             ->orderBy('created_at', 'DESC')
             ->get();
 

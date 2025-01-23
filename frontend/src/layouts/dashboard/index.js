@@ -170,7 +170,7 @@ function Dashboard() {
                 </Grid>
               </>
             }
-            {access > 0 && 
+            {access == 30 && 
               <>
                 <Grid item xs={12} md={7} xl={8}>
                   <Grid container spacing={3}>

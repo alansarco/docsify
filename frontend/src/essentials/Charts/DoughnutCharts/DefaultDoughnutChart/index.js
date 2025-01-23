@@ -16,7 +16,7 @@ function DefaultDoughnutChart({ title, description, height, chart, loading, noda
   const { data, options, cutout } = configs(chart.labels || [], chart.datasets || {}, chart.cutout);
 
   const renderChart = (
-    <SoftBox p={2}>
+    <SoftBox p={2} minHeight="14rem">
       {title || description ? (
         <SoftBox px={description ? 1 : 0} pt={description ? 1 : 0}>
           {title && (
@@ -46,7 +46,7 @@ function DefaultDoughnutChart({ title, description, height, chart, loading, noda
 DefaultDoughnutChart.defaultProps = {
   title: "",
   description: "",
-  height: "auto",
+  height: "10rem",
 };
 
 // Typechecking props for the DefaultDoughnutChart
