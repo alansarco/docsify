@@ -71,7 +71,13 @@ function DashboardNavbar(props) {
     adminnotifs: true, 
     render: render
   });
-  let notifs = adminnotifs.length;
+  let notifs = 0;
+  if(access == 999) {
+    notifs = adminnotifs?.adminnotifs?.length || 0;
+  }
+  else if(access == 30) {
+    notifs = adminnotifs?.repnotifs?.length || 0;
+  }
 
   useEffect(() => {
     const updateTimestamps = () => {

@@ -31,7 +31,7 @@ function DefaultDoughnutChart({ title, description, height, chart, loading, noda
                 <AbsoluteLoading /> 
                 : !nodata ? 
                   <Doughnut data={data} options={options} cutout={cutout} />
-                  : <SoftTypography className="text-sm m-auto">No data to fetch</SoftTypography>}
+                  : <SoftTypography className="text-xs m-auto text-secondary">No data to display</SoftTypography>}
             </SoftBox>
           ), [chart, height])}
         </SoftBox>

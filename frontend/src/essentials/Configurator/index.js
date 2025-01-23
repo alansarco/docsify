@@ -37,7 +37,13 @@ function Configurator() {
   let {adminnotifs} = useDashboardData({
     // adminnotifs: true, 
   });
-
+  let notifs = 0;
+  if(access == 999) {
+    notifs = adminnotifs?.adminnotifs;
+  }
+  else if(access == 30) {
+    notifs = adminnotifs?.repnotifs;
+  }
   const navigate = useNavigate(); 
   
   const handleViewRequest = () => {
@@ -59,7 +65,7 @@ function Configurator() {
         <SoftBox>
           <SoftTypography variant="h5">Notifications</SoftTypography>
           <SoftTypography variant="body2" color="text">
-            {adminnotifs && adminnotifs.length > 0 ? "Active Request" : "No Active Request"}
+            {notifs && notifs.length > 0 ? "Active Request" : "No Active Request"}
           </SoftTypography>
         </SoftBox>
 
@@ -78,19 +84,25 @@ function Configurator() {
         </Icon>
       </SoftBox>
       <Divider />
-      {adminnotifs && adminnotifs.length > 0 && adminnotifs.map((adminnotif) => (
-      <SoftBox key={adminnotif.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
+      {notifs && notifs.length > 0 && notifs.map((notif) => (
+      <SoftBox key={notif.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
           <SoftBox display="flex">
-            <SoftTypography variant="h6">{adminnotif.fullname}</SoftTypography>
-            {/* <SoftBadge badgeContent="mark as read" variant="gradient" color="info" size="sm" /> */}
+            <SoftTypography variant="h6">{notif.fullname}</SoftTypography>
+            <SoftBadge 
+              badgeContent={notif.role === "USER" ? "student" : notif.role} 
+              variant="gradient" 
+              color={notif.role === "REPRESENTATIVE" ? "dark" 
+                  : notif.role === "REGISTRAR" ? "warning"
+                  : "info"} 
+              size="sm" />
           </SoftBox>
           <SoftBox display="flex">
-            <SoftTypography variant="h6" color="secondary" className="text-xxs">{adminnotif.username}</SoftTypography>
+            <SoftTypography variant="h6" color="secondary" className="text-xxs">{notif.username}</SoftTypography>
             {/* contained */}
           </SoftBox>
           <SoftBox mt={1}>
             {/* <SoftTypography className="text-xxs" color="dark" ><b>Date Added: </b>{adminnotif.created_date}</SoftTypography> */}
-            <SoftTypography className="text-xxs" color="dark" >{adminnotif.created_date}</SoftTypography>
+            <SoftTypography className="text-xxs" color="dark" >{notif.created_date}</SoftTypography>
           </SoftBox> 
           
         </SoftBox>

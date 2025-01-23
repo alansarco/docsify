@@ -22,6 +22,7 @@ import { useDashboardData } from 'layouts/dashboard/data/dashboardRedux';
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
 import GradientLineChart from "essentials/Charts/LineCharts/GradientLineChart";
+import VerticalBarChart from "essentials/Charts/BarCharts/VerticalBarChart";
 
 function Dashboard() {
   const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
@@ -95,7 +96,7 @@ function Dashboard() {
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={12} xl={12}>
                       <GradientLineChart
-                        title="Income Growth"
+                        title="Current Year Income"
                         currentincome={currentincome}
                         total_income={otherStats.data7}
                         description={
@@ -161,6 +162,82 @@ function Dashboard() {
                             data: [
                               otherStats.data5, 
                               otherStats.data6],
+                          },
+                        }}
+                      />  
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </>
+            }
+            {access > 0 && 
+              <>
+                <Grid item xs={12} md={7} xl={8}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={12} xl={12}>
+                      <VerticalBarChart
+                        title="Task Distribution Today"
+                        height="20rem"
+                        nodata={otherStats && otherStats.taskDistribution && Object.values(otherStats.taskDistribution).every(value => value === "0")}
+                        loading={loadOtherStats}
+                        maxCount={otherStats && otherStats.taskDistribution && otherStats.taskDistribution.maximum}
+                        chart={{
+                          labels: ["pending", "in queue", "processing", "releasing", "completed", "rejected"],
+                          datasets: [{
+                            color: "dark",
+                            data: [
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.pending, 
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.queue, 
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.processing, 
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.releasing, 
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.completed, 
+                              otherStats && otherStats.taskDistribution && otherStats.taskDistribution.rejected, 
+                            ],
+                          }],
+                        }}
+                      />  
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={5} xl={4}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <DefaultDoughnutChart
+                        title="Student Distribution"
+                        nodata={otherStats && otherStats.gradeCounts && Object.values(otherStats.gradeCounts).every(value => value === "0")}
+                        loading={loadOtherStats}
+                        chart={{
+                          labels: ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12", "Others"],  
+                          datasets: {
+                            label: "Students",
+                            backgroundColors: ["dark", "primary", "info", "success", "warning", "error", "secondary"],
+                            data: [
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade7, 
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade8, 
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade9, 
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade10,
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade11,
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.grade12,
+                              otherStats && otherStats.gradeCounts && otherStats.gradeCounts.others,
+                            ],
+                          },
+                        }}
+                      />  
+                    </Grid>
+                    <Grid item xs={12}>
+                      <DefaultDoughnutChart
+                        title="Registrar Distribution"
+                        nodata={otherStats && otherStats.registrarCounts && Object.values(otherStats.registrarCounts).every(value => value === "0")}
+                        loading={loadOtherStats}
+                        chart={{
+                          labels: ["Active", "Inactive"],  
+                          datasets: {
+                            label: "Registrar",
+                            backgroundColors: ["dark", "warning"],
+                            data: [
+                              otherStats && otherStats.registrarCounts && otherStats.registrarCounts.active, 
+                              otherStats && otherStats.registrarCounts && otherStats.registrarCounts.inactive
+                            ],
                           },
                         }}
                       />  

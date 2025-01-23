@@ -1,5 +1,6 @@
 // React base styles
 import typography from "assets/theme/base/typography";
+import { getNumber } from "components/General/Utils";
 
 function configs(labels, datasets, maxCount) {
   return {
@@ -11,7 +12,7 @@ function configs(labels, datasets, maxCount) {
       datasets: [...datasets],
     },
     options: {
-      indexAxis: "y",
+      indexAxis: "x",
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -23,7 +24,7 @@ function configs(labels, datasets, maxCount) {
           anchor: 'end',
           align: 'end',
           font: {
-            size: 15,  // Adjust this size if needed
+            size: 12,  // Adjust this size if needed
             family: typography.fontFamily,
             style: "normal",
             weight: 'bold',
@@ -34,10 +35,10 @@ function configs(labels, datasets, maxCount) {
       scales: {
         y: {
           title: {
-            display: true,
-            text: 'CANDIDATES',
+            display: false,
+            text: 'STATUS',
             font: {
-              size: 14,
+              size: 10,
               family: typography.fontFamily,
               weight: 'bold',
             },
@@ -54,20 +55,21 @@ function configs(labels, datasets, maxCount) {
             precision: 0,
             display: true,
             padding: 10,
-            color: "#1f1f1f",
+            color: "#9ca2b7",
             font: {
-              size: 12,   
+              size: 10,   
               family: typography.fontFamily,
               lineHeight: 1,
             },
           },
+          max: Math.floor(maxCount),
         },
         x: {
           title: {
-            display: true,
-            text: 'VOTES',
+            display: false,
+            text: 'COUNT',
             font: {
-              size: 14,
+              size: 10,
               family: typography.fontFamily,
               weight: 'bold',
             },
@@ -91,7 +93,7 @@ function configs(labels, datasets, maxCount) {
             },
           },
           // Add this section to set the maximum value for the x-axis (Votes)
-          max: maxCount, // or use suggestedMax for a softer limit
+          max: Math.floor(maxCount), // or use suggestedMax for a softer limit
         },
       },
     },

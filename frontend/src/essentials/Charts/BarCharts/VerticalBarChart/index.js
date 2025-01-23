@@ -20,7 +20,7 @@ import configs from "essentials/Charts/BarCharts/VerticalBarChart/configs";
 // React base styles
 import colors from "assets/theme/base/colors";
 
-function VerticalBarChart({ title, description, height, chart, nodata, loading, maxCount, currentCount }) {
+function VerticalBarChart({ title, description, height, chart, nodata, loading, maxCount }) {
   const predefinedColors = [
     '#FF6384', // Color for the first dataset
     '#36A2EB', // Color for the second dataset
@@ -89,7 +89,7 @@ function VerticalBarChart({ title, description, height, chart, nodata, loading, 
         // borderRadius: 5,  
        backgroundColor: Object.values(predefinedColors),
         fill: false,
-        maxBarThickness: 10, 
+        maxBarThickness: 20, 
         // borderSkipped: 'start'
         // borderSkipped: {
         //   top: 5,    // Radius for the top
@@ -99,22 +99,17 @@ function VerticalBarChart({ title, description, height, chart, nodata, loading, 
     : [];
 
   const { data, options } = configs(chart.labels || [], chartDatasets, maxCount);
-
   const renderChart = (
     <SoftBox p={2}>
       {title || description ? (
         <SoftBox px={description ? 1 : 0} pt={description ? 1 : 0}>
           {title && (
             <SoftBox mb={0}>
-              <SoftTypography variant="h5" className="text-center">{title}</SoftTypography>
+              <SoftTypography variant="h6" className="">{title}</SoftTypography>
               <SoftBox display="flex" justifyContent="end">
-                <SoftTypography color="info" className="text-center" variant="h6">
-                  Total Voters:
-                  <b className="text-dark">{maxCount || 0}</b>
-                </SoftTypography>
-                <SoftTypography color="info" className="text-center ms-3" variant="h6">
-                  Casted Votes:
-                  <b className="text-dark">{currentCount || 0}</b>
+                <SoftTypography color="info" className="text-center text-xs">
+                  Total:
+                  <b className="text-dark"> {maxCount || 0}</b>
                 </SoftTypography>
               </SoftBox>
               
@@ -134,7 +129,7 @@ function VerticalBarChart({ title, description, height, chart, nodata, loading, 
               <AbsoluteLoading /> 
               : !nodata ? 
                 <Bar data={data} options={options} /> 
-                : <SoftTypography className="text-sm m-auto">No data to fetch</SoftTypography> }
+                : <SoftTypography className="text-xs m-auto text-secondary">No data to display</SoftTypography> }
           </SoftBox>
         ),
         [chart, height]
