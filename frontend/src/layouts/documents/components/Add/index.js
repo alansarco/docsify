@@ -29,6 +29,7 @@ function Add({HandleRendering, ReloadTable }) {
             doc_name: "",
             doc_limit: "",
             days_process: "",
+            doc_requirements: "",
             agreement: false,   
       };
 
@@ -57,6 +58,7 @@ function Add({HandleRendering, ReloadTable }) {
                   "doc_name",
                   "doc_limit",
                   "days_process",
+                  "doc_requirements",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -128,6 +130,11 @@ function Add({HandleRendering, ReloadTable }) {
                                                 <SoftInput name="days_process" value={getNumber(formData.days_process)} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>    
+                                          <Grid item xs={12} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Requirements:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <textarea name="doc_requirements" value={formData.doc_requirements} onChange={handleChange} className="form-control text-xs" rows="10"></textarea>
+                                          </Grid> 
                                     </Grid>    
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>

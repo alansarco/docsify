@@ -6,6 +6,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { useEffect } from 'react';
 import { useStateContext } from "context/ContextProvider";
 import { passToSuccessLogs, passToErrorLogs } from 'components/Api/Gateway';
+import { toast } from "react-toastify";
 
 export function useDashboardData(fetchData) {
   const currentFileName = "layouts/dashboard/data/dashboardRedux.js";
@@ -30,6 +31,7 @@ export function useDashboardData(fetchData) {
           passToSuccessLogs(response.data, currentFileName);
         })
         .catch(error => {
+          toast.error('Somoene just updated your account and you no longer have access on this function. Please re-login.', { autoClose: true });
           passToErrorLogs(`Auth User Data not Fetched!  ${error}`, currentFileName);
         }); 
     }

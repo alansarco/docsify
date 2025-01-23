@@ -63,6 +63,7 @@ class DocumentController extends Controller
             'doc_name' => 'required',
             'doc_limit' => 'required',
             'days_process' => 'required',
+            'doc_requirements' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -82,6 +83,7 @@ class DocumentController extends Controller
             'doc_name' => strtoupper($request->doc_name),
             'doc_limit' => $request->doc_limit,
             'days_process' => $request->days_process,
+            'doc_requirements' => $request->doc_requirements,
             'status' => 1,
             'created_by' => $authUser->fullname
         ]);
@@ -147,6 +149,7 @@ class DocumentController extends Controller
             'doc_name' => 'required',
             'doc_limit' => 'required',
             'days_process' => 'required',
+            'doc_requirements' => 'required',
             'status' => 'required',
         ]);
 
@@ -159,6 +162,7 @@ class DocumentController extends Controller
             'doc_name' => strtoupper($request->doc_name),
             'doc_limit' => $request->doc_limit,
             'days_process' => $request->days_process,
+            'doc_requirements' => $request->doc_requirements,
             'status' => $request->status,
             'updated_by' => $authUser->fullname,
         ];

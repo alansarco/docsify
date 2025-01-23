@@ -19,6 +19,7 @@ class Document extends Model
         'doc_name',
         'doc_limit',
         'days_process',
+        'doc_requirements',
         'status',
         'created_by',
         'updated_by'

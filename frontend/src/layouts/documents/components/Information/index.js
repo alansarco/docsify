@@ -44,7 +44,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Section?',
+      title: 'Delete Document?',
       text: "Are you sure you want to delete this data? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
@@ -93,6 +93,7 @@ function Information({DATA, HandleRendering, ReloadTable}) {
                 info={{
                   Name: DATA.doc_name ?? " ",
                   Request_Limit_per_Year: DATA.doc_limit ?? " ",
+                  Requirements: DATA.doc_requirements ?? " ",
                   Day_to_Process: DATA.days_process ?? " ",
                   Status: DATA.status == "1" ? "Active" : "Inactive",
                   Updated_Date: DATA.updated_date ?? " ",

@@ -31,6 +31,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             doc_name: DATA.doc_name == null ? "" : DATA.doc_name,
             doc_limit: DATA.doc_limit == null ? "" : DATA.doc_limit,
             days_process: DATA.days_process == null ? "" : DATA.days_process,
+            doc_requirements: DATA.days_process == null ? "" : DATA.doc_requirements,
             status: DATA.status == null ? "" : DATA.status,
             agreement: false,   
       };
@@ -62,6 +63,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                   "doc_name",
                   "doc_limit",
                   "days_process",
+                  "doc_requirements",
                   "status",
             ];
 
@@ -151,6 +153,11 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                       ))}
                                                 </select>
                                           </Grid>
+                                          <Grid item xs={12} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Requirements:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <textarea name="doc_requirements" value={formData.doc_requirements} onChange={handleChange} className="form-control text-xs" rows="10"></textarea>
+                                          </Grid> 
                                     </Grid>     
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>

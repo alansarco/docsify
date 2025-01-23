@@ -311,7 +311,7 @@ class SettingsController extends Controller
                 try {
                     $updateData = [
                         'client_name' => $request->client_name,   
-                        'client_acr' => $request->client_acr,   
+                        'client_acr' => strtoupper($request->client_acr),   
                         'client_email' => $request->client_email,   
                         'client_contact' => $request->client_contact,   
                         'client_address' => $request->client_address,   

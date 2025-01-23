@@ -178,7 +178,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Address:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="client_address" value={formData.client_address} onChange={handleChange} size="small" />
+                                                <SoftInput name="client_address" value={formData.client_address} onChange={handleChange} size="small" />
                                           </Grid>  
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Request Limit:</SoftTypography>
@@ -212,7 +212,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           </Grid>  
                                     </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
-                                          <Grid item xs={12} pl={1} mt={3}>
+                                          <Grid item xs={12} pl={1}>
                                                 <Checkbox 
                                                       className={` ${formData.agreement ? '' : 'border-2 border-info'}`} 
                                                       name="agreement" 
