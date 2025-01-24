@@ -170,7 +170,7 @@ function Dashboard() {
                 </Grid>
               </>
             }
-            {access == 30 && 
+            {(access == 30 || access == 10) && 
               <>
                 <Grid item xs={12} md={7} xl={8}>
                   <Grid container spacing={3}>
@@ -199,6 +199,7 @@ function Dashboard() {
                     </Grid>
                   </Grid>
                 </Grid>
+                {access == 30 &&
                 <Grid item xs={12} md={5} xl={4}>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -244,6 +245,8 @@ function Dashboard() {
                     </Grid>
                   </Grid>
                 </Grid>
+                }
+                
               </>
             }
             </Grid>

@@ -40,6 +40,7 @@ import LogRepresentative from "layouts/log-representative";
 import Programs from "layouts/programs";
 import Documents from "layouts/documents";
 import RepresentativeSettings from "layouts/settings-representative";
+import LogRegistrar from "layouts/log-registrar";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -255,7 +256,7 @@ const routes = (access) => [
     key: "registrar-logs",
     route: "/registrar-logs",
     icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <LogRegistrar />,
     noCollapse: true,
   },
   access == 5 && {

@@ -241,9 +241,11 @@ function Students() {
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
+                  {access == 30 &&
                   <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
                     <Icon>add</Icon> Add Students
                   </SoftButton>
+                  }
                 </SoftBox>
               </SoftBox>
               <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">

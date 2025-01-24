@@ -165,7 +165,7 @@ function UserContainer({USER, HandleRendering, ReloadTable, SECTIONS, PROGRAMS})
               </SoftTypography>
             </SoftBox>
           </Grid>
-          <Grid item xs={12} md={5} sx={{ ml: "auto" }}>
+          <Grid item xs={12} md={access == 30 ? 5 : 3} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs
                 orientation={tabsOrientation}
@@ -174,7 +174,7 @@ function UserContainer({USER, HandleRendering, ReloadTable, SECTIONS, PROGRAMS})
                 sx={{ background: "transparent" }}
               >
                 <Tab label="Information" onClick={setProfile} icon={<Cube />} />
-                <Tab label="Edit" onClick={setEdit} icon={<Document />} />
+                {access == 30 && <Tab label="Edit" onClick={setEdit} icon={<Document />} />}
               </Tabs> 
             </AppBar>
           </Grid>

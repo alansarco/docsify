@@ -37,7 +37,7 @@ function Configurator() {
   let {adminnotifs} = useDashboardData({
     // adminnotifs: true, 
   });
-  let notifs = 0;
+  let notifs = 1;
   if(access == 999) {
     notifs = adminnotifs?.adminnotifs;
   }
