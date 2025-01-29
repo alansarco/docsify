@@ -12,11 +12,19 @@ import SoftTypography from "components/SoftTypography";
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
+import { getStatus } from "components/General/Utils";
+import SoftBadge from "components/SoftBadge";
+import { getStatusColor } from "components/General/Utils";
 
-function Table({ logs, tablehead }) {
-  const { light } = colors;
+function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
+  const { light, secondary } = colors;
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
+  const handleSubmit = (row) => {
+    HandleDATA(row.reference_no);
+    HandleRendering(2);
+  }
+
   const renderColumns = tablehead.map((head , key) => {
     return (
       <SoftBox
@@ -35,9 +43,25 @@ function Table({ logs, tablehead }) {
     );
   });
 
-  const renderRows = logs.map((row) => {
+  const renderRows = DATA.map((row) => {
     return (
-      <TableRow key={row.id}>  
+      <TableRow key={row.reference_no}>
+          <SoftBox
+            className="pe-2 text-decoration-underline cursor-pointer fw-bold"
+            component="td"
+            fontSize={size.xs}
+            onClick={() => handleSubmit(row)}
+            color="dark"
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+            sx={{
+              "&:hover ": {
+                color: "#006eff"        
+              },
+            }}  
+          >
+            {row.reference_no}
+          </SoftBox>  
           <SoftBox
             className="px-2"
             component="td"
@@ -46,17 +70,7 @@ function Table({ logs, tablehead }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.date_added}
-          </SoftBox>      
-          <SoftBox
-            className="px-2"
-            component="td"
-            fontSize={size.xs}
-            color="secondary"
-            borderBottom={`${borderWidth[1]} solid ${light.main}`}
-            borderTop={`${borderWidth[1]} solid ${light.main}`}
-          >
-            {row.action}
+            {row.fullname}
           </SoftBox>      
           <SoftBox
             className="px-2"
@@ -66,34 +80,52 @@ function Table({ logs, tablehead }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.module}    
+            {row.doc_name}    
           </SoftBox>  
           <SoftBox
-            className="px-2 text-wrap"
+            className="px-2"
             component="td"
             fontSize={size.xs}
             color="secondary" 
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.details}    
+            {row.task_owner_name}    
           </SoftBox>  
           <SoftBox
-            className="px-2 text-wrap"
-            textAlign="left"
+            className="px-2"
+            textAlign="center"
+            component="td"
+            fontSize={size.xs}
+            color="info"
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`} 
+          >
+            {/* <SoftTypography color={row.status == "1" ? "info" : "primary"} sx={{ fontSize: "1rem" }}>{row.status == "1" ? <CheckIcon /> : "x"}</SoftTypography> */}
+            {row.status &&
+              <SoftBadge 
+              badgeContent={getStatus(row.status)} 
+              variant="gradient" 
+              color={getStatusColor(row.status)} 
+              size="sm" />
+            }
+            
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
             component="td"
             fontSize={size.xs}
             color="secondary" 
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
-            {row.created_by}
-          </SoftBox>
+            {row.date_added}    
+          </SoftBox>  
         </TableRow>
     )});
 
   return (  
-      <TableContainer className="shadow-none p-3">
+      <TableContainer className="shadow-none  p-3">
         <MuiTable className="table table-sm table-hover table-responsive">  
           <SoftBox component="thead">
             <TableRow>{renderColumns}</TableRow>  

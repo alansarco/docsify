@@ -1,26 +1,31 @@
 export const tablehead = [
   {
-    name: "log date",
+    name: "reference no.",
+    padding: "pe-2",
+    align: "left",
+  },
+  {
+    name: "student name",
     padding: "px-2",
     align: "left",
   },
   {
-    name: "action",
+    name: "document",
     padding: "px-2",
     align: "left",
   },
   {
-    name: "module",
+    name: "task owner",
     padding: "px-2",
     align: "left",
   },
   {
-    name: "details",
+    name: "status",
     padding: "px-2",
-    align: "left",
+    align: "center",
   },
   {
-    name: "logged by",
+    name: "date requested",
     padding: "ps-2",
     align: "left",
   },

@@ -172,6 +172,12 @@ export const activeStatusSelect = [
       { value: 3, desc: "For Release" },
 ];
 
+export const historyStatusSelect = [
+      { value: 4, desc: "Completed" },
+      { value: 5, desc: "Rejected" },
+      { value: 6, desc: "Cancelled" },
+];
+
 export const inactiveStatusSelect = [
       { value: 4, desc: "Completed" },
       { value: 5, desc: "Rejected" },

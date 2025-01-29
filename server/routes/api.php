@@ -114,6 +114,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('requests')->group(function () {
         Route::post('/', [RequestController::class, 'index']);
+        Route::post('historyrequests', [RequestController::class, 'historyrequests']);
         Route::get('documentselect', [RequestController::class, 'documentselect']);
         Route::get('retrieverequest', [RequestController::class, 'retrieverequest']);
         Route::get('assigntome', [RequestController::class, 'assigntome']);

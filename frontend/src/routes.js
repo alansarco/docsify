@@ -40,8 +40,8 @@ import LogRepresentative from "layouts/log-representative";
 import Programs from "layouts/programs";
 import Documents from "layouts/documents";
 import RepresentativeSettings from "layouts/settings-representative";
-import LogRegistrar from "layouts/log-registrar";
 import ActiveRequest from "layouts/request-active";
+import HistoryRequest from "layouts/request-history";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -84,15 +84,7 @@ const routes = (access) => [
     component: <Registrars />,
     noCollapse: true,
   },
-  // access >= 10 && access <= 30 && {
-  //   type: "collapse",
-  //   name: "Students",
-  //   key: "students",
-  //   route: "/students",
-  //   icon: <SchoolTwoToneIcon size="12px" />,
-  //   component: <Users />,
-  //   noCollapse: true,
-  // },
+
   access >= 10 && access <= 30 && {
     type: "collapse",
     name: "Students",
@@ -170,7 +162,7 @@ const routes = (access) => [
     key: "request-history",
     route: "/request-history",
     icon: <ScheduleTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <HistoryRequest />,
     noCollapse: true,
   },
 
@@ -251,25 +243,7 @@ const routes = (access) => [
     component: <LogRepresentative />,
     noCollapse: true,
   },
-  access == 10 && {
-    type: "collapse",
-    name: "Logs",
-    key: "registrar-logs",
-    route: "/registrar-logs",
-    icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <LogRegistrar />,
-    noCollapse: true,
-  },
-  access == 5 && {
-    type: "collapse",
-    name: "Logs",
-    key: "student-logs",
-    route: "/student-logs",
-    icon: <ImportContactsTwoToneIcon size="12px" />,
-    component: <Blank />,
-    noCollapse: true,
-  },
-  
+
   access == 999 && {
     type: "collapse",
     name: "Settings",
