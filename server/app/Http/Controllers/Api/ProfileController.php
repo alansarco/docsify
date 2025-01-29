@@ -68,7 +68,12 @@ class ProfileController extends Controller
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
+            'username' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'gender' => 'required',
             'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+            'birthdate' => 'required',   
             'address' => 'required',   
         ]);
 
@@ -91,9 +96,14 @@ class ProfileController extends Controller
                 try {
                     $updateData = [
                         'username' => $request->username,
+                        'first_name' => strtoupper($request->first_name),
+                        'middle_name' => strtoupper($request->middle_name),
+                        'last_name' => strtoupper($request->last_name),
+                        'gender' => $request->gender,
                         'email' => $request->email,
                         'address' => $request->address,
                         'contact' => $request->contact,
+                        'birthdate' => $request->birthdate,
                         'updated_by' => $authUser->fullname,
                     ];
                     $pictureData = null;

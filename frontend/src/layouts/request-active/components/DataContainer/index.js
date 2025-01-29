@@ -33,7 +33,7 @@ import { toast } from "react-toastify";
 import FixedLoading from "components/General/FixedLoading";
 
 function DataContainer({DATA, HandleRendering, ReloadTable}) {
-  const currentFileName = "layouts/users/components/DataContainer/index.js";
+  const currentFileName = "layouts/programs/components/DataContainer/index.js";
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -77,10 +77,11 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
   };
 
   const [Data, setData] = useState([]);
-  const [License, setLicense] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [haveAccount, setHaveAccount] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(true);
-  const dataid = DATA;
+  const data = DATA;
 
   const UpdateLoading = (reloading) => {
     setReload(reloading);
@@ -89,11 +90,12 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
   useEffect(() => {
     if (reload) {
       setReload(true);
-      axios.get(apiRoutes.retrieveCampusOne, { params: { dataid }, headers })
+      axios.get(apiRoutes.retrieveRequestOne, { params: { data }, headers })
         .then(response => {
           if (response.data.status === 200) {
             setData(response.data.dataRetrieved);
-            setLicense(response.data.licenseRetrieved);
+            setTimeline(response.data.timelineRetrieved);
+            setHaveAccount(response.data.haveAccount)  
           } else {
             toast.error(`${response.data.message}`, { autoClose: true });
           }
@@ -146,7 +148,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             <SoftAvatar
-              src={Data.client_logo ? `data:image/*;base64,${Data.client_logo}` : logo}
+              src={Data.id_picture ? `data:image/*;base64,${Data.id_picture}` : logo}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -156,14 +158,14 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
           <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                {Data.client_name}{" "}
+                {Data.fullname}{" "}
               </SoftTypography>
               <SoftTypography variant="button" color="text" fontWeight="medium">
-                {Data.clientid}{" "}
+                {Data.username}{" "}
               </SoftTypography>
             </SoftBox>
           </Grid>
-          <Grid item xs={12} md={3} sx={{ ml: "auto" }}>
+          <Grid item xs={12} md={5} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs
                 orientation={tabsOrientation}
@@ -172,15 +174,15 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
                 sx={{ background: "transparent" }}
               >
                 <Tab label="Information" onClick={setProfile} icon={<Cube />} />
-                {/* <Tab label="Edit" onClick={setEdit} icon={<Document />} /> */}
+                <Tab label="Timeline" onClick={setEdit} icon={<Document />} />
               </Tabs> 
             </AppBar>
           </Grid>
         </Grid>
       </Card>
     </SoftBox>
-    {menu === "profile" && <Information DATA={Data} LICENSE={License} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
-    {/* {menu === "edit" && <Edit UpdateLoading={UpdateLoading} DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />} */}
+    {menu === "profile" && <Information DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {menu === "edit" && <Edit TIMELINE={timeline} UpdateLoading={UpdateLoading} DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
     </>
   );
 }

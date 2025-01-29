@@ -45,6 +45,8 @@ import { toast } from 'react-toastify';
 import FixedLoading from "components/General/FixedLoading";
 import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import logo from "assets/images/logo.png";
+import SoftAvatar from "components/SoftAvatar";
 
 function DashboardNavbar(props) {
   const absolute = props.absolute;
@@ -258,7 +260,14 @@ function DashboardNavbar(props) {
                 color="inherit"
                 onClick={handleOpenMenu}
               >
-                <Icon>account_circle</Icon>
+                <SoftAvatar
+                  src={authUser.id_picture ? `data:image/*;base64,${authUser.id_picture}` : logo}
+                  alt="profile-image"
+                  variant="rounded-pill"
+                  size="sm"
+                  shadow="sm"
+                  className="border"
+                />
               </IconButton>
               {renderMenu()}
             </SoftBox>

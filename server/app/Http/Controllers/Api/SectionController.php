@@ -42,7 +42,7 @@ class SectionController extends Controller
         $authUser = $authUser->getAuthUser();
         $query->where('clientid', $authUser->clientid);
         
-        $sections = $query->orderBy('created_at', 'DESC')->paginate(20);
+        $sections = $query->orderBy('created_at', 'DESC')->paginate(50);
 
         if($sections) {
             return response()->json([

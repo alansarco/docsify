@@ -34,7 +34,7 @@ class LicenseController extends Controller
             $query->where('license_keys.license_price', '>=', $request->filter_price);
         }
         
-        $organizations = $query->orderBy('license_date_use')->orderBy('created_at', 'DESC')->paginate(20);
+        $organizations = $query->orderBy('license_date_use')->orderBy('created_at', 'DESC')->paginate(50);
 
         if($organizations) {
             return response()->json([

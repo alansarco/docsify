@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ResidentController;
 use App\Http\Controllers\Api\RepresentativeController;
+use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StudentController;
@@ -109,6 +110,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrievedocument', [DocumentController::class, 'retrievedocument']);
         Route::get('deletedocument', [DocumentController::class, 'deletedocument']);
         Route::post('updatedocument', [DocumentController::class, 'updatedocument']);
+    });
+
+    Route::prefix('requests')->group(function () {
+        Route::post('/', [RequestController::class, 'index']);
+        Route::get('documentselect', [RequestController::class, 'documentselect']);
+        Route::get('retrieverequest', [RequestController::class, 'retrieverequest']);
+        Route::get('assigntome', [RequestController::class, 'assigntome']);
+
+        Route::post('adddocument', [RequestController::class, 'adddocument']);
+        Route::post('updatedocument', [RequestController::class, 'updatedocument']);
     });
 
     Route::prefix('campuses')->group(function () {

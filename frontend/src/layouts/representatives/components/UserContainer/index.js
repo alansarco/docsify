@@ -165,7 +165,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
               </SoftTypography>
             </SoftBox>
           </Grid>
-          <Grid item xs={12} md={5} sx={{ ml: "auto" }}>
+          <Grid item xs={12} md={3} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs
                 orientation={tabsOrientation}
@@ -174,7 +174,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
                 sx={{ background: "transparent" }}
               >
                 <Tab label="Information" onClick={setProfile} icon={<Cube />} />
-                <Tab label="Edit" onClick={setEdit} icon={<Document />} />
+                {/* <Tab label="Edit" onClick={setEdit} icon={<Document />} /> */}
               </Tabs> 
             </AppBar>
           </Grid>
@@ -182,7 +182,7 @@ function UserContainer({USER, HandleRendering, ReloadTable}) {
       </Card>
     </SoftBox>
     {menu === "profile" && <Information USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
-    {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {/* {menu === "edit" && <Edit UpdateLoading={UpdateLoading} USER={User} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />} */}
     </>
   );
 }

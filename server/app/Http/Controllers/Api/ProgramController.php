@@ -42,7 +42,7 @@ class ProgramController extends Controller
         $authUser = $authUser->getAuthUser();
         $query->where('clientid', $authUser->clientid);
 
-        $programs = $query->orderBy('created_at', 'DESC')->paginate(20);
+        $programs = $query->orderBy('created_at', 'DESC')->paginate(50);
 
         if($programs) {
             return response()->json([

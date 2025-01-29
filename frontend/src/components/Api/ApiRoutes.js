@@ -61,6 +61,11 @@ export const apiRoutes = {
     deleteDocument: `${mainRoute}/api/documents/deletedocument`,
     updateDocument: `${mainRoute}/api/documents/updatedocument`,
 
+    activeRequestRetreive: `${mainRoute}/api/requests`,
+    documentSelect: `${mainRoute}/api/requests/documentselect`,
+    retrieveRequestOne: `${mainRoute}/api/requests/retrieverequest`,
+    assignToMe: `${mainRoute}/api/requests/assigntome`,
+
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
     inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,

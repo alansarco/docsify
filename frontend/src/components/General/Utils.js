@@ -11,6 +11,7 @@ export const moduleSelect = [
       { value: "Documents", desc: "Documents" },
       { value: "Sections", desc: "Sections" },
       { value: "Programs", desc: "Programs" },
+      { value: "Requests", desc: "Requests" },
       { value: "Settings", desc: "Settings" },
 ];
 
@@ -74,6 +75,11 @@ export const accessSelect = [
 export const yesnoSelect = [
       { value: 1, desc: "Yes" },
       { value: 0, desc: "No" },
+];
+
+export const assignedSelect = [
+      { value: true, desc: "Yes" },
+      { value: false, desc: "No" },
 ];
 
 export const colorSelect = [
@@ -157,5 +163,91 @@ export function getLRN(amount) {
           return amount.slice(1);
       }
       return amount;
-  }
-  
+}
+
+export const activeStatusSelect = [
+      { value: 0, desc: "Pending" },
+      { value: 1, desc: "On Queue" },
+      { value: 2, desc: "Processing" },
+      { value: 3, desc: "For Release" },
+];
+
+export const inactiveStatusSelect = [
+      { value: 4, desc: "Completed" },
+      { value: 5, desc: "Rejected" },
+];
+
+export function getStatus(status) {
+      if (status == 0) {
+            return 'PENDING'
+      }
+      if (status == 1) {
+            return 'ON QUEUE'
+      }
+      if (status == 2) {
+            return 'PROCESSING'
+      }
+      if (status == 3) {
+            return 'FOR RELEASE'
+      }
+      if (status == 4) {
+            return 'COMPLETED'
+      }
+      if (status == 5) {
+            return 'REJECTED'
+      }
+      if (status == 6) {
+            return 'CANCELLED'
+      }
+      return '';
+}
+
+export function getStatusColor(status) {
+      if (status == 0) {
+            return 'warning'
+      }
+      if (status == 1) {
+            return 'success'
+      }
+      if (status == 2) {
+            return 'info'
+      }
+      if (status == 3) {
+            return 'dark'
+      }
+      if (status == 4) {
+            return 'dark'
+      }
+      if (status == 5) {
+            return 'primary'
+      }
+      if (status == 6) {
+            return 'primary'
+      }
+      return 'secondary';
+}
+
+export function getStatusIcon(status) {
+      if (status == 0) {
+            return 'shopping_cart'
+      }
+      if (status == 1) {
+            return 'airplane'
+      }
+      if (status == 2) {
+            return 'queue'
+      }
+      if (status == 3) {
+            return 'inventory_2'
+      }
+      if (status == 4) {
+            return 'check'
+      }
+      if (status == 5) {
+            return 'close'
+      }
+      if (status == 6) {
+            return 'close'
+      }
+      return 'notifications';
+}

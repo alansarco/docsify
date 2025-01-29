@@ -16,12 +16,13 @@ import { useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { messages } from "components/General/Messages";
 import axios from "axios";  
+import { getStatus } from "components/General/Utils";
 
-function Information({USER, HandleRendering, ReloadTable}) {
+function Information({DATA, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
   const currentFileName = "layouts/users/components/UserContainer/index.js";
 
-  const username = USER.username;
+  const reference_no = DATA.reference_no;
   const {token, role, access} = useStateContext();  
   const YOUR_ACCESS_TOKEN = token; 
   const headers = {
@@ -44,13 +45,13 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Representative?',
-      text: "Are you sure you want to delete this account? You won't be able to revert this!",
+      title: 'Assign to you?',
+      text: "Are you sure you want to assign this request under your name? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',  
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, I confirm it!'
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteUser(true);
@@ -58,7 +59,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteRepresentative, { params: { username }, headers })
+            axios.get(apiRoutes.assignToMe, { params: { reference_no }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -72,7 +73,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
               })  
               .catch(error => {
                 setDeleteUser(false);
-                toast.error("Cant delete representative", { autoClose: true });
+                toast.error("Cant assign request!", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }
@@ -87,47 +88,21 @@ function Information({USER, HandleRendering, ReloadTable}) {
       <SoftBox mt={5} mb={3} px={2}>
         <SoftBox p={4} className="shadow-sm rounded-4 bg-white" >
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} xl={6}>
+            <Grid item xs={12}>
               <ProfileInfoCard
-                title="Personal Information"
+                title="Request Information"
                 info={{
-                  Firstname: USER.first_name,
-                  Middle_Name: USER.middle_name,
-                  Lastname: USER.last_name,
-                  Age: USER.age ?? " ",
-                  Gender: USER.gender ?? " ",
-                  Birthdate: USER.birthday ?? " ",
-                  Email: USER.email ?? " ",
-                  Contact_Number: USER.contact ?? " ",
-                  Address: USER.address ?? " ",
-                  Status: USER.account_status == "1" ? "Verified" : "Not Verified",
-                  Last_Online: USER.last_online ?? "None",
+                  Reference_No: DATA.reference_no ?? " ",
+                  Documet: DATA.doc_name ?? " ",
+                  Status: getStatus(DATA.status) ?? " ",
+                  Assigned_Registrar: DATA.task_owner == null ? "None" : DATA.task_owner_name,
+                  Date_Needed: DATA.date_needed ?? " ",
+                  Created_Date: DATA.created_date ?? " ",
+                  Created_By: DATA.fullname ?? " ",
+                  Updated_Date: DATA.updated_date ?? " ",
+                  Updated_By: DATA.updated_by ?? " ",
                 }}
               />
-            </Grid>
-            <Grid item xs={12} md={6} xl={6}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <ProfileInfoCard
-                      title="Campus Information"
-                      info={{
-                      Campus_Name: USER.client_name ?? " ",
-                      Short_Name: USER.client_acr ?? " ",                      
-                      }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <ProfileInfoCard
-                      title="Other Information"
-                      info={{
-                      Updated_Date: USER.created_date ?? " ",
-                      Updated_By: USER.updated_by ?? " ",
-                      Created_Date: USER.created_date ?? " ",
-                      Created_by: USER.created_by ?? " ",
-                      }}
-                  />
-                </Grid>
-              </Grid>
             </Grid>
           </Grid>
           <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
@@ -138,14 +113,15 @@ function Information({USER, HandleRendering, ReloadTable}) {
                 </SoftButton>
               </SoftBox>
             </Grid>
-            {/* {access >= 10 && role === "ADMIN" && 
+            {!DATA.task_owner &&
             <Grid item xs={12} sm={4} md={2} pl={1}>
               <SoftBox mt={2} display="flex" justifyContent="end">
                 <SoftButton onClick={handleDelete} variant="gradient" color="info" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small">
-                  Delete
+                  Assign to me
                 </SoftButton>
               </SoftBox>
-            </Grid>} */}
+            </Grid>
+            }
           </Grid>   
         </SoftBox>
       </SoftBox>

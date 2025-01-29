@@ -41,6 +41,7 @@ import Programs from "layouts/programs";
 import Documents from "layouts/documents";
 import RepresentativeSettings from "layouts/settings-representative";
 import LogRegistrar from "layouts/log-registrar";
+import ActiveRequest from "layouts/request-active";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -160,7 +161,7 @@ const routes = (access) => [
     key: "active-requests",
     route: "/active-requests",
     icon: <TaskTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <ActiveRequest />,
     noCollapse: true,
   },
   access == 10 && {
@@ -273,7 +274,7 @@ const routes = (access) => [
     type: "collapse",
     name: "Settings",
     key: "admin-settings",
-    route: "/settings",
+    route: "/admin-settings",
     icon: <SettingsTwoToneIcon size="12px" />,
     component: <AdminSettings />,
     noCollapse: true,

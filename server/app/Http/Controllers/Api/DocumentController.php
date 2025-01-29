@@ -32,7 +32,7 @@ class DocumentController extends Controller
         $authUser = $authUser->getAuthUser();
         $query->where('clientid', $authUser->clientid);
 
-        $documents = $query->orderBy('created_at', 'DESC')->paginate(20);
+        $documents = $query->orderBy('created_at', 'DESC')->paginate(50);
 
         if($documents) {
             return response()->json([

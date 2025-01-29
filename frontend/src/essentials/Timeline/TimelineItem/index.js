@@ -33,6 +33,7 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
 
   return (
     <SoftBox position="relative" ml={2} sx={(theme) => timelineItem(theme, { lastItem })}>
+      {title &&
       <SoftBox
         bgColor={isDark ? "dark" : "white"}
         width="1.625rem"
@@ -45,11 +46,12 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
       >
         <Icon sx={(theme) => timelineItemIcon(theme, { color })}>{icon}</Icon>
       </SoftBox>
+      }
       <SoftBox ml={5.75} pt={description ? 0.7 : 0.5} lineHeight={0} maxWidth="100%">
         <SoftTypography variant="button" fontWeight="medium" color={isDark ? "white" : "dark"}>
           {title}
         </SoftTypography>
-        <SoftBox mt={0.5}>
+        <SoftBox mt={1}>
           <SoftTypography
             variant="caption"
             fontWeight="medium"
@@ -58,7 +60,7 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
             {dateTime}
           </SoftTypography>
         </SoftBox>
-        <SoftBox mt={2} mb={1.5}>
+        <SoftBox mt={0.5} mb={1.5}>
           {description ? (
             <SoftTypography variant="button" fontWeight="regular" color="text" className="fst-italic" >
               {description}

@@ -1,6 +1,3 @@
-// @mui material components
-import Card from "@mui/material/Card";
-
 // React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
@@ -23,24 +20,23 @@ import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import DataContainer from "layouts/campuses/components/DataContainer";
-import Add from "layouts/campuses/components/Add";
+import DataContainer from "layouts/request-active/components/DataContainer";
+import Add from "layouts/request-active/components/Add";
 
-import Table from "layouts/campuses/data/table";
-import { tablehead } from "layouts/campuses/data/head";  
+import Table from "layouts/request-active/data/table";
+import { tablehead } from "layouts/request-active/data/head";  
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
-import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';
-import { minPaymenSelect,maxPaymenSelect } from "components/General/Utils";
-import { toast } from "react-toastify";
+import { useTheme } from "@emotion/react";
+import { activeStatusSelect, assignedSelect , currentDate} from "components/General/Utils";
 
-function ActiveCampus() {
-    const currentFileName = "layouts/campuses/index.js";
-    const {token, access, updateTokenExpiration, role} = useStateContext();
+function ActiveRequest() {
+    const currentFileName = "layouts/request-active/index.js";
+    const {token, access, updateTokenExpiration} = useStateContext();
     updateTokenExpiration();
     if (!token) {
         return <Navigate to="/authentication/sign-in" />
@@ -53,6 +49,7 @@ function ActiveCampus() {
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
     const [searchTriggered, setSearchTriggered] = useState(true);
+    const [fetchdocuments, setFetchDocuments] = useState([]);
 
     const [reload, setReload] = useState(false);
 
@@ -61,15 +58,31 @@ function ActiveCampus() {
         'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
     };
 
+    useEffect(() => {
+      axios.get(apiRoutes.documentSelect, {headers})
+      .then(response => {
+        setFetchDocuments(response.data.documents);
+        passToSuccessLogs(response.data, currentFileName);
+      })
+      .catch(error => {
+        passToErrorLogs(`Documents not Fetched!  ${error}`, currentFileName);
+      });
+    }, []);
+
+
     const initialState = {
+        doc_id: "",
+        created_at: "",
         filter: "",
-        min_payment: "",
-        max_payment: "",
-        subscription_start: "",
-        subscription_end: "",
+        assigned: "",
+        status: "",
     };
 
     const [formData, setFormData] = useState(initialState);
+
+    const HandleClear = (user) => {
+      setFormData(initialState);
+    };
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -83,14 +96,10 @@ function ActiveCampus() {
     const [DATA, setDATA] = useState(); 
     const [rendering, setRendering] = useState(1);
     const [fetchdata, setFetchdata] = useState([]);
-    const tableHeight = DynamicTableHeight(); 
-    
-    const HandleClear = (data) => {
-      setFormData(initialState);
-    };
+    const tableHeight = DynamicTableHeight();  
 
     const HandleDATA = (data) => {
-        setDATA(data);
+      setDATA(data);
     };
 
     const HandleRendering = (rendering) => {
@@ -100,15 +109,15 @@ function ActiveCampus() {
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.activeCampusRetrieve + '?page=' + 1, formData, {headers})
+        axios.post(apiRoutes.activeRequestRetreive + '?page=' + 1, formData, {headers})
           .then(response => {
-            setFetchdata(response.data.campuses);
+            setFetchdata(response.data.requests);
             passToSuccessLogs(response.data, currentFileName);
             setReload(false);
             setFetching("No data Found!")
           })
           .catch(error => {
-            passToErrorLogs(`Campus Data not Fetched!  ${error}`, currentFileName);
+            passToErrorLogs(`Document Data not Fetched!  ${error}`, currentFileName);
             setReload(false);
           });
         setSearchTriggered(false);
@@ -116,9 +125,9 @@ function ActiveCampus() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.activeCampusRetrieve + '?page=' + page, formData, {headers})
+        axios.post(apiRoutes.activeRequestRetreive + '?page=' + page, formData, {headers})
         .then(response => {
-        setFetchdata(response.data.campuses);
+        setFetchdata(response.data.requests);
         passToSuccessLogs(response.data, currentFileName);
         setReload(false);      
         })
@@ -130,31 +139,23 @@ function ActiveCampus() {
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-        if(parseInt(formData.min_payment) > parseInt(formData.max_payment) && formData.max_payment != '') {
-          toast.warning('Min Payment must be lesser than Max Payment!', { autoClose: true });
-        }
-        else if(formData.subscription_start > formData.subscription_end && formData.subscription_end != '') {
-          toast.warning('Subscription Start be lesser than Subscription End', { autoClose: true });
-        }
-        else {
-          setReload(true);      
-          try {
-              const response = await axios.post(apiRoutes.activeCampusRetrieve + '?page=' + 1, formData, {headers});
-              if(response.data.status == 200) {
-                  setFetchdata(response.data.campuses);
-              }
-              else {
-                  setFetchdata([]);
-                  setFetching("No data Found!");
-              }
-              passToSuccessLogs(response.data, currentFileName);
-              setReload(false);
-          } catch (error) { 
-              passToErrorLogs(error, currentFileName);
-              setReload(false);
-          }     
-          setReload(false);
-        }
+        setReload(true);      
+        try {
+            const response = await axios.post(apiRoutes.activeRequestRetreive + '?page=' + 1, formData, {headers});
+            if(response.data.status == 200) {
+                setFetchdata(response.data.requests);
+            }
+            else {
+                setFetchdata([]);
+                setFetching("No data Found!");
+            }
+            passToSuccessLogs(response.data, currentFileName);
+            setReload(false);
+        } catch (error) { 
+            passToErrorLogs(error, currentFileName);
+            setReload(false);
+        }     
+        setReload(false);
     };
 
   const fetchNextPrevTasks = (link) => {
@@ -162,10 +163,11 @@ function ActiveCampus() {
     const nextPage = url.searchParams.get('page');
     setPage(nextPage ? parseInt(nextPage) : 1);
     setReload(true);      
+
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.activeCampusRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.post(apiRoutes.activeRequestRetreive + '?page=' + nextPage, formData, {headers})
     .then(response => {
-      setFetchdata(response.data.campuses);
+      setFetchdata(response.data.requests);
       passToSuccessLogs(response.data, currentFileName);
       setReload(false);      
     })
@@ -191,27 +193,24 @@ function ActiveCampus() {
           :
           rendering == 3 ?
             <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
-        :
+          :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Active Campus List</SoftTypography>
+                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Active Request List</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
-                  {/* <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Campus
-                  </SoftButton> */}
                 </SoftBox>
               </SoftBox>
               <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
                 <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
-                    {fetchdata && fetchdata.data && (fetchdata.data.length > 0) ? 
-                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} campuses={fetchdata.data} tablehead={tablehead} /> :
+                    {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
+                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
@@ -230,29 +229,35 @@ function ActiveCampus() {
                         <Grid item xs={12}>
                             <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
                             <SoftBox className="my-auto">
-                              <SoftTypography variant="button" className="me-1">Subscription Start:</SoftTypography>
-                              <input className="form-control form-control-sm text-secondary rounded-5"  name="subscription_start" value={formData.subscription_start} onChange={handleChange} type="date" />
-                              <SoftTypography variant="button" className="me-1">Subscription End:</SoftTypography>
-                              <input className="form-control form-control-sm text-secondary rounded-5"  name="subscription_end" value={formData.subscription_end} onChange={handleChange} type="date" />
-                              <SoftTypography variant="button" className="me-1">Min. Payment:</SoftTypography>
-                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="min_payment" value={formData.min_payment} onChange={handleChange} >
+                            <SoftTypography variant="button" className="me-1">Date Requested:</SoftTypography>
+                            <input className="form-control form-control-sm text-secondary rounded-5" max={currentDate}  name="created_at" value={formData.created_at} onChange={handleChange} type="date" />
+                            <SoftTypography variant="button" className="me-1">Status:</SoftTypography>
+                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="status" value={formData.status} onChange={handleChange} >
                                 <option value="">-- Select --</option>
-                                {minPaymenSelect && minPaymenSelect.map((min) => (
-                                <option key={min.value} value={min.value}>
-                                        {min.desc}
+                                {activeStatusSelect && activeStatusSelect.map((status) => (
+                                <option key={status.value} value={status.value}>
+                                  {status.desc}
                                 </option>
                                 ))}
-                              </select>
-                              <SoftTypography variant="button" className="me-1">Gender:</SoftTypography>
-                              <SoftTypography variant="button" className="me-1">Max. Payment:</SoftTypography>
-                              <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="max_payment" value={formData.max_payment} onChange={handleChange} >
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Documents:</SoftTypography>
+                            <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="doc_id" value={formData.doc_id} onChange={handleChange} >
+                            <option value="">-- Select --</option>
+                                  {fetchdocuments && fetchdocuments.map((doc) => (
+                                  <option key={doc.doc_id} value={doc.doc_id}>
+                                        {doc.doc_name}
+                                  </option>
+                                  ))}
+                            </select>
+                            <SoftTypography variant="button" className="me-1">Assigned:</SoftTypography>
+                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="assigned" value={formData.assigned} onChange={handleChange} >
                                 <option value="">-- Select --</option>
-                                {maxPaymenSelect && maxPaymenSelect.map((max) => (
-                                <option key={max.value} value={max.value}>
-                                        {max.desc}
+                                {assignedSelect && assignedSelect.map((yn) => (
+                                <option key={yn.value} value={yn.value}>
+                                  {yn.desc}
                                 </option>
                                 ))}
-                              </select>
+                            </select>
                             </SoftBox>
                             <SoftInput 
                               className="my-3"
@@ -299,4 +304,4 @@ function ActiveCampus() {
   );
 }
 
-export default ActiveCampus;
+export default ActiveRequest;

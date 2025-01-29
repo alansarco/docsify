@@ -32,7 +32,7 @@ class StudentSectionController extends Controller
             $query->where('license_keys.license_price', '>=', $request->filter_price);
         }
         
-        $sections = $query->orderBy('license_date_use')->orderBy('created_at', 'DESC')->paginate(20);
+        $sections = $query->orderBy('license_date_use')->orderBy('created_at', 'DESC')->paginate(50);
 
         if($sections) {
             return response()->json([

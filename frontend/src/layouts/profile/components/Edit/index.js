@@ -34,10 +34,14 @@ function Edit({USER, UpdateLoading}) {
             
       const initialState = {
             username: USER.username,
+            first_name: USER.first_name == null ? "" : USER.first_name,
+            middle_name: USER.middle_name == null ? "" : USER.middle_name,
+            last_name: USER.last_name == null ? "" : USER.last_name,
             address: USER.address == null ? "" : USER.address,
+            gender: USER.gender == null ? "" : USER.gender,
             email: USER.email == null ? "" : USER.email,
             contact: USER.contact == null ? "" : USER.contact,
-            account_status: USER.account_status == null ? "" : USER.account_status, 
+            birthdate: USER.birthdate == null ? "" : USER.birthdate,
             agreement: false,   
       };
 
@@ -94,8 +98,13 @@ function Edit({USER, UpdateLoading}) {
                               else {  
                                     const data = new FormData();
                                     data.append("username", formData.username);
+                                    data.append("first_name", formData.first_name);
+                                    data.append("middle_name", formData.middle_name);
+                                    data.append("last_name", formData.last_name);
                                     data.append("id_picture", formData.id_picture);
+                                    data.append("gender", formData.gender);
                                     data.append("contact", formData.contact);
+                                    data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
                                     data.append("email", formData.email);
                                     const response = await axios.post(apiRoutes.updateProfile, data, {headers});
@@ -139,21 +148,37 @@ function Edit({USER, UpdateLoading}) {
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                          </Grid>     
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Middle Name:</SoftTypography>
+                                                <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                          </Grid>     
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Last Name:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                          </Grid>         
+                                          <Grid item xs={12} md={6} lg={2} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Gender: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="gender" value={formData.gender} onChange={handleChange} >
+                                                      <option value=""></option>
+                                                      {genderSelect && genderSelect.map((gender) => (
+                                                      <option key={gender.value} value={gender.value}>
+                                                            {gender.desc}
+                                                      </option>
+                                                      ))}
+                                                </select>
+                                          </Grid>
                                           <Grid item xs={12} lg={6} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                           </Grid>
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
-                                          </Grid> 
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
                                                 <input
@@ -164,7 +189,22 @@ function Edit({USER, UpdateLoading}) {
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
-                                    </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={5} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
+                                          </Grid>
+                                    </Grid>   
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 
