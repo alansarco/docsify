@@ -7545,6 +7545,10 @@ textarea.form-control-lg {
   background-color: #344767 !important;
 }
 
+.bg-purple {
+  background-color: #6f42c1 !important;
+}
+
 .bg-body {
   background-color: #fff !important;
 }
@@ -11287,4 +11291,27 @@ textarea.form-control-lg {
 .justify-text {
   text-align: justify !important;
   text-indent: 2em; 
+}
+
+
+.timeline-container {
+  overflow-x: auto;
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-right: 40px;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 0%;
+  left: 100%;
+  width: 20px;
+}
+
+.timeline-item:last-child .timeline-line {
+  display: none;
 }

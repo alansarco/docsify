@@ -233,12 +233,37 @@ export function getStatusColor(status) {
       return 'secondary';
 }
 
+export function getStatusBgColor(status) {
+      if (status == 0) {
+            return 'bg-warning'
+      }
+      if (status == 1) {
+            return 'bg-success'
+      }
+      if (status == 2) {
+            return 'bg-info'
+      }
+      if (status == 3) {
+            return 'bg-dark'
+      }
+      if (status == 4) {
+            return 'bg-purple'
+      }
+      if (status == 5) {
+            return 'bg-primary'
+      }
+      if (status == 6) {
+            return 'bg-primary'
+      }
+      return 'bg-secondary';
+}
+
 export function getStatusIcon(status) {
       if (status == 0) {
             return 'shopping_cart'
       }
       if (status == 1) {
-            return 'airplane'
+            return 'pending'
       }
       if (status == 2) {
             return 'queue'

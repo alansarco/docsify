@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -118,9 +119,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('documentselect', [RequestController::class, 'documentselect']);
         Route::get('retrieverequest', [RequestController::class, 'retrieverequest']);
         Route::get('assigntome', [RequestController::class, 'assigntome']);
+    });
 
-        Route::post('adddocument', [RequestController::class, 'adddocument']);
-        Route::post('updatedocument', [RequestController::class, 'updatedocument']);
+    Route::prefix('tasks')->group(function () {
+        Route::post('/', [TaskController::class, 'index']);
     });
 
     Route::prefix('campuses')->group(function () {

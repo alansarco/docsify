@@ -42,6 +42,7 @@ import Documents from "layouts/documents";
 import RepresentativeSettings from "layouts/settings-representative";
 import ActiveRequest from "layouts/request-active";
 import HistoryRequest from "layouts/request-history";
+import ActiveTask from "layouts/task-active";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -167,14 +168,14 @@ const routes = (access) => [
   },
 
   //my-pages
-  access >= 5 && access <= 10 && { type: "title", title: "My Pages", key: "my-pages" },
+  access >= 5 && access <= 10 && { type: "title", title: "My Tasks", key: "my-tasks" },
   access == 10 && {
     type: "collapse",
     name: "Active Tasks",
     key: "active-tasks",
     route: "/active-tasks",
     icon: <TaskTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <ActiveTask />,
     noCollapse: true,
   },
   access == 10 && {

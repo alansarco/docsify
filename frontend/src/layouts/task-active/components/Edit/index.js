@@ -22,7 +22,6 @@ import { Autorenew } from '@mui/icons-material';
 import RecyclingIcon from '@mui/icons-material/Recycling';
 import { getStatusIcon } from "components/General/Utils";
 import HorizontalTimeline from "components/General/HorizontalTimeline";
-
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STATUS }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
@@ -133,6 +132,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                     {TIMELINE && TIMELINE.map((time, index) => {
                                     // Get the previous item's status_name
                                     const prevStatusName = index > 0 ? TIMELINE[index - 1].status_name : null;
+
                                     return (
                                           <TimelineItem
                                                 key={index}
@@ -144,6 +144,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                           />
                                     );
                                     })}
+
                                     </TimelineList>
                                     <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
                                           <Grid item xs={12} sm={4} md={2} pl={1}>

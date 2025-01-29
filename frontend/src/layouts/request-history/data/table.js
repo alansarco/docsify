@@ -121,6 +121,29 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
           >
             {row.date_added}    
           </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.date_needed}
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.date_completed}
+            <SoftTypography variant="span" className="fw-bold" color="primary">
+            {row.days_overdue != 0 && ` - ${row.days_overdue} day/s overdue`}    
+            </SoftTypography>
+          </SoftBox>  
         </TableRow>
     )});
 

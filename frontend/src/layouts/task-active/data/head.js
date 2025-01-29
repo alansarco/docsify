@@ -31,11 +31,6 @@ export const tablehead = [
   },
   {
     name: "target finish",
-    padding: "px-2",
-    align: "left",
-  },
-  {
-    name: "date completed",
     padding: "ps-2",
     align: "left",
   },

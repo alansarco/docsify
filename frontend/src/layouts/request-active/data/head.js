@@ -26,6 +26,11 @@ export const tablehead = [
   },
   {
     name: "date requested",
+    padding: "px-2",
+    align: "left",
+  },
+  {
+    name: "target finish",
     padding: "ps-2",
     align: "left",
   },

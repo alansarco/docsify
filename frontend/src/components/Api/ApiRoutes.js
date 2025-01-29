@@ -67,6 +67,8 @@ export const apiRoutes = {
     retrieveRequestOne: `${mainRoute}/api/requests/retrieverequest`,
     assignToMe: `${mainRoute}/api/requests/assigntome`,
 
+    activeTaskRetreive: `${mainRoute}/api/tasks`,
+
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
     inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,
@@ -82,7 +84,6 @@ export const apiRoutes = {
 
     adminlogsRetrieve: `${mainRoute}/api/logs/adminlogs`,
     representativelogsRetrieve: `${mainRoute}/api/logs/representativelogs`,
-    registrarlogsRetrieve: `${mainRoute}/api/logs/registrarlogs`,
 
     adminSettings: `${mainRoute}/api/settings/adminsettings`,
     adminSettingsRetrieved: `${mainRoute}/api/settings/adminsettingsretrieved`,

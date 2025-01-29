@@ -78,6 +78,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
 
   const [Data, setData] = useState([]);
   const [timeline, setTimeline] = useState([]);
+  const [maxstatus, setMaxStatus] = useState(0);
   const [haveAccount, setHaveAccount] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(true);
@@ -95,6 +96,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
           if (response.data.status === 200) {
             setData(response.data.dataRetrieved);
             setTimeline(response.data.timelineRetrieved);
+            setMaxStatus(response.data.statusRetrieved);
             setHaveAccount(response.data.haveAccount)  
           } else {
             toast.error(`${response.data.message}`, { autoClose: true });
@@ -182,7 +184,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
       </Card>
     </SoftBox>
     {menu === "profile" && <Information DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
-    {menu === "edit" && <Edit TIMELINE={timeline} UpdateLoading={UpdateLoading} DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {menu === "edit" && <Edit STATUS={maxstatus} TIMELINE={timeline} UpdateLoading={UpdateLoading} DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
     </>
   );
 }
