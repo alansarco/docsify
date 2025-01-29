@@ -97,11 +97,10 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             textAlign="center"
             component="td"
             fontSize={size.xs}
-            color="info"
+            color="secondary"
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`} 
           >
-            {/* <SoftTypography color={row.status == "1" ? "info" : "primary"} sx={{ fontSize: "1rem" }}>{row.status == "1" ? <CheckIcon /> : "x"}</SoftTypography> */}
             {row.status &&
               <SoftBadge 
               badgeContent={getStatus(row.status)} 

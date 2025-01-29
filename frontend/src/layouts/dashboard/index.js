@@ -23,6 +23,11 @@ import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
 import GradientLineChart from "essentials/Charts/LineCharts/GradientLineChart";
 import VerticalBarChart from "essentials/Charts/BarCharts/VerticalBarChart";
+import TimelineList from "essentials/Timeline/TimelineList";
+import { getStatusColor } from "components/General/Utils";
+import { getStatusIcon } from "components/General/Utils";
+import TimelineDash from "essentials/Timeline/TimelineItem/TimelineDash";
+import { getStatus } from "components/General/Utils";
 
 function Dashboard() {
   const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
@@ -242,6 +247,38 @@ function Dashboard() {
                           },
                         }}
                       />  
+                    </Grid>
+                  </Grid>
+                </Grid>
+                }
+                {access == 10 &&
+                <Grid item xs={12} md={5} xl={4}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TimelineList title="My Tasks">
+                        {(otherStats && otherStats.mytask && otherStats.mytask.length < 0)  ?
+                        <SoftTypography mt={0} color="dark" fontSize="0.8rem" className="text-center">
+                        None for Today!
+                        </SoftTypography> : ""
+                        }
+                        {otherStats && otherStats.mytask && otherStats.mytask.length && otherStats.mytask.map((time, index) => {
+                        // Get the previous item's status_name
+                        return (
+                              <TimelineDash
+                                    key={index}
+                                    color={getStatusColor(time.status)}
+                                    icon="lens"
+                                    title={time.doc_name} // Set empty if same as previous
+                                    dateNeeded={time.date_needed}
+                                    dateRequested={time.date_added}
+                                    description={time.fullname}
+                                    badges={[
+                                      getStatus(time.status)
+                                    ]}
+                              />
+                        );
+                        })}
+                      </TimelineList>
                     </Grid>
                   </Grid>
                 </Grid>

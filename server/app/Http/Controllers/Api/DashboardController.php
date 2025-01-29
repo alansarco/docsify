@@ -81,6 +81,25 @@ class DashboardController extends Controller
         )
         ->where('clientid', $authUser->clientid)
         ->first();
+
+        $mytask = DocRequest::leftJoin('users', 'requests.username', 'users.username')
+            ->leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+            ->leftJoin('students_section', 'users.section', 'students_section.section_id')
+            ->leftJoin('students_program', 'users.program', 'students_program.program_id')
+            ->select(
+                'requests.status',
+                'requests.reference_no',
+                'documents.doc_name',
+                DB::raw("CONCAT(IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as fullname"),
+                DB::raw("DATE_FORMAT(requests.created_at, '%M %d, %Y') AS date_added"),
+                DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
+                DB::raw("CASE WHEN CURDATE() > requests.date_needed THEN DATEDIFF(CURDATE(), requests.date_needed) ELSE 0 END AS days_overdue")
+            )
+            ->where('requests.status', '<', 4)
+            ->where('requests.clientid', $authUser->clientid)
+            ->where('requests.task_owner', $authUser->username)
+            ->orderBy('requests.created_at')
+            ->get();
         
         $otherStats = [
             'data1' => $data1,
@@ -94,6 +113,7 @@ class DashboardController extends Controller
             'gradeCounts' => $gradeCounts,
             'registrarCounts' => $registrarCounts,
             'taskDistribution' => $taskDistribution,
+            'mytask' => $mytask,
         ];
 
 

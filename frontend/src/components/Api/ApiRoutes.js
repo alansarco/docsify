@@ -66,8 +66,10 @@ export const apiRoutes = {
     documentSelect: `${mainRoute}/api/requests/documentselect`,
     retrieveRequestOne: `${mainRoute}/api/requests/retrieverequest`,
     assignToMe: `${mainRoute}/api/requests/assigntome`,
+    updateRequestStatus: `${mainRoute}/api/requests/updaterequeststatus`,
 
     activeTaskRetreive: `${mainRoute}/api/tasks`,
+    historyTaskRetreive: `${mainRoute}/api/tasks/historytask`,
 
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,

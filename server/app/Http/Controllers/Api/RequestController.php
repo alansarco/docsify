@@ -13,6 +13,7 @@ use App\Models\DocReqTimeline;
 use App\Models\DocRequest;
 use App\Models\LogRepresentative;
 use App\Models\Document;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class RequestController extends Controller
@@ -226,6 +227,7 @@ class RequestController extends Controller
             DB::raw("DATE_FORMAT(requests.created_at, '%M %d, %Y %h:%i %p') AS created_date"),
             DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"),
             DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y %h:%i %p') AS date_needed"),
+            DB::raw("DATE_FORMAT(requests.date_completed, '%M %d, %Y %h:%i %p') AS date_completed"),
             )
 
         ->where('requests.clientid', $authUser->clientid)
@@ -298,6 +300,85 @@ class RequestController extends Controller
                 'module' => 'Requests',
                 'action' => 'UPDATE',
                 'details' => $authUser->name .' assigned the request under its name with reference number of '.$request->reference_no,
+                'created_by' => $authUser->fullname,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Requested document assigned successfully!'
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Something went wrong!'
+        ]);
+    }
+
+    public function updaterequeststatus(Request $request) {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        $getStatus = new Utils;
+        $getStatus = $getStatus->getStatus($request->status);
+        
+        if($authUser->role !== "REGISTRAR" || $authUser->access_level != 10) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+        $validator = Validator::make($request->all(), [
+            'reference_no' => 'required',
+            'status_details' => 'required',
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message' => $validator->messages()->all()
+            ]);
+        }
+
+        $checkrequest = DocRequest::where('reference_no', $request->reference_no)->first();
+
+        if(!$checkrequest) {
+            return response()->json([
+                'message' => 'Request not found!'
+            ]);
+        }
+
+        if($checkrequest->task_owner != $authUser->username) {
+            return response()->json([
+                'message' => 'You do not own this task, someone just change it. Please refresh!'
+            ]);
+        }
+
+        $today = Carbon::today();
+
+        $updateRequest = [
+            'status' => $request->status,
+            'updated_at' => $today,
+            'updated_by' => $authUser->fullname,
+        ];
+
+
+        $createTimeline = [
+            'clientid' => $checkrequest->clientid,
+            'reference_no' => $checkrequest->reference_no,
+            'status' => $request->status,
+            'status_name' => $getStatus,
+            'status_details' => $request->status_details,
+            'created_at' => $today,
+            'updated_by' => $authUser->fullname,
+        ];
+
+        $update = DocRequest::where('reference_no', $request->reference_no)->update($updateRequest);
+        
+        if($update) {
+            DocReqTimeline::create($createTimeline);
+
+            LogRepresentative::create([
+                'clientid' => $authUser->clientid,
+                'module' => 'Requests',
+                'action' => 'UPDATE',
+                'details' => $authUser->name .' updated the request status to '.$getStatus.', with reference number of '.$checkrequest->reference_no,
                 'created_by' => $authUser->fullname,
             ]);
             return response()->json([

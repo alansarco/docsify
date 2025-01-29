@@ -101,14 +101,13 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderBottom={`${borderWidth[1]} solid ${light.main}`}
             borderTop={`${borderWidth[1]} solid ${light.main}`} 
           >
-            {row.status >= 0 &&
+            {row.status &&
               <SoftBadge 
               badgeContent={getStatus(row.status)} 
               variant="gradient" 
               color={getStatusColor(row.status)} 
               size="sm" />
             }
-            
           </SoftBox>  
           <SoftBox
             className="px-2"
@@ -129,6 +128,16 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
             {row.date_needed}
+          </SoftBox>  
+          <SoftBox
+            className="px-2"
+            component="td"
+            fontSize={size.xs}
+            color="secondary" 
+            borderBottom={`${borderWidth[1]} solid ${light.main}`}
+            borderTop={`${borderWidth[1]} solid ${light.main}`}
+          >
+            {row.date_completed}
             <SoftTypography variant="span" className="fw-bold" color="primary">
             {row.days_overdue != 0 && ` - ${row.days_overdue} day/s overdue`}    
             </SoftTypography>

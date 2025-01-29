@@ -8,13 +8,13 @@ import TimelineItem from "essentials/Timeline/TimelineItem";
 import { getStatusColor } from "components/General/Utils";
 import { getStatusIcon } from "components/General/Utils";
 import HorizontalTimeline from "components/General/HorizontalTimeline";
-
 function Edit({HandleRendering, ReloadTable, TIMELINE, STATUS }) {
+
       const handleCancel = () => {
             HandleRendering(1);
             ReloadTable();
       };
-
+            
       return (  
       <>
             <SoftBox mt={5} mb={3} px={2}>      
@@ -24,7 +24,7 @@ function Edit({HandleRendering, ReloadTable, TIMELINE, STATUS }) {
                         </SoftTypography>
                         
                         <SoftBox mt={2}>
-                              <SoftBox component="form" role="form" className="px-md-0 px-2">
+                              <SoftBox component="form" role="form" className="px-md-0 px-2" >
                                     <HorizontalTimeline STATUS={STATUS} />
                                     <TimelineList shadow="shadow-none" title="Timeline of Requested Document"  >
                                     {(TIMELINE && TIMELINE.length < 0)  ?
@@ -35,6 +35,7 @@ function Edit({HandleRendering, ReloadTable, TIMELINE, STATUS }) {
                                     {TIMELINE && TIMELINE.map((time, index) => {
                                     // Get the previous item's status_name
                                     const prevStatusName = index > 0 ? TIMELINE[index - 1].status_name : null;
+
                                     return (
                                           <TimelineItem
                                                 key={index}
@@ -46,6 +47,7 @@ function Edit({HandleRendering, ReloadTable, TIMELINE, STATUS }) {
                                           />
                                     );
                                     })}
+
                                     </TimelineList>
                                     <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
                                           <Grid item xs={12} sm={4} md={2} pl={1}>

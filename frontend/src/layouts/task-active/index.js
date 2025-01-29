@@ -21,7 +21,6 @@ import FixedLoading from "components/General/FixedLoading";
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
 import DataContainer from "layouts/task-active/components/DataContainer";
-import Add from "layouts/task-active/components/Add";
 
 import Table from "layouts/task-active/data/table";
 import { tablehead } from "layouts/task-active/data/head";  
@@ -190,9 +189,6 @@ function ActiveTask() {
         <DashboardNavbar RENDERNAV={rendering} /> 
           {DATA && rendering == 2 ? 
             <DataContainer DATA={DATA} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
-          :
-          rendering == 3 ?
-            <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
           :
           <SoftBox p={2}>
             <SoftBox >   

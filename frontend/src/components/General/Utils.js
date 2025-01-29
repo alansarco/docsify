@@ -178,9 +178,14 @@ export const historyStatusSelect = [
       { value: 6, desc: "Cancelled" },
 ];
 
-export const inactiveStatusSelect = [
+export const requestStatusSelect = [
+      { value: 0, desc: "Pending" },
+      { value: 1, desc: "On Queue" },
+      { value: 2, desc: "Processing" },
+      { value: 3, desc: "For Release" },
       { value: 4, desc: "Completed" },
       { value: 5, desc: "Rejected" },
+      { value: 6, desc: "Cancelled" },
 ];
 
 export function getStatus(status) {

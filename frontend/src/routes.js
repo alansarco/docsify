@@ -43,6 +43,7 @@ import RepresentativeSettings from "layouts/settings-representative";
 import ActiveRequest from "layouts/request-active";
 import HistoryRequest from "layouts/request-history";
 import ActiveTask from "layouts/task-active";
+import HistoryTask from "layouts/task-history";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -116,6 +117,27 @@ const routes = (access) => [
     noCollapse: true,
   },
   
+  //request-pages
+  (access == 10 || access == 30) && { type: "title", title: "Document Requests", key: "request-pages" },
+  (access == 10 || access == 30) && {
+    type: "collapse",
+    name: "Active",
+    key: "active-requests",
+    route: "/active-requests",
+    icon: <TaskTwoToneIcon size="12px" />,
+    component: <ActiveRequest />,
+    noCollapse: true,
+  },
+  (access == 10 || access == 30) && {
+    type: "collapse",
+    name: "History",
+    key: "request-history",
+    route: "/request-history",
+    icon: <ScheduleTwoToneIcon size="12px" />,
+    component: <HistoryRequest />,
+    noCollapse: true,
+  },
+  
   //school-pages
   access == 30 && { type: "title", title: "Campus Pages", key: "school-pages" },
   access == 30 && {
@@ -146,27 +168,6 @@ const routes = (access) => [
     noCollapse: true,
   },
 
-  //request-pages
-  access == 10 && { type: "title", title: "Document Requests", key: "request-pages" },
-  access == 10 && {
-    type: "collapse",
-    name: "Active",
-    key: "active-requests",
-    route: "/active-requests",
-    icon: <TaskTwoToneIcon size="12px" />,
-    component: <ActiveRequest />,
-    noCollapse: true,
-  },
-  access == 10 && {
-    type: "collapse",
-    name: "History",
-    key: "request-history",
-    route: "/request-history",
-    icon: <ScheduleTwoToneIcon size="12px" />,
-    component: <HistoryRequest />,
-    noCollapse: true,
-  },
-
   //my-pages
   access >= 5 && access <= 10 && { type: "title", title: "My Tasks", key: "my-tasks" },
   access == 10 && {
@@ -184,7 +185,7 @@ const routes = (access) => [
     key: "task-history",
     route: "/task-history",
     icon: <ScheduleTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <HistoryTask />,
     noCollapse: true,
   },
   access == 5 && {

@@ -54,4 +54,16 @@ class Utils
         }
         return null;
     }
+
+    public function getStatus(int $status) {
+        $here="";
+        if($status == 0) return "PENDING";
+        else if ($status == 1) return "ON QUEUE";
+        else if ($status == 2) return "PROCESSING";
+        else if ($status == 3) return "FOR RELEASE";
+        else if ($status == 4) return "COMPLETED";
+        else if ($status == 5) return "REJECTED";
+        else if ($status == 6) return "CANCELLED";
+        else return "PENDING";
+    }
 }

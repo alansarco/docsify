@@ -126,7 +126,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <HorizontalTimeline STATUS={STATUS} />
-                                    <TimelineList title="Timeline of Requested Document">
+                                    <TimelineList shadow="shadow-none" title="Timeline of Requested Document">
                                     {(TIMELINE && TIMELINE.length < 0)  ?
                                     <SoftTypography mt={0} color="dark" fontSize="0.8rem" className="text-center">
                                     None for Today!

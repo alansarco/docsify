@@ -119,10 +119,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('documentselect', [RequestController::class, 'documentselect']);
         Route::get('retrieverequest', [RequestController::class, 'retrieverequest']);
         Route::get('assigntome', [RequestController::class, 'assigntome']);
+        Route::post('updaterequeststatus', [RequestController::class, 'updaterequeststatus']);
     });
 
     Route::prefix('tasks')->group(function () {
         Route::post('/', [TaskController::class, 'index']);
+        Route::post('historytask', [TaskController::class, 'historytask']);
     });
 
     Route::prefix('campuses')->group(function () {
