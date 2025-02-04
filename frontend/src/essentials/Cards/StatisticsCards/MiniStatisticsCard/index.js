@@ -13,8 +13,8 @@ import NumberAnimation from "components/General/NumberAnimation";
 
 function MiniStatisticsCard({ bgColor, title, count, percentage, icon, direction }) {
   return (
-    <Card>
-      <SoftBox bgColor={bgColor} variant="gradient">
+    <Card >
+      <SoftBox bgColor={bgColor} variant="gradient"minHeight="100px">
         <SoftBox p={2}>
           <Grid container alignItems="center">
             <Grid item xs={8}>
@@ -24,6 +24,7 @@ function MiniStatisticsCard({ bgColor, title, count, percentage, icon, direction
                   color={bgColor === "white" ? "text" : "white"}
                   opacity={bgColor === "white" ? 1 : 0.7}
                   textTransform="capitalize"
+                  className="text-nowrap"
                   fontWeight={title.fontWeight}
                 >
                   {title.text}

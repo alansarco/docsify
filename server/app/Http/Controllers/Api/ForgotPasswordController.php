@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\Password;
-use App\Models\Suffix;
 use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Hash;

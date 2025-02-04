@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\LicenseKey;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Utilities\Utils;
-use App\Models\LogAdmin;
-use App\Models\Client;
 use App\Models\LogRepresentative;
 use App\Models\StudentProgram;
 use Illuminate\Support\Str;

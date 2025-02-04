@@ -30,7 +30,7 @@ function Abouts() {
     if (!token) {
         return <Navigate to="/authentication/sign-in" />
     }
-    else if(token && access < 10) {
+    else if(token && access < 5) {
         return <Navigate to="/not-found" />
     }
     

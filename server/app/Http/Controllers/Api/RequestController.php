@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Utilities\Utils;
@@ -13,8 +11,8 @@ use App\Models\DocReqTimeline;
 use App\Models\DocRequest;
 use App\Models\LogRepresentative;
 use App\Models\Document;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class RequestController extends Controller
 {
@@ -384,6 +382,115 @@ class RequestController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Requested document assigned successfully!'
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Something went wrong!'
+        ]);
+    }
+
+    public function representativeselect() {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        $representatives = User::select('username', 'access_level', 'role',
+            DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"),
+            )
+            ->where('access_level', 10)
+            ->where('account_status', 1)
+            ->where('clientid', $authUser->clientid)
+            ->get();
+
+        if($representatives) {
+            return response()->json([
+                'status' => 200,
+                'representatives' => $representatives,
+                'message' => 'Representatives retrieved!',
+            ]);
+        }   
+        else {
+            return response()->json([
+                'representatives' => $representatives,
+                'message' => 'No representatives  found!'
+            ]);
+        }
+    }
+
+    public function assignregistrar(Request $request) {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'reference_no' => 'required',
+            'task_owner' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message' => $validator->messages()->all()
+            ]);
+        }
+
+        $checkrequest = DocRequest::where('reference_no', $request->reference_no)->first();
+        $checkuser = User::
+            select(
+                DB::raw("CONCAT(IFNULL(username, ''), ' - ', IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"))
+            ->where('username', $request->task_owner)->first();
+
+        $getStatus = new Utils;
+        $getStatus = $getStatus->getStatus($checkrequest->status);
+
+        if(!$checkrequest) {
+            return response()->json([
+                'message' => 'Request not found!'
+            ]);
+        }
+        $today = Carbon::today();
+        $status = $checkrequest->status;
+        if($status == 0) {
+            $status = 1;
+            $getStatus = "ON QUEUE";
+        }
+
+        $updateRequest = [
+            'status' => $status,
+            'task_owner' => $request->task_owner,
+            'updated_at' => $today,
+            'updated_by' => $authUser->fullname,
+        ];
+
+
+        $createTimeline = [
+            'clientid' => $checkrequest->clientid,
+            'reference_no' => $checkrequest->reference_no,
+            'status' => $status,
+            'status_name' => $getStatus,
+            'status_details' => 'Request document assigned to '.$checkuser->fullname,
+            'created_at' => $today,
+            'updated_by' => $authUser->fullname,
+        ];
+
+        $update = DocRequest::where('reference_no', $request->reference_no)->update($updateRequest);
+        
+        if($update) {
+            DocReqTimeline::create($createTimeline);
+
+            LogRepresentative::create([
+                'clientid' => $authUser->clientid,
+                'module' => 'Requests',
+                'action' => 'UPDATE',
+                'details' => $authUser->name .' assigned requested document to '.$checkuser->fullname.', with reference number of '.$checkrequest->reference_no,
+                'created_by' => $authUser->fullname,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Registrar assigned successfully!'
             ], 200);
         }
         return response()->json([

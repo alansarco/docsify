@@ -28,6 +28,7 @@ import { getStatusColor } from "components/General/Utils";
 import { getStatusIcon } from "components/General/Utils";
 import TimelineDash from "essentials/Timeline/TimelineItem/TimelineDash";
 import { getStatus } from "components/General/Utils";
+import MiniStatisticsCard from "essentials/Cards/StatisticsCards/MiniStatisticsCard";
 
 function Dashboard() {
   const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
@@ -261,7 +262,7 @@ function Dashboard() {
                         None for Today!
                         </SoftTypography> : ""
                         }
-                        {otherStats && otherStats.mytask && otherStats.mytask.length && otherStats.mytask.map((time, index) => {
+                        {otherStats && otherStats.mytask && otherStats.mytask.length > 0 && otherStats.mytask.map((time, index) => {
                         // Get the previous item's status_name
                         return (
                               <TimelineDash
@@ -286,6 +287,43 @@ function Dashboard() {
                 
               </>
             }
+            
+            {access == 5 &&
+              <Grid item xs={12}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <MiniStatisticsCard
+                      title={{ text: "Completed Requests" }}
+                      count={otherStats && otherStats.myRequests && otherStats.myRequests.completed || 0}
+                      icon={{ color: "dark", component: "note" }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <MiniStatisticsCard
+                      title={{ text: "Ongoing Requests" }}
+                      count={otherStats && otherStats.myRequests && otherStats.myRequests.ongoing || 0}
+                      icon={{ color: "info", component: "note" }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={3} mt={1}>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <MiniStatisticsCard
+                      title={{ text: "Pending Requests" }}
+                      count={otherStats && otherStats.myRequests && otherStats.myRequests.pending || 0}
+                      icon={{ color: "warning", component: "note" }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <MiniStatisticsCard
+                      title={{ text: "Rejected Requests" }}
+                      count={otherStats && otherStats.myRequests && otherStats.myRequests.rejected || 0}
+                      icon={{ color: "primary", component: "note" }}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+                }
             </Grid>
           </SoftBox>
         </SoftBox>

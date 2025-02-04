@@ -67,9 +67,13 @@ export const apiRoutes = {
     retrieveRequestOne: `${mainRoute}/api/requests/retrieverequest`,
     assignToMe: `${mainRoute}/api/requests/assigntome`,
     updateRequestStatus: `${mainRoute}/api/requests/updaterequeststatus`,
+    representativeSelect: `${mainRoute}/api/requests/representativeselect`,
+    assignRegistrar: `${mainRoute}/api/requests/assignregistrar`,
 
     activeTaskRetreive: `${mainRoute}/api/tasks`,
     historyTaskRetreive: `${mainRoute}/api/tasks/historytask`,
+
+    studentHistoryRequests: `${mainRoute}/api/tasks/studenthistoryrequests`,
 
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,

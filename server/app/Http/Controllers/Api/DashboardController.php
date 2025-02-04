@@ -4,15 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utilities\Utils;
-use Illuminate\Http\Request;
-use App\Models\Calendar;
 use App\Models\Client;
 use App\Models\DocRequest;
-use App\Models\RequestDoc;
 use App\Models\SystemIncome;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -100,6 +96,16 @@ class DashboardController extends Controller
             ->where('requests.task_owner', $authUser->username)
             ->orderBy('requests.created_at')
             ->get();
+
+        $myRequests = DocRequest::select(
+            DB::raw("IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) as pending"),
+            DB::raw("IFNULL(SUM(CASE WHEN status > 0 AND status < 4 THEN 1 ELSE 0 END), 0) as ongoing"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END), 0) as completed"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 5 OR status = 6 THEN 1 ELSE 0 END), 0) as rejected"),
+        )
+        ->where('clientid', $authUser->clientid)
+        ->where('username', $authUser->username)
+        ->first();
         
         $otherStats = [
             'data1' => $data1,
@@ -114,6 +120,7 @@ class DashboardController extends Controller
             'registrarCounts' => $registrarCounts,
             'taskDistribution' => $taskDistribution,
             'mytask' => $mytask,
+            'myRequests' => $myRequests,
         ];
 
 

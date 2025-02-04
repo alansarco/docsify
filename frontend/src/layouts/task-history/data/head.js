@@ -15,7 +15,7 @@ export const tablehead = [
     align: "left",
   },
   {
-    name: "task owner",
+    name: "registrar assigned",
     padding: "px-2",
     align: "left",
   },

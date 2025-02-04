@@ -28,9 +28,11 @@ function Information({DATA, HandleRendering, ReloadTable}) {
                 info={{
                   Reference_No: DATA.reference_no ?? " ",
                   Documet: DATA.doc_name ?? " ",
+                  Contact: DATA.contact ?? " ",
+                  Purpose: DATA.purpose ?? " ",
                   Status: getStatus(DATA.status) ?? " ",
                   Assigned_Registrar: DATA.task_owner == null ? "None" : DATA.task_owner_name,
-                  Date_Needed: DATA.date_needed ?? " ",
+                  Target_Finish: DATA.date_needed ?? " ",
                   Created_Date: DATA.created_date ?? " ",
                   Created_By: DATA.fullname ?? " ",
                   Updated_Date: DATA.updated_date ?? " ",

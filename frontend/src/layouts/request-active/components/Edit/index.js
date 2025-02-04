@@ -13,29 +13,40 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { getNumber } from "components/General/Utils";
+import { requestStatusSelect } from "components/General/Utils";
 import TimelineList from "essentials/Timeline/TimelineList";
 import TimelineItem from "essentials/Timeline/TimelineItem";
 import { getStatusColor } from "components/General/Utils";
+import { Autorenew } from '@mui/icons-material';
+import RecyclingIcon from '@mui/icons-material/Recycling';
 import { getStatusIcon } from "components/General/Utils";
 import HorizontalTimeline from "components/General/HorizontalTimeline";
-
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STATUS }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
-      const {token} = useStateContext();  
+      const {token, access} = useStateContext();  
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
             'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
       };
+      const [fetchrepresentatives, setFetchRepresentatives] = useState([]);
       
+      useEffect(() => {
+            axios.get(apiRoutes.representativeSelect, {headers})
+            .then(response => {
+            setFetchRepresentatives(response.data.representatives);
+              passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+              passToErrorLogs(`Representatives not Fetched!  ${error}`, currentFileName);
+            });
+      }, []);
+
       const initialState = {
-            doc_id: DATA.doc_id,
-            doc_name: DATA.doc_name == null ? "" : DATA.doc_name,
-            doc_limit: DATA.doc_limit == null ? "" : DATA.doc_limit,
-            days_process: DATA.days_process == null ? "" : DATA.days_process,
-            doc_requirements: DATA.days_process == null ? "" : DATA.doc_requirements,
-            status: DATA.status == null ? "" : DATA.status,
+            reference_no: DATA.reference_no,
+            task_owner: DATA.task_owner == null ? "" : DATA.task_owner,
             agreement: false,   
       };
 
@@ -62,12 +73,8 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
             toast.dismiss();
              // Check if all required fields are empty
              const requiredFields = [
-                  "doc_id",
-                  "doc_name",
-                  "doc_limit",
-                  "days_process",
-                  "doc_requirements",
-                  "status",
+                  "reference_no",
+                  "task_owner",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -83,11 +90,9 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                     toast.error(messages.prohibit, { autoClose: true });
                               }
                               else {  
-                                    
-                                    const response = await axios.post(apiRoutes.updateDocument, formData, {headers});
+                                    const response = await axios.post(apiRoutes.assignRegistrar, formData, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
-                                          // setFormData(initialState);
                                           ReloadTable();
                                           UpdateLoading(true);
                                     } else {
@@ -107,13 +112,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                   toast.warning(messages.required, { autoClose: true });
             }
       };
-      const timelineData = [
-            { data: "PENDING" },
-            { data: "ON QUEUE" },
-            { data: "PROCESSING" },
-            { data: "FOR RELEASE" },
-            { data: "COMPLETED" },
-          ];
+
       return (  
       <>
             {submitProfile && <FixedLoading />}   
@@ -126,7 +125,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <HorizontalTimeline STATUS={STATUS} />
-                                    <TimelineList shadow="shadow-none" title="Timeline of Requested Document">
+                                    <TimelineList shadow="shadow-none" title="Timeline of Requested Document"  >
                                     {(TIMELINE && TIMELINE.length < 0)  ?
                                     <SoftTypography mt={0} color="dark" fontSize="0.8rem" className="text-center">
                                     None for Today!
@@ -149,44 +148,27 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                     })}
 
                                     </TimelineList>
-                                    {/* <Grid container spacing={0} alignItems="center">
+                                    <input type="hidden" name="reference_no" value={formData.reference_no} size="small" /> 
+
+                                    <SoftBox className={`${access == 30 ? "shadow-lg py-3 bg-dark rounded-5 px-md-0 px-3" : ""}`}>
+                                    {access == 30 && 
+                                    <>
+                                    <Grid container spacing={0} alignItems="center" mt={3} className="px-md-4 px-0" >
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Name:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1 text-white"> Assign Registrar: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="doc_name" value={formData.doc_name} onChange={handleChange} size="small"
-                                                /> 
-                                          </Grid>    
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Request Limit per Year:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="doc_limit" value={getNumber(formData.doc_limit)} onChange={handleChange} size="small"
-                                                /> 
-                                          </Grid>    
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Days to Process:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="days_process" value={getNumber(formData.days_process)} onChange={handleChange} size="small"
-                                                /> 
-                                          </Grid>    
-                                          <Grid item xs={12} md={6} lg={2} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Status: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="status" value={formData.status} onChange={handleChange} >
-                                                      <option value=""></option>
-                                                      {activeSelect && activeSelect.map((active) => (
-                                                      <option key={active.value} value={active.value}>
-                                                            {active.desc}
-                                                      </option>
-                                                      ))}
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="task_owner" value={formData.task_owner} onChange={handleChange} >
+                                                      <option value="">-- Select --</option>
+                                                      {fetchrepresentatives && fetchrepresentatives.map(rep => (
+                                                            <option key={rep.username} value={rep.username}>
+                                                                  {rep.fullname}
+                                                            </option>
+                                                      ))
+                                                      }
                                                 </select>
                                           </Grid>
-                                          <Grid item xs={12} px={1}>
-                                                <SoftTypography variant="button" className="me-1">Requirements:</SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <textarea name="doc_requirements" value={formData.doc_requirements} onChange={handleChange} className="form-control text-xs" rows="10"></textarea>
-                                          </Grid> 
                                     </Grid>     
-                                    <Grid mt={3} container spacing={0} alignItems="center">
+                                    <Grid mt={3} container spacing={0} alignItems="center" className="px-md-4 px-0">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 
                                                       className={` ${formData.agreement ? '' : 'border-2 border-info'}`} 
@@ -194,27 +176,32 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                       checked={formData.agreement} 
                                                       onChange={handleChange} 
                                                 />
-                                                <SoftTypography variant="button" className="me-1 ms-2">Verify Data </SoftTypography>
-                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(Confirming that the information above are true and accurate) </SoftTypography>
+                                                <SoftTypography variant="button" className="me-1 ms-2 text-white">Verify Data </SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-white fst-italic">(Confirming that the information above are true and accurate) </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                           </Grid>
-                                    </Grid> */}
-                                    <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
-                                          <Grid item xs={12} sm={4} md={2} pl={1}>
+                                    </Grid>
+                                    </>
+                                    }
+                                    <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end" className="px-md-4 px-0">
+                                          <Grid item xs={12} md={4} lg={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
                                                       <SoftButton onClick={handleCancel} className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="light">
                                                             Back
                                                       </SoftButton>
                                                 </SoftBox>
                                           </Grid>
-                                          {/* <Grid item xs={12} sm={4} md={2} pl={1}>
+                                          {access == 30 && 
+                                          <Grid item xs={12} md={4} lg={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">
-                                                      <SoftButton variant="gradient" type="submit" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="info">
+                                                      <SoftButton variant="gradient" type="submit" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small" color="warning">
                                                             Update
                                                       </SoftButton>
                                                 </SoftBox>
-                                          </Grid> */}
-                                    </Grid>     
+                                          </Grid>
+                                          }
+                                    </Grid> 
+                                    </SoftBox>
                               </SoftBox>
                         </SoftBox>
                   </SoftBox>

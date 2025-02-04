@@ -7,19 +7,12 @@ use App\Http\Controllers\Utilities\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
-use App\Models\Admin;
 use App\Models\LogAdmin;
 use App\Models\App_Info;
-use App\Models\Calendar;
 use App\Models\Client;
-use App\Models\LicenseKey;
 use App\Models\LogRepresentative;
-use App\Models\SystemIncome;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 
 class SettingsController extends Controller
 {

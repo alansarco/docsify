@@ -56,7 +56,6 @@ class Utils
     }
 
     public function getStatus(int $status) {
-        $here="";
         if($status == 0) return "PENDING";
         else if ($status == 1) return "ON QUEUE";
         else if ($status == 2) return "PROCESSING";

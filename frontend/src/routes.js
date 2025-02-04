@@ -44,6 +44,7 @@ import ActiveRequest from "layouts/request-active";
 import HistoryRequest from "layouts/request-history";
 import ActiveTask from "layouts/task-active";
 import HistoryTask from "layouts/task-history";
+import StudentHistoryRequest from "layouts/task-history-student";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -169,7 +170,7 @@ const routes = (access) => [
   },
 
   //my-pages
-  access >= 5 && access <= 10 && { type: "title", title: "My Tasks", key: "my-tasks" },
+  access == 10 && { type: "title", title: "My Tasks", key: "my-tasks" },
   access == 10 && {
     type: "collapse",
     name: "Active Tasks",
@@ -188,6 +189,7 @@ const routes = (access) => [
     component: <HistoryTask />,
     noCollapse: true,
   },
+  access == 5 && { type: "title", title: "My Requests", key: "my-requests" },
   access == 5 && {
     type: "collapse",
     name: "Active Requests",
@@ -203,16 +205,7 @@ const routes = (access) => [
     key: "my-request-history",
     route: "/my-request-history",
     icon: <ScheduleTwoToneIcon size="12px" />,
-    component: <Blank />,
-    noCollapse: true,
-  },
-  access == 5 && {
-    type: "collapse",
-    name: "Personal Storage",
-    key: "personal-storage",
-    route: "/personal-storage",
-    icon: <BackupTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <StudentHistoryRequest />,
     noCollapse: true,
   },
 
@@ -263,6 +256,15 @@ const routes = (access) => [
     route: "/settings",
     icon: <SettingsTwoToneIcon size="12px" />,
     component: <RepresentativeSettings />,
+    noCollapse: true,
+  },
+  access == 5 && {
+    type: "collapse",
+    name: "Personal Storage",
+    key: "personal-storage",
+    route: "/personal-storage",
+    icon: <BackupTwoToneIcon size="12px" />,
+    component: <Blank />,
     noCollapse: true,
   },
   {
