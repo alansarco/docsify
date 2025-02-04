@@ -45,6 +45,7 @@ import HistoryRequest from "layouts/request-history";
 import ActiveTask from "layouts/task-active";
 import HistoryTask from "layouts/task-history";
 import StudentHistoryRequest from "layouts/task-history-student";
+import StudentActiveRequest from "layouts/task-active-student";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -196,7 +197,7 @@ const routes = (access) => [
     key: "my-active-requests",
     route: "/my-active-requests",
     icon: <TaskTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <StudentActiveRequest />,
     noCollapse: true,
   },
   access == 5 && {
@@ -252,7 +253,7 @@ const routes = (access) => [
   access == 30 && {
     type: "collapse",
     name: "Settings",
-    key: "representative-settings",
+    key: "settings",
     route: "/settings",
     icon: <SettingsTwoToneIcon size="12px" />,
     component: <RepresentativeSettings />,

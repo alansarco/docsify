@@ -36,7 +36,7 @@ class Utils
     }
 
     public function getAuthUser() {
-        $authUser = User::select('username', 'role', 'access_level', 'clientid',
+        $authUser = User::select('username', 'role', 'access_level', 'clientid', 'contact',
             DB::raw("CONCAT(IFNULL(username, ''), ' - ', IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"),
             DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as name"))
             ->where('username', Auth::user()->username)
@@ -44,6 +44,32 @@ class Utils
 
         return $authUser;
     }
+
+    public function assignAdmin() {
+        $authUser = $this->getAuthUser();
+        $today = Carbon::today();
+        
+        // Get the registrar with the lowest number of tasks
+        $registrar = User::select(
+            'users.username',
+            DB::raw("CONCAT(IFNULL(users.username, ''), ' - ', IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as fullname"),
+            DB::raw("(SELECT COUNT(*) FROM requests 
+                     WHERE requests.task_owner = users.username 
+                       AND requests.status > 0 
+                       AND requests.status < 4 
+                       AND DATE(requests.created_at) = CURDATE()
+                     ) AS request_count")
+        )
+        ->where('users.role', 'REGISTRAR')
+        ->where('users.access_level', 10)
+        ->where('users.account_status', 1)
+        ->where('users.clientid', $authUser->clientid)
+        ->orderBy('request_count', 'asc') // Sort by the lowest request count
+        ->first();
+        
+        return $registrar;
+    }
+    
 
     public function checkPassword($password) {
         $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
@@ -65,4 +91,6 @@ class Utils
         else if ($status == 6) return "CANCELLED";
         else return "PENDING";
     }
+
+    
 }

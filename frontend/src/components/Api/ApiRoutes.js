@@ -73,8 +73,11 @@ export const apiRoutes = {
     activeTaskRetreive: `${mainRoute}/api/tasks`,
     historyTaskRetreive: `${mainRoute}/api/tasks/historytask`,
 
-    studentHistoryRequests: `${mainRoute}/api/tasks/studenthistoryrequests`,
-
+    activeStudentRequestRetreive: `${mainRoute}/api/my-requests`,
+    studentHistoryRequests: `${mainRoute}/api/my-requests/studenthistoryrequests`,
+    cancelRequest: `${mainRoute}/api/my-requests/cancelrequest`,
+    documentSelectStudent: `${mainRoute}/api/my-requests/documentselect`,
+    addRequest: `${mainRoute}/api/my-requests/addrequest`,
 
     activeCampusRetrieve: `${mainRoute}/api/campuses/active`,
     inactiveCampusRetrieve: `${mainRoute}/api/campuses/inactive`,
@@ -163,7 +166,6 @@ export const apiRoutes = {
 
     docSelect: `${mainRoute}/api/document-requests/docselect`,
     requestRetrieve: `${mainRoute}/api/document-requests`,
-    addRequest: `${mainRoute}/api/document-requests/addrequest`,
     deleteRequest: `${mainRoute}/api/document-requests/deleterequest`,
     finishedRequest: `${mainRoute}/api/document-requests/finishedrequest`,
     claimedRequest: `${mainRoute}/api/document-requests/claimedrequest`,

@@ -101,7 +101,7 @@ class DashboardController extends Controller
             DB::raw("IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) as pending"),
             DB::raw("IFNULL(SUM(CASE WHEN status > 0 AND status < 4 THEN 1 ELSE 0 END), 0) as ongoing"),
             DB::raw("IFNULL(SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END), 0) as completed"),
-            DB::raw("IFNULL(SUM(CASE WHEN status = 5 OR status = 6 THEN 1 ELSE 0 END), 0) as rejected"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) as rejected"),
         )
         ->where('clientid', $authUser->clientid)
         ->where('username', $authUser->username)

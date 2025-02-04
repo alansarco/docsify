@@ -128,8 +128,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('tasks')->group(function () {
         Route::post('/', [TaskController::class, 'index']);
         Route::post('historytask', [TaskController::class, 'historytask']);
+    });
 
+    Route::prefix('my-requests')->group(function () {
+        Route::post('/', [StudentRequestController::class, 'index']);
         Route::post('studenthistoryrequests', [StudentRequestController::class, 'studenthistoryrequests']);
+        Route::get('cancelrequest', [StudentRequestController::class, 'cancelrequest']);
+        Route::get('documentselect', [StudentRequestController::class, 'documentselect']);
+        Route::post('addrequest', [StudentRequestController::class, 'addrequest']);
     });
 
     Route::prefix('campuses')->group(function () {

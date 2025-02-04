@@ -103,9 +103,12 @@ class LoginController extends Controller {
     }
 
     public function user(Request $request) {
-        $authUser = Auth::user();
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        $hour = Carbon::now()->format('H:i:s');
 
-        $userInfo = User::select('*', 
+        $userInfo = User::
+        select('*', 
             DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"),
             DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("TO_BASE64(id_picture) as id_picture"),
@@ -124,6 +127,21 @@ class LoginController extends Controller {
             DB::raw("TO_BASE64(logo) as logo"),
             )
         ->first();
+
+        $getCampusLimit = Client::select('request_limit', 'request_timeout')
+            ->where('clientid', $authUser->clientid)
+            ->first();
+
+        if($getCampusLimit) {
+            $formattedTime = Carbon::createFromFormat('H:i:s', $getCampusLimit->request_timeout)->format('h:i A'); 
+            $allowrequest = true;
+            if ($getCampusLimit && $hour >= $getCampusLimit->request_timeout) {
+                $allowrequest = false;
+            }
+            $userInfo->request_timeout = $formattedTime;
+            $userInfo->allowrequest = $allowrequest;
+        }
+        
 
         if($userInfo) {
             return response()->json([

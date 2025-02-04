@@ -233,7 +233,7 @@ export function getStatusColor(status) {
             return 'primary'
       }
       if (status == 6) {
-            return 'primary'
+            return 'secondary'
       }
       return 'secondary';
 }
