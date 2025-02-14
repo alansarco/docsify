@@ -36,6 +36,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             client_address: DATA.client_address == null ? "" : DATA.client_address,
             request_limit: DATA.request_limit == null ? "" : DATA.request_limit,
             request_timeout: DATA.request_timeout == null ? "" : DATA.request_timeout,
+            file_limit: DATA.file_limit == null ? "" : DATA.file_limit,
             agreement: false,   
       };
 
@@ -89,6 +90,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                   "client_acr",
                   "client_contact",
                   "client_email",
+                  "file_limit",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -115,6 +117,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("client_address", formData.client_address);
                                     data.append("request_limit", formData.request_limit);
                                     data.append("request_timeout", formData.request_timeout);
+                                    data.append("file_limit", formData.file_limit);
                                     const response = await axios.post(apiRoutes.updateRepresentativeSettings, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
@@ -189,7 +192,12 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 <SoftTypography variant="button" className="me-1">Request Cutoff:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput type="time" name="request_timeout" value={formData.request_timeout} onChange={handleChange} size="small" />
-                                          </Grid>  
+                                          </Grid> 
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">File Upload Limit:</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="file_limit" value={getNumber(formData.file_limit)} onChange={handleChange} size="small" />
+                                          </Grid>   
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Logo:</SoftTypography>
                                                 <input

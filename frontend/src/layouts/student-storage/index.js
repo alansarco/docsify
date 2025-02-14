@@ -13,15 +13,13 @@ import DashboardNavbar from "essentials/Navbars";
 import Footer from "essentials/Footer";
 
 // Data
-  import { Grid, useMediaQuery } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DynamicTableHeight } from "components/General/TableHeight";
 
 import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
-import DataContainer from "layouts/student-storage/components/DataContainer";
-import Add from "layouts/student-storage/components/Add";
 
 import Table from "layouts/student-storage/data/table";
 import { tablehead } from "layouts/student-storage/data/head";  
@@ -30,12 +28,9 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
-import { genderSelect } from "components/General/Utils";
-import { statusSelect } from "components/General/Utils";
-import TuneIcon from '@mui/icons-material/Tune';
-import { useTheme } from "@emotion/react";
-import { activeSelect } from "components/General/Utils";
 import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { toast } from "react-toastify";
 
 function StudentStorage() {
     const currentFileName = "layouts/student-storage/index.js";
@@ -54,7 +49,6 @@ function StudentStorage() {
       otherStats: false, 
     }); 
     
-    const [showFilter, setShowFilter] = useState(false);
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
     const [searchTriggered, setSearchTriggered] = useState(true);
@@ -66,45 +60,19 @@ function StudentStorage() {
         'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`
     };
 
-    const initialState = {
-        filter: "",
-        status: "",
-    };
-
-    const [formData, setFormData] = useState(initialState);
-
-    const HandleClear = (user) => {
-      setFormData(initialState);
-    };
-
-    const handleChange = (e) => {
-        const { name, value, type } = e.target;
-        if (type === "checkbox") {
-              setFormData({ ...formData, [name]: !formData[name]});
-        } else {
-              setFormData({ ...formData, [name]: value });
-        }
-    };
-
-    const [DATA, setDATA] = useState(); 
     const [rendering, setRendering] = useState(1);
     const [fetchdata, setFetchdata] = useState([]);
     const tableHeight = DynamicTableHeight();  
-
-    const HandleDATA = (data) => {
-      setDATA(data);
-    };
-
-    const HandleRendering = (rendering) => {
-        setRendering(rendering);
-    };
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [fileName, setFileName] = useState("");
+    const [fileType, setFileType] = useState("");
 
     useEffect(() => {
       if (searchTriggered) {
         setReload(true);
-        axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers})
+        axios.get(apiRoutes.storageRetrieve + '?page=' + 1, {headers})
           .then(response => {
-            setFetchdata(response.data.sections);
+            setFetchdata(response.data.filedata);
             passToSuccessLogs(response.data, currentFileName);
             setReload(false);
             setFetching("No data Found!")
@@ -118,9 +86,9 @@ function StudentStorage() {
     }, [searchTriggered]);
 
     const ReloadTable = () => {
-        axios.post(apiRoutes.sectionRetrieve + '?page=' + page, formData, {headers})
+        axios.get(apiRoutes.storageRetrieve + '?page=' + page, {headers})
         .then(response => {
-        setFetchdata(response.data.sections);
+        setFetchdata(response.data.filedata);
         passToSuccessLogs(response.data, currentFileName);
         setReload(false);      
         })
@@ -130,27 +98,6 @@ function StudentStorage() {
         });
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault(); 
-        setReload(true);      
-        try {
-            const response = await axios.post(apiRoutes.sectionRetrieve + '?page=' + 1, formData, {headers});
-            if(response.data.status == 200) {
-                setFetchdata(response.data.sections);
-            }
-            else {
-                setFetchdata([]);
-                setFetching("No data Found!");
-            }
-            passToSuccessLogs(response.data, currentFileName);
-            setReload(false);
-        } catch (error) { 
-            passToErrorLogs(error, currentFileName);
-            setReload(false);
-        }     
-        setReload(false);
-    };
-
   const fetchNextPrevTasks = (link) => {
     const url = new URL(link);
     const nextPage = url.searchParams.get('page');
@@ -158,9 +105,9 @@ function StudentStorage() {
     setReload(true);      
 
     // Trigger the API call again with the new page
-    axios.post(apiRoutes.sectionRetrieve + '?page=' + nextPage, formData, {headers})
+    axios.get(apiRoutes.storageRetrieve + '?page=' + nextPage, {headers})
     .then(response => {
-      setFetchdata(response.data.sections);
+      setFetchdata(response.data.filedata);
       passToSuccessLogs(response.data, currentFileName);
       setReload(false);      
     })
@@ -173,20 +120,62 @@ function StudentStorage() {
   const renderPaginationLinks = () => (
     <CustomPagination fetchdata={fetchdata} fetchNextPrevTasks={fetchNextPrevTasks} />
   )
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const nameWithoutExt = file.name.split('.').slice(0, -1).join('.'); // Remove the extension
+      setFileName(nameWithoutExt); // Store the name without the extension
+      const fileType = file.name.split('.').pop().toLowerCase(); // Get the file extension as type
+      setFileType(fileType); // Store the file type (e.g., pdf, docx, jpg)
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.warning("Please select new file to upload!", { autoClose: true });
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('fileData', selectedFile);
+    formData.append('fileName', fileName); // Pass the file name
+    formData.append('fileType', fileType); // Pass the file type
+  
+    try {
+      setSearchTriggered(true); // Refresh data after upload
+      const response = await axios.post(apiRoutes.uploadStorageData, formData, {
+        headers: {
+          'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      if(response.data.status == 200) {
+        toast.success(`${response.data.message}`, { autoClose: true });
+        ReloadTable();
+        setSelectedFile(null); 
+        setFileType(""); 
+        setFileName(""); // Reset file name
+        passToSuccessLogs(response.data, currentFileName);
+      } else {
+        toast.error(`${response.data.message}`, { autoClose: true });
+        passToErrorLogs(response.data, currentFileName);
+
+      }
+    } catch (error) {
+      toast.error("Failed to upload file.", { autoClose: true });
+    }
+  };
+  
+
 
   return (
     <> 
       {reload && <FixedLoading />} 
       <DashboardLayout>
         <DashboardNavbar RENDERNAV={rendering} /> 
-          {DATA && rendering == 2 ? 
-            <DataContainer DATA={DATA} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />       
-          :
-          rendering == 3 ?
-            <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
-          :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
@@ -200,20 +189,29 @@ function StudentStorage() {
                     }
                   </SoftTypography>
                 </SoftBox>
-                <SoftBox display="flex" >
-                  <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
-                    <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
-                  </SoftButton>
-                  <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Upload File
+                <SoftBox display="flex" alignItems="center">
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept=".jpeg,.png,.jpg,.gif,.pdf,.xlsx,.xls,.csv,.ppt,.pptx,.doc,.docx,.zip"
+                    className="form-control form-control-sm rounded-5 text-xs"
+                  />
+                  <SoftButton
+                    className="ms-2 px-3 d-flex rounded-pill"
+                    variant="gradient"
+                    color="dark"
+                    size="small"
+                    onClick={handleUpload}
+                  >
+                    <CloudUploadIcon className="me-1" /> Upload
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
-              <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
-                <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
+              <Grid container className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
+                <Grid item xs={12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
-                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
+                      <Table table="sm" ReloadTable ={ReloadTable } DATA={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
@@ -225,51 +223,9 @@ function StudentStorage() {
                   </SoftBox>
                   {fetchdata && fetchdata.data && fetchdata.data.length > 0 && <SoftBox>{renderPaginationLinks()}</SoftBox>}
                 </Grid>
-                {showFilter &&
-                <Grid item xs={12} lg={3} mb={3}>
-                <SoftBox component="form" role="form" className="ms-lg-3 px-3 px-4 mt-2 rounded-5 bg-white shadow" onSubmit={handleSubmit}>
-                    <Grid container spacing={1} py={1} pb={2}>  
-                        <Grid item xs={12}>
-                            <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
-                            <SoftBox className="my-auto">
-                            <SoftTypography variant="button" className="me-1">Status:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="status" value={formData.status} onChange={handleChange} >
-                                <option value="">-- Select --</option>
-                                {activeSelect && activeSelect.map((status) => (
-                                <option key={status.value} value={status.value}>
-                                  {status.desc}
-                                </option>
-                                ))}
-                            </select>
-                            </SoftBox>
-                            <SoftInput 
-                              className="my-3"
-                              value={formData.filter}
-                              onChange={handleChange}
-                              placeholder="Search here..." name="filter" size="small"
-                            />
-                            <Grid container display="flex" justifyContent="end">
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton onClick={HandleClear}  className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="secondary" size="small" >
-                                  clear
-                                </SoftButton>
-                              </Grid>
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="info" size="small" type="submit">
-                                  search
-                                </SoftButton>
-                              </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </SoftBox>
-                </Grid>
-                }
-                
               </Grid>
             </SoftBox>
           </SoftBox>
-          }
         <Footer />
       </DashboardLayout>
       <ToastContainer

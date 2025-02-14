@@ -200,6 +200,10 @@ function RepresentativeSettings() {
                                     <SoftTypography variant="h6" className="text-secondary fw-normal ms-2">{item.request_timeout || "N/A"}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} mt={1} display="flex">
+                                    <SoftTypography variant="h6" color="dark" > File Upload Limit: </SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal ms-2">{item.file_limit || "N/A"}</SoftTypography>
+                                  </Grid>
+                                  <Grid item xs={12} mt={1} display="flex">
                                     <SoftTypography variant="h6" color="dark" >Reprsentative ID: </SoftTypography>
                                     <SoftTypography variant="h6" className="text-secondary fw-normal ms-2">{item.representative_id || " "}</SoftTypography>
                                   </Grid>

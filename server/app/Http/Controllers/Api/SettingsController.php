@@ -284,6 +284,7 @@ class SettingsController extends Controller
             'client_address' => 'required',
             'request_limit' => 'required',
             'request_timeout' => 'required',
+            'file_limit' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -310,6 +311,7 @@ class SettingsController extends Controller
                         'client_address' => $request->client_address,   
                         'request_limit' => $request->request_limit,   
                         'request_timeout' => $request->request_timeout,   
+                        'file_limit' => $request->file_limit,   
                         'updated_by' => $authUser->fullname,
                     ];
                     $pictureLogo = null;

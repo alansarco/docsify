@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\RepresentativeController;
 use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\StudentRequestController;
 use App\Http\Controllers\Api\TaskController;
@@ -173,6 +174,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('profileretrieve', [ProfileController::class, 'profileretrieve']);
         Route::post('updateprofile', [ProfileController::class, 'updateprofile']);
         Route::post('personalchangepass', [ProfileController::class, 'personalchangepass']);
+    });
+
+    Route::prefix('storages')->group(function () {
+        Route::get('/', [StorageController::class, 'index']);
+        Route::get('deletestoragedata', [StorageController::class, 'deletestoragedata']);
+        Route::get('downloadstoragedata', [StorageController::class, 'downloadstoragedata']);
+        Route::post('uploadstoragedata', [StorageController::class, 'uploadstoragedata']);
     });
 
     Route::prefix('accounts')->group(function () {

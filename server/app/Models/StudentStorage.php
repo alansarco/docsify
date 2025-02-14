@@ -16,6 +16,7 @@ class StudentStorage extends Model
     protected $fillable = [
         'username',
         'file_name',
-        'file_data'
+        'file_data',
+        'file_type',
     ];
 }

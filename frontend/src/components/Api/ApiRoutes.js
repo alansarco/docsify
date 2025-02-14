@@ -110,6 +110,10 @@ export const apiRoutes = {
     updateProfile: `${mainRoute}/api/profile/updateprofile`,
     personalChangePass: `${mainRoute}/api/profile/personalchangepass`,
 
+    storageRetrieve: `${mainRoute}/api/storages`,
+    deleteStorageData: `${mainRoute}/api/storages/deletestoragedata`,
+    downloadStorageData: `${mainRoute}/api/storages/downloadstoragedata`,
+    uploadStorageData: `${mainRoute}/api/storages/uploadstoragedata`,
 
 
 
