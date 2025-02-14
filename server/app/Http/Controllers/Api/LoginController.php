@@ -128,7 +128,7 @@ class LoginController extends Controller {
             )
         ->first();
 
-        $getCampusLimit = Client::select('request_limit', 'request_timeout')
+        $getCampusLimit = Client::select('request_limit', 'request_timeout', 'file_limit')
             ->where('clientid', $authUser->clientid)
             ->first();
 
@@ -140,6 +140,7 @@ class LoginController extends Controller {
             }
             $userInfo->request_timeout = $formattedTime;
             $userInfo->allowrequest = $allowrequest;
+            $userInfo->file_limit = $getCampusLimit->file_limit;
         }
         
 

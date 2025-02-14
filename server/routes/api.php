@@ -176,27 +176,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('accounts')->group(function () {
-        Route::get('/', [UsersController::class, 'index']);
-        Route::post('store', [UsersController::class, 'store']);
-        Route::post('update', [UsersController::class, 'update']);
-        Route::get('retrieve', [UsersController::class, 'retrieve']);
-        Route::get('delete', [UsersController::class, 'delete']);
         Route::post('uploadexcel', [UsersController::class, 'uploadexcel']);
-        Route::post('personalchangepass', [UsersController::class, 'personalchangepass']);
     });
 
     Route::prefix('residents')->group(function () {
         Route::post('/', [ResidentController::class, 'index']);
-
-    });
-
-    Route::prefix('announcements')->group(function () {
-        Route::get('/', [AnnouncementController::class, 'index']);
-        Route::get('retrieve', [AnnouncementController::class, 'retrieve']);
-        Route::post('addannouncement', [AnnouncementController::class, 'addannouncement']);
-        Route::post('updateannouncement', [AnnouncementController::class, 'updateannouncement']);
-        Route::get('deleteannouncement', [AnnouncementController::class, 'deleteannouncement']);
-
     });
 
 });

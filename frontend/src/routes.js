@@ -25,7 +25,6 @@ import Dashboard from "layouts/dashboard";
 import Admins from "layouts/admins";
 import Blank from "layouts/blank";
 import Students from "layouts/students";
-import Announcements from "layouts/announcements";
 import Profile from "layouts/profile";
 import Licenses from "layouts/licenses";
 import Abouts from "layouts/abouts";
@@ -46,6 +45,7 @@ import ActiveTask from "layouts/task-active";
 import HistoryTask from "layouts/task-history";
 import StudentHistoryRequest from "layouts/task-history-student";
 import StudentActiveRequest from "layouts/task-active-student";
+import StudentStorage from "layouts/student-storage";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -265,7 +265,7 @@ const routes = (access) => [
     key: "personal-storage",
     route: "/personal-storage",
     icon: <BackupTwoToneIcon size="12px" />,
-    component: <Blank />,
+    component: <StudentStorage />,
     noCollapse: true,
   },
   {

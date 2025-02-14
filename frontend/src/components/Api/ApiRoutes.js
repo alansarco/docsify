@@ -15,6 +15,9 @@ export const apiRoutes = {
 
     authUserRetrieve: `${mainRoute}/api/user`,
     doLogout: `${mainRoute}/api/user`,
+
+    otherStatsRetrieve: `${mainRoute}/api/dashboard/otherStats`,
+    adminNotifsRetrieve: `${mainRoute}/api/dashboard/adminnotifs`,
     
     adminRetrieve: `${mainRoute}/api/admins`,
     addAdmin: `${mainRoute}/api/admins/addadmin`,
@@ -120,56 +123,6 @@ export const apiRoutes = {
 
 
     residentsRetrieve: `${mainRoute}/api/residents`,
-
-    retrieveAnnouncement: `${mainRoute}/api/announcements`,
-    retrieveAnnouncementOne: `${mainRoute}/api/announcements/retrieve`,
-    addAnnouncement: `${mainRoute}/api/announcements/addannouncement`,
-    deleteAnnouncement: `${mainRoute}/api/announcements/deleteannouncement`,
-    updateAnnouncement: `${mainRoute}/api/announcements/updateannouncement`,
-
-    retrieveReport: `${mainRoute}/api/reports`,
-    retrieveReportOne: `${mainRoute}/api/reports/retrieve`,
-    submitComment: `${mainRoute}/api/reports/submitcomment`,
-    addReport: `${mainRoute}/api/reports/addreport`,
-    deleteReport: `${mainRoute}/api/reports/deletereport`,
-    resolveReport: `${mainRoute}/api/reports/resolvereport`,
-    reopenReport: `${mainRoute}/api/reports/reopenreport`,
-    updateReport: `${mainRoute}/api/reports/updatereport`,
-
-    retrieveOfficials: `${mainRoute}/api/officials`,
-    retrieveOfficialOne: `${mainRoute}/api/officials/retrieve`,
-    addOfficial: `${mainRoute}/api/officials/addofficial`,
-    deleteOfficial: `${mainRoute}/api/officials/deleteofficial`,
-    updateOfficial: `${mainRoute}/api/officials/updateofficial`,
-
-    accountRetrieve: `${mainRoute}/api/accounts`,
-    accountRetrieveOne: `${mainRoute}/api/accounts/retrieve`,
-    accountStore: `${mainRoute}/api/accounts/store`,
-    accountDelete: `${mainRoute}/api/accounts/delete`,
-    accountUpdate: `${mainRoute}/api/accounts/update`,
-    accountChangePass: `${mainRoute}/api/accounts/personalchangepass`,
     uploadExcel: `${mainRoute}/api/accounts/uploadexcel`,
-
-    requestRetrieve: `${mainRoute}/api/requests`,
-    requestorInfo: `${mainRoute}/api/requests/requestorinfo`,
-    editRequest: `${mainRoute}/api/requests/editrequest`,
-
-    suffixRetrieve: `${mainRoute}/api/suffix`,
-
-    otherStatsRetrieve: `${mainRoute}/api/dashboard/otherStats`,
-    adminNotifsRetrieve: `${mainRoute}/api/dashboard/adminnotifs`,
-
-    retrieveSettings: `${mainRoute}/api/settings`,
-    updateSettings: `${mainRoute}/api/settings/updatesettings`,
-
-    docRetrieve: `${mainRoute}/api/documents`,
-
-    docSelect: `${mainRoute}/api/document-requests/docselect`,
-    requestRetrieve: `${mainRoute}/api/document-requests`,
-    deleteRequest: `${mainRoute}/api/document-requests/deleterequest`,
-    finishedRequest: `${mainRoute}/api/document-requests/finishedrequest`,
-    claimedRequest: `${mainRoute}/api/document-requests/claimedrequest`,
-    availabledateRequest: `${mainRoute}/api/document-requests/availabledate`,
-    
     // Add more routes here
 };  
