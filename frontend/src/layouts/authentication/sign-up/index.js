@@ -15,15 +15,22 @@ import { Link, useNavigate, Navigate  } from "react-router-dom";
 import { useSignInData } from "../sign-in/data/signinRedux";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import MainLoading from "components/General/MainLoading";
-import { genderSelect, currentDate, years, gradeSelect, roleSelect } from "components/General/Utils";
+import { genderSelect, currentDate, years, gradeSelect, roleSelect, monthSelect, cardyears , getCVV, getCardNumber, subscriptionSelect, formatCurrency } from "components/General/Utils";
+import paypal from "assets/images/logos/paypal.png";
+import maya from "assets/images/logos/maya.png";
+import visa from "assets/images/logos/visa.png";
+import mastercard from "assets/images/logos/mastercard.png";
+import visamaster from "assets/images/logos/visa-master.png";
+import { getLRN, getCampusID } from "components/General/Utils";
 
 function SignUp() {
       const currentFileName = "layouts/authentication/sign-up/index.js";
-      const { isLoading, status} = useSignInData();
-
+      const { isLoading, status, rawData} = useSignInData();
       const [sendOTP, setSendOTP] = useState(false);  
       const {token} = useStateContext();  
       const [fetchclients, setFetchClients] = useState([]);
+      const [showOptions, setShowOptions] = useState(false);
+      const [selectedCampusName, setSelectedCampusName] = useState("");
 
       if (token) {
         return <Navigate to="/dashboard" />
@@ -53,11 +60,22 @@ function SignUp() {
             birthdate: "",
             address: "",
             grade: "",
-            section: "",
-            program: "",
             year_enrolled: "",
             email: "",
             otp_code: "",
+
+            cardname: "",
+            cardnumber: "",
+            cvv: "",
+            expmonth: "",
+            expyear: "",
+
+            subscription: "",
+            client_name: "",
+            client_acr: "",
+            client_email: "",
+            new_clientid: "",
+
             agreement: false,   
       };
 
@@ -107,15 +125,34 @@ function SignUp() {
           ];
       
           // Add clientid as required only if role is not 999
-          if (formData.role != 999) {
+          if (formData.role == 5) {
               requiredFields.push("clientid");
           }
-          const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
+          if (formData.role == 30) {
+            requiredFields.push("cardname");
+            requiredFields.push("cardnumber");
+            requiredFields.push("cvv");
+            requiredFields.push("expmonth");
+            requiredFields.push("expyear");
 
+            requiredFields.push("subscription");
+            requiredFields.push("new_clientid");
+            requiredFields.push("client_name");
+            requiredFields.push("client_acr");
+            requiredFields.push("client_email");
+        }
+          const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
           if (emptyRequiredFields.length === 0) {
             if(!formData.agreement) {
-              toast.warning(messages.agreement, { autoClose: true });
+                  toast.warning(messages.agreement, { autoClose: true });
             }
+            else if (!/^\d{3}$/.test(getCVV(formData.cvv)) && formData.role == 30) { 
+                  toast.error("CVV must be exactly 3 digits", { autoClose: true });
+            }
+            else if (!/^\d{16}$/.test(getCardNumber(formData.cardnumber)) && formData.role == 30) { 
+                  toast.error("Card number must be exactly 16 digits", { autoClose: true });
+            }
+
             else {    
               setSendOTP(true);
               const data = new FormData();
@@ -131,68 +168,71 @@ function SignUp() {
               data.append("birthdate", formData.birthdate);
               data.append("address", formData.address);
               data.append("grade", formData.grade);
-              data.append("section", formData.section);
-              data.append("program", formData.program);
               data.append("year_enrolled", formData.year_enrolled);
               data.append("clientid", formData.clientid);
               data.append("email", formData.email);
-              axios.post(apiRoutes.signupuser, data)      
+
+              data.append("subscription", formData.subscription);
+              data.append("new_clientid", formData.new_clientid);
+              data.append("client_name", formData.client_name);
+              data.append("client_acr", formData.client_acr);
+              data.append("client_email", formData.client_email);
+
+            //   axios.post(apiRoutes.signupuser, data) 
               const response = await axios.post(apiRoutes.createOTPverification, data);
-              if(response.data.status == 200) {
-                setSendOTP(false);
-                Swal.fire({
-                  customClass: {
-                    title: 'alert-title',
-                    icon: 'alert-icon',
-                    confirmButton: 'alert-confirmButton',
-                    cancelButton: 'alert-cancelButton',
-                    container: 'alert-container',
-                    input: 'alert-input',
-                    popup: 'alert-popup'
-                  },
-                  title: 'Account Confirmation',
-                  input: "text",
-                  text: "A verification message is sent to your email. Enter valid OTP to verify your account!",
-                  icon: 'warning',        
-                  showCancelButton: true,
-                  allowOutsideClick: false,
-                  confirmButtonColor: '#3085d6',  
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Verify Account'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                        formData.otp_code = result.value;
-                        data.append("otp_code", formData.otp_code);
-                        setSendOTP(true);
-                        try {
-                              axios.post(apiRoutes.signupuser, data)      
+              if (response.data.status === 200) {
+                  setSendOTP(false);
+                  Swal.fire({
+                      customClass: {
+                          title: 'alert-title',
+                          icon: 'alert-icon',
+                          confirmButton: 'alert-confirmButton',
+                          cancelButton: 'alert-cancelButton',
+                          container: 'alert-container',
+                          input: 'alert-input',
+                          popup: 'alert-popup'
+                      },
+                      title: 'Account Confirmation',
+                      input: "text",
+                      text: "A verification message is sent to your email. Enter valid OTP to verify your account!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      allowOutsideClick: false,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Verify Account',
+                      preConfirm: (otp) => {
+                          formData.otp_code = otp;
+                          data.append("otp_code", formData.otp_code);
+                          setSendOTP(true);
+                          
+                          // Return a promise to keep SweetAlert open during the request
+                          return axios.post(apiRoutes.signupuser, data)
                               .then((response) => {
-                                    if (response.data.status === 200) {
-                                          toast.success(`${response.data.message}`, { autoClose: true });
-                                          
-                                    } else {
-                                          toast.error(`${response.data.message}`, { autoClose: true });
-                                    }
-                                    // setFormData(initialState);
-                                    setSendOTP(false);
-                                    passToSuccessLogs(response.data, currentFileName);
+                                  if (response.data.status === 200) {
+                                      toast.success(`${response.data.message}`, { autoClose: true });
+                                      setSendOTP(false);
+                                      passToSuccessLogs(response.data, currentFileName);
+                                      return true; // Allow SweetAlert to close
+                                  } else {
+                                      toast.error(`${response.data.message}`, { autoClose: true });
+                                      setSendOTP(false);
+                                      return false; // Keep SweetAlert open
+                                  }
                               })
                               .catch((error) => {
-                                    setSendOTP(false);
-                                    toast.error(messages.addUserError, { autoClose: true });
-                                    passToErrorLogs(error, currentFileName);
+                                  setSendOTP(false);
+                                  toast.error(messages.addUserError, { autoClose: true });
+                                  passToErrorLogs(error, currentFileName);
+                                  return false; // Keep SweetAlert open
                               });
-                        } catch (error) { 
-                              setSendOTP(false);
-                              toast.error(messages.addUserError, { autoClose: true });
-                              passToErrorLogs(error, currentFileName);
-                        }     
-                  }
-                })
+                      }
+                  });
               } else {
-                setSendOTP(false);
-                toast.error(`${response.data.message}`, { autoClose: true });
-              }  
+                  setSendOTP(false);
+                  toast.error(`${response.data.message}`, { autoClose: true });
+              }
+              
             }
           } else {  
               // Display an error message or prevent form submission
@@ -205,9 +245,9 @@ function SignUp() {
         {status == 1 && !isLoading ? 
         <>
             {sendOTP && <FixedLoading />}     
-            <SoftBox className="d-flex px-4 py-4 border" height={{ xs: "100%", md: "100vh" }}>      
-            <Grid className="m-auto" container maxWidth={{ xs: "100%", md: "1500px" }} justifyContent="center">
-                  <Grid item xs={12} lg={8} className="m-auto" >
+            <SoftBox component="form" role="form" onSubmit={handleSubmit} className="d-flex px-4" height={{ xs: "100%", md: "100vh" }}>      
+            <Grid className="m-auto" spacing={3} container maxWidth={{ xs: "100%", md: "1500px" }} justifyContent="center">
+                  <Grid item xs={12} lg={8}  >
                         <SoftBox mb={5} p={4} className="shadow-sm rounded-4 bg-white">
                               <SoftTypography fontWeight="medium" color="info" textGradient>
                                     Direction!
@@ -216,16 +256,16 @@ function SignUp() {
                                     Please fill in the required fields. Rest assured that data is secured.     
                               </SoftTypography> 
                               <SoftBox mt={2}>
-                                    <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
+                                    <SoftBox className="px-md-0 px-2" >
                                           <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                                 Account Information    
                                           </SoftTypography>
                                           <Grid container spacing={0} alignItems="center">
                                             <Grid item xs={12} md={6} lg={4} px={1}>
-                                              <SoftTypography variant="button" className="me-1"> Role: </SoftTypography>
+                                              <SoftTypography variant="button" className="me-1"> Account Type: </SoftTypography>
                                               <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                               <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="role" value={formData.role} onChange={handleChange} >
-                                                    <option value="">--- Select Role ---</option>
+                                                    <option value="">--- Select ---</option>
                                                     {roleSelect && roleSelect.map((role) => (
                                                     <option key={role.value} value={role.value}>
                                                           {role.desc}
@@ -235,27 +275,77 @@ function SignUp() {
                                             </Grid>
                                           </Grid>    
                                           <Grid container spacing={0} alignItems="center">
-                                            {formData.role != 999 &&
+                                            {formData.role == 5 &&
                                             <>
                                               <Grid item xs={12} md={6} lg={4} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Campus:</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
-                                                  <option value="">--- Select Campus ---</option>
-                                                        {fetchclients && fetchclients.map((school) => (
-                                                        <option key={school.clientid} value={school.clientid}>
-                                                              {school.client_name}
-                                                        </option>
-                                                        ))}
-                                                  </select>
+                                                  <SoftBox position="relative">
+                                                      <input
+                                                            type="text"
+                                                            className="form-control form-select form-select-sm text-secondary rounded-5"
+                                                            value={selectedCampusName}
+                                                            onFocus={() => setShowOptions(true)}
+                                                            onBlur={() => setTimeout(() => setShowOptions(false), 200)}
+                                                            onChange={(e) => {
+                                                            setSelectedCampusName(e.target.value);
+                                                            setFormData({ ...formData, clientid: "" });
+                                                            }}
+                                                      />
+                                                      {showOptions && (
+                                                            <SoftBox 
+                                                            position="absolute" 
+                                                            zIndex={10} 
+                                                            width="100%" 
+                                                            maxHeight="200px" 
+                                                            overflow="auto" 
+                                                            className="bg-white rounded-5 shadow"
+                                                            >
+                                                            {fetchclients
+                                                            .filter(school => 
+                                                                  school.client_name.toLowerCase().includes(selectedCampusName.toLowerCase())
+                                                            )
+                                                            .map((school) => (
+                                                                  <SoftBox 
+                                                                  key={school.clientid}
+                                                                  px={2} 
+                                                                  py={1} 
+                                                                  className="text-xs cursor-pointer hover:bg-gray-200 py-1"
+                                                                  onMouseDown={() => {
+                                                                  setFormData({ ...formData, clientid: school.clientid });
+                                                                  setSelectedCampusName(school.client_name); 
+                                                                  setShowOptions(false);
+                                                                  }}
+                                                                  >
+                                                                  {school.client_name}
+                                                                  </SoftBox>
+                                                            ))}
+                                                            {fetchclients.filter(school => 
+                                                            school.client_name.toLowerCase().includes(selectedCampusName.toLowerCase())
+                                                            ).length === 0 && (
+                                                            <SoftBox px={2} py={1} className="text-xxs text-gray-500">
+                                                                  No campus found
+                                                            </SoftBox>
+                                                            )}
+                                                            </SoftBox>
+                                                      )}
+                                                      </SoftBox>
+                                                {/* <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
+                                                <option value="">--- Select Campus ---</option>
+                                                      {fetchclients && fetchclients.map((school) => (
+                                                      <option key={school.clientid} value={school.clientid}>
+                                                            {school.client_name}
+                                                      </option>
+                                                      ))}
+                                                </select> */}
                                               </Grid> 
                                             </>
                                             }
                                                 
                                             <Grid item xs={12} md={6} lg={4} px={1}>
-                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Username:"}</SoftTypography>
+                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Employee ID:"}</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                  <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.username} onChange={handleChange} size="small"
+                                                  <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.role == 5 ? getLRN(formData.username) : formData.username} onChange={handleChange} size="small"
                                                   /> 
                                             </Grid> 
                                             <Grid item xs={12} md={6} lg={4} px={1}>
@@ -339,14 +429,6 @@ function SignUp() {
                                                         ))}
                                                   </select>
                                             </Grid>
-                                            <Grid item xs={12} md={6} lg={3} px={1}>
-                                                  <SoftTypography variant="button" className="me-1">Section:</SoftTypography>
-                                                  <SoftInput name="section" value={formData.section.toUpperCase()} onChange={handleChange} size="small" /> 
-                                            </Grid>  
-                                            <Grid item xs={12} md={6} lg={5} px={1}>
-                                                  <SoftTypography variant="button" className="me-1">Program:</SoftTypography>
-                                                  <SoftInput name="program" value={formData.program.toUpperCase()} onChange={handleChange} size="small" /> 
-                                            </Grid>  
                                             <Grid item xs={12} md={6} lg={2} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Year Enrolled: </SoftTypography>
                                                   <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
@@ -360,8 +442,58 @@ function SignUp() {
                                             </Grid>
                                             </>
                                             }
+                                          </Grid> 
+                                          <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>
+                                                Campus Information    
+                                          </SoftTypography> 
+                                          <Grid container spacing={0} alignItems="center">
+                                          
+                                          {formData.role == 30 &&
+                                            <>
+                                            <Grid item xs={12} px={1}>
+                                                <ul className="text-danger fw-bold">
+                                                      <li className="text-xxs fst-italic">You may complete campus information after successful signup</li>
+                                                </ul>
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Campus ID:</SoftTypography>
+                                                  <SoftInput name="new_clientid" value={getCampusID(formData.new_clientid)} onChange={handleChange} size="small" /> 
+                                            </Grid>  
+                                            <Grid item xs={12} md={6} lg={6} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Campus Name:</SoftTypography>
+                                                  <SoftInput name="client_name" value={formData.client_name} onChange={handleChange} size="small" /> 
+                                            </Grid>  
+                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Short Name:</SoftTypography>
+                                                  <SoftInput name="client_acr" value={formData.client_acr.toUpperCase()} onChange={handleChange} size="small" /> 
+                                            </Grid>  
+
+                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Campus Email:</SoftTypography>
+                                                  <SoftInput type="email" name="client_email" value={formData.client_email} onChange={handleChange} size="small" /> 
+                                            </Grid>  
                                             
-                                          </Grid>  
+                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                  <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
+                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
+                                                        <option value=""></option>
+                                                        {subscriptionSelect && subscriptionSelect.map((sub) => (
+                                                        <option key={sub.value} value={sub.value}>
+                                                              {sub.desc}
+                                                        </option>
+                                                        ))}
+                                                  </select>
+                                            </Grid>
+                                            {rawData >= 0 &&
+                                            
+                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Total Payment:</SoftTypography>
+                                                  <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
+                                            </Grid>  
+                                            }
+                                            </>
+                                            }
+                                          </Grid>
                                           <Grid mt={3} container spacing={0} alignItems="center">
                                             <Grid item xs={12} pl={1}>
                                                   <Checkbox 
@@ -395,6 +527,61 @@ function SignUp() {
                               </SoftBox>
                         </SoftBox>
                   </Grid>
+                  {formData.role == 30 &&
+                  <Grid item xs={12} lg={3} px={1}>
+                        <SoftBox mb={5} p={4} className="shadow-sm rounded-4 bg-white">
+                              <SoftTypography variant="h3" className="me-1">Payment</SoftTypography>
+
+                              <SoftBox mt={1}>
+                                    <SoftTypography variant="h6" className="text-uppercase">Accepted Cards</SoftTypography>
+                              </SoftBox>
+
+                              <SoftBox display="flex" mt={1}>
+                                    <img src={paypal} alt="paypal" width={50} height={30} className="me-1" />
+                                    <img src={maya}  alt="maya" width={50} height={30} className="me-1" />
+                                    <img src={visa} alt="visa" width={50} height={30} className="me-1" />
+                                    <img src={mastercard} alt="visa" width={50} height={30} className="me-1" />
+                              </SoftBox>
+
+                              <SoftBox mt={3}>
+                                    <SoftTypography variant="button" className="text-xxs text-uppercase">Name on Card</SoftTypography>
+                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                    <SoftInput mb={5} name="cardname" value={formData.cardname} onChange={handleChange} size="small" /> 
+
+                                    <SoftTypography variant="button" className="text-xxs text-uppercase">Card Number</SoftTypography>
+                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                    <SoftInput name="cardnumber" value={getCardNumber(formData.cardnumber)} onChange={handleChange} size="small" /> 
+                                    
+                                    <SoftTypography variant="button" className="text-xxs text-uppercase">CVV</SoftTypography>
+                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                    <SoftInput name="cvv" value={getCVV(formData.cvv)} onChange={handleChange} size="small" />
+                                    
+                                    <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Month:</SoftTypography>
+                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expmonth" value={formData.expmonth} onChange={handleChange} >
+                                          <option value=""></option>
+                                          {monthSelect && monthSelect.map((month) => (
+                                          <option key={month.value} value={month.value}>
+                                                {month.desc}
+                                          </option>
+                                          ))}
+                                    </select>
+                             
+                                    <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Year:</SoftTypography>
+                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expyear" value={formData.expyear} onChange={handleChange} >
+                                          <option value=""></option>
+                                          {cardyears && cardyears.map((year) => (
+                                          <option key={year} value={year}>
+                                                {year}
+                                          </option>
+                                          ))}
+                                    </select>
+                                    
+                              </SoftBox>
+                        </SoftBox>
+                  </Grid>  
+                  } 
             </Grid>
                   
             </SoftBox>

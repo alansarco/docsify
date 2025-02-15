@@ -76,6 +76,7 @@ class SettingsController extends Controller
             'system_security_code' => 'required',
             'system_admin_limit' => 'required|numeric',
             'system_info' => 'required',
+            'price_per_day' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -90,6 +91,7 @@ class SettingsController extends Controller
                     'contact' => $request->system_contact,
                     'security_code' => $request->system_security_code,
                     'superadmin_limit' => $request->system_admin_limit,
+                    'price_per_day' => $request->price_per_day,
                     'system_info' => $request->system_info,
                     'notify_campus_add' => $request->notify_campus_add === "true" ? 1 : 0,
                     'notify_campus_renew' => $request->notify_campus_renew === "true" ? 1 : 0,

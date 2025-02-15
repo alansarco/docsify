@@ -36,7 +36,6 @@ function Table({ DATA, tablehead, ReloadTable  }) {
   };
 
   const handleDelete = async (id) => {
-    console.log(id);
     Swal.fire({
       customClass: {
         title: 'alert-title',

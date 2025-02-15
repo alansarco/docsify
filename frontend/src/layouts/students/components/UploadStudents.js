@@ -119,6 +119,7 @@ function UploadStudents({ HandleRendering, ReloadTable }) {
                             <li className="text-xxs fst-italic">When USERNAME matches the existing record in database, they will be replaced by new data</li>
                             <li className="text-xxs fst-italic">Existing USERNAME in database that does not matches the new master list will be retain to maintain data integrity</li>
                             <li className="text-xxs fst-italic">Make sure to check the masterlist as uploading will be not successfull once data are not in correct format</li>
+                            <li className="text-xxs fst-italic">The default password of student accountwill be their contact number</li>
                     </ul>
                     <SoftBox mt={2}>
                         <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>

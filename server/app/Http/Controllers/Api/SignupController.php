@@ -5,11 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utilities\Utils;
 use App\Mail\OtpStringsEmailVerification;
+use App\Models\App_Info;
+use App\Models\Client;
+use App\Models\LicenseKey;
+use App\Models\LogAdmin;
 use App\Models\OTP;
+use App\Models\SystemIncome;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Mail;
@@ -22,25 +28,56 @@ class SignupController extends Controller
             $checkpass = $checkpass->checkPassword($request->password);
             if($checkpass) return $checkpass;
 
-            $validator = Validator::make($request->all(), [ 
-                'email' => 'required|email',
-                'username' => 'required',
-                'first_name' => 'required',
-                'middle_name' => 'required',
-                'last_name' => 'required',
-                'password' => 'required',
-                'gender' => 'required',
-                'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
-                'birthdate' => 'required',   
-                'address' => 'required',   
-                'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
-            ]);
+            if($request->role == 30) {
+                $validator = Validator::make($request->all(), [ 
+                    'email' => 'required|email',
+                    'username' => 'required',
+                    'first_name' => 'required',
+                    'middle_name' => 'required',
+                    'last_name' => 'required',
+                    'password' => 'required',
+                    'gender' => 'required',
+                    'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+                    'birthdate' => 'required',   
+                    'address' => 'required',   
+                    'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+
+                    'new_clientid' => 'required',   
+                    'client_name' => 'required',   
+                    'client_acr' => 'required',   
+                    'subscription' => 'required',   
+                    'client_email' => 'required|email',   
+                ]);
+            }
+            else {
+                $validator = Validator::make($request->all(), [ 
+                    'email' => 'required|email',
+                    'username' => 'required',
+                    'first_name' => 'required',
+                    'middle_name' => 'required',
+                    'last_name' => 'required',
+                    'password' => 'required',
+                    'gender' => 'required',
+                    'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+                    'birthdate' => 'required',   
+                    'address' => 'required',   
+                    'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+                ]);
+            }
+
             if($validator->fails()) {
                 return response()->json([
                     'message' => $validator->messages()->all()
                 ]);
             }
             else {
+                if($request->role == 30) {
+                    $campusExist = DB::table('clients')->where('clientid', $request->new_clientid)->first();
+                    $emailExist = DB::table('clients')->where('client_email', $request->client_email)->first();
+                    if ($campusExist) return response()->json(['message' => 'Client already exist!' ]);
+                    else if ($emailExist) return response()->json(['message' => 'Email already taken!']);
+                }
+
                 $user = DB::table('users')->where('username', $request->username)->first();
                 if($user) {
                     return response()->json([
@@ -99,19 +136,42 @@ class SignupController extends Controller
         $checkOTP = OTP::where('id', $request->otp_code)->where('valid_for', $request->username)->where('expires_at', ">", now())->first();
 
         if($checkOTP) {
-            $validator = Validator::make($request->all(), [ 
-                'email' => 'required|email',
-                'username' => 'required',
-                'first_name' => 'required',
-                'middle_name' => 'required',
-                'last_name' => 'required',
-                'password' => 'required',
-                'gender' => 'required',
-                'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
-                'birthdate' => 'required',   
-                'address' => 'required',   
-                'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
-            ]);
+            if($request->role == 30) {
+                $validator = Validator::make($request->all(), [ 
+                    'email' => 'required|email',
+                    'username' => 'required',
+                    'first_name' => 'required',
+                    'middle_name' => 'required',
+                    'last_name' => 'required',
+                    'password' => 'required',
+                    'gender' => 'required',
+                    'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+                    'birthdate' => 'required',   
+                    'address' => 'required',   
+                    'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+
+                    'new_clientid' => 'required',   
+                    'client_name' => 'required',   
+                    'client_acr' => 'required',   
+                    'subscription' => 'required',   
+                    'client_email' => 'required|email',   
+                ]);
+            }
+            else {
+                $validator = Validator::make($request->all(), [ 
+                    'email' => 'required|email',
+                    'username' => 'required',
+                    'first_name' => 'required',
+                    'middle_name' => 'required',
+                    'last_name' => 'required',
+                    'password' => 'required',
+                    'gender' => 'required',
+                    'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+                    'birthdate' => 'required',   
+                    'address' => 'required',   
+                    'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+                ]);
+            }
     
             if($validator->fails()) {
                 return response()->json([
@@ -127,14 +187,31 @@ class SignupController extends Controller
                         $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                     }
 
-                    $clientid = $request->role == 999 ? '' : $request->clientid;
+                    $clientid = $request->role == 30 ? $request->new_clientid : $request->clientid;
                     $grade = $request->role != 5 ? '' : $request->grade;
-                    $section = $request->role != 5 ? '' : $request->section;
-                    $program = $request->role != 5 ? '' : $request->program;
                     $year_enrolled = $request->role != 5 ? '' : $request->year_enrolled;
+                    $account_status = $request->role == 30 ? 1 : 0;
 
                     $role = new Utils;
                     $role = $role->checkRole($request->role);
+
+                    $app_info = App_Info::select('price_per_day')->first();
+
+                    
+                    if($request->role == 30) {
+                        $campusExist = DB::table('clients')->where('clientid', $request->new_clientid)->first();
+                        $emailExist = DB::table('clients')->where('client_email', $request->client_email)->first();
+                        if ($campusExist) 
+                            return response()->json(['message' => 'Client already exist!' ]);
+                        else if ($emailExist) 
+                            return response()->json(['message' => 'Email already taken!']);
+
+                        $current_payment = 0;
+                        $SubscriptionEnd = Carbon::today()->addDays($request->subscription);
+                        if($app_info && $app_info->price_per_day) {}
+                            $current_payment = $app_info->price_per_day * $request->subscription;
+
+                    }
                     
                     $add = User::create([
                         'clientid' => $clientid,
@@ -150,12 +227,10 @@ class SignupController extends Controller
                         'role' => $role,   
                         'access_level' => $request->role,   
                         'grade' => $grade,   
-                        'section' => $section,   
-                        'program' => $program,   
                         'year_enrolled' => $year_enrolled,   
                         'id_picture' => $pictureData,   
                         'birthdate' => $request->birthdate,  
-                        'account_status' => 0,  
+                        'account_status' => $account_status,  
                         'updated_by' => $request->first_name,
                         'created_by' => $request->first_name,
                     ]);
@@ -163,6 +238,51 @@ class SignupController extends Controller
                     OTP::where('id', $request->otp_code)->delete();
         
                     if($add) {
+                        if($request->role == 30) {
+                            // Generate a unique 15-character license key
+                            // Generate a unique 15-character license key
+                            do {
+                                $GeneratedLicense = Str::upper(Str::random(15)); // Generate a random string of 15 characters
+                            } while (DB::table('license_keys')->where('license_key', $GeneratedLicense)->exists());
+
+                            LicenseKey::create([
+                                'license_key' => $GeneratedLicense,
+                                'license_price' => $current_payment,
+                                'license_duration' => $request->subscription,
+                                'created_by' => $request->username,
+                                'license_client' => $request->new_clientid,
+                                'license_date_use' => Carbon::today(),
+                            ]);
+                            
+                            Client::create([
+                                'clientid' => $request->new_clientid,
+                                'client_name' => $request->client_name,   
+                                'client_acr' => $request->client_acr,   
+                                'client_email' => $request->client_email,   
+                                'license_key' => $GeneratedLicense,   
+                                'subscription_start' => Carbon::today(),
+                                'subscription_end' => $SubscriptionEnd,   
+                                'current_payment' => $current_payment,  
+                                'total_payment' => $current_payment,  
+                                'client_representative' => $request->username,  
+                                'created_by' => $request->username,
+                                'updated_by' => $request->username,
+                            ]);
+
+                            SystemIncome::create([
+                                'price' => $current_payment ?? 0,
+                                'year_sold' => date('Y'), 
+                                'sold_to' => $request->new_clientid,
+                                'created_by' => $request->username,
+                            ]);
+
+                            LogAdmin::create([
+                                'module' => 'Campus',
+                                'action' => 'ADD',
+                                'details' => $request->username .' added campus '.$request->new_clientid. '-'.$request->client_name,
+                                'created_by' => $request->username,
+                            ]);
+                        }
                         return response()->json([
                             'status' => 200,
                             'message' => 'Account submitted successfully! Please wait for the admin to acknowledge your account.'

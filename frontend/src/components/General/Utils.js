@@ -42,9 +42,7 @@ export const gradeSelect = [
 ];
 
 export const roleSelect = [
-      { value: 999, desc: "Admin" },
-      { value: 30, desc: "School Representative" },
-      { value: 10, desc: "Registrar" },
+      { value: 30, desc: "School Admin/Representative" },
       { value: 5, desc: "Student" },
 ];
 
@@ -99,6 +97,8 @@ export const prioritySelect = [
 
 const currentYear = new Date().getFullYear();
 export const years = Array.from({ length: currentYear - 1899 }, (_, index) => currentYear - index);
+
+export const cardyears = Array.from({ length: 21 }, (_, index) => currentYear + index);
 
 export const currentDate = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
   .toISOString()
@@ -165,6 +165,55 @@ export function getLRN(amount) {
       }
       return amount;
 }
+
+export function getCVV(number) {
+      // Prevent input if length is already 12
+      if (number.length > 3) {
+          return number.slice(0, 3); // Trim to 12 characters if exceeded
+      }
+      // Validate if it's not a number or empty
+      if (isNaN(number) || number === '') {
+          return '';
+      }
+      return number;
+}
+
+export function getCardNumber(number) {
+      // Prevent input if length is already 12
+      if (number.length > 16) {
+          return number.slice(0, 16); // Trim to 12 characters if exceeded
+      }
+      // Validate if it's not a number or empty
+      if (isNaN(number) || number === '') {
+          return '';
+      }
+      return number;
+}
+
+export function getCampusID(number) {
+      // Prevent input if length is already 12
+      if (number.length > 6) {
+          return number.slice(0, 6); // Trim to 12 characters if exceeded
+      }
+      // Validate if it's not a number or empty
+      if (isNaN(number) || number === '') {
+          return '';
+      }
+      return number;
+}
+
+// export function getCardNumber(number) {
+//       // Remove all non-digit characters
+//       number = number.replace(/\D/g, '');
+      
+//       // Prevent input if length is already 16
+//       if (number.length > 16) {
+//           number = number.slice(0, 16); // Trim to 16 characters if exceeded
+//       }
+//       // Format the number by grouping every 4 digits with a dash
+//       return number.replace(/(.{4})/g, '$1-').replace(/-$/, '');
+// }
+  
 
 export const activeStatusSelect = [
       { value: 0, desc: "Pending" },
@@ -288,3 +337,25 @@ export function getStatusIcon(status) {
       }
       return 'notifications';
 }
+
+export const monthSelect = [
+      { value: 1, desc: "January" },
+      { value: 2, desc: "February" },
+      { value: 3, desc: "March" },
+      { value: 4, desc: "April" },
+      { value: 5, desc: "May" },
+      { value: 6, desc: "June" },
+      { value: 7, desc: "July" },
+      { value: 8, desc: "August" },
+      { value: 9, desc: "September" },
+      { value: 10, desc: "October" },
+      { value: 11, desc: "November" },
+      { value: 12, desc: "December" },
+];
+
+export const subscriptionSelect = [
+      { value: 31, desc: "1 month" },
+      { value: 92, desc: "3 months" },
+      { value: 183, desc: "6 months" },
+      { value: 365, desc: "1 year" },
+];

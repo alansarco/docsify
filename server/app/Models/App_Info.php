@@ -23,6 +23,7 @@ class App_Info extends Model
         'email',
         'contact',
         'logo',
+        'price_per_day',
         'notify_campus_add',
         'notify_campus_renew',
         'notify_user_approve',

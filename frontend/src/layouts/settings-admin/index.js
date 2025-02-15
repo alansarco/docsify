@@ -22,6 +22,7 @@ import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
+import { formatCurrency } from "components/General/Utils";
 
 function AdminSettings() {
     const currentFileName = "layouts/settings-admin/index.js";
@@ -177,6 +178,10 @@ function AdminSettings() {
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Notify User when Account Approved</SoftTypography>
                                     <SoftTypography variant="h6" className="text-secondary fw-normal">{item.notify_user_approve == 1 ? "Yes" : "No"}</SoftTypography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6} lg={6} mt={2}>
+                                    <SoftTypography variant="h6" color="dark" >Price (per day)</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{formatCurrency(item.price_per_day)}</SoftTypography>
                                   </Grid>
                                 </Grid>
                               </Grid>

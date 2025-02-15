@@ -26,6 +26,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       
       const initialState = {
             system_id: DATA.system_id == null ? "" : DATA.system_id,
+            price_per_day: DATA.price_per_day == null ? "" : DATA.price_per_day,
             system_logo: DATA.logo == null ? null : DATA.logo,
             system_contact: DATA.contact == null ? "" : DATA.contact,
             system_email: DATA.email == null ? "" : DATA.email,
@@ -89,6 +90,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                   "system_security_code",
                   "system_admin_limit",
                   "system_info",
+                  "price_per_day",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -115,6 +117,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("notify_campus_add", formData.notify_campus_add);
                                     data.append("notify_campus_renew", formData.notify_campus_renew);
                                     data.append("notify_user_approve", formData.notify_user_approve);
+                                    data.append("price_per_day", formData.price_per_day);
                                     const response = await axios.post(apiRoutes.updateAdminSettings, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
@@ -184,6 +187,11 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                       className="form-control form-control-sm rounded-5 text-xs"
                                                       onChange={handleChange}
                                                 />
+                                          </Grid>  
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                                <SoftTypography variant="button" className="me-1">Price (per day):</SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <SoftInput name="price_per_day" value={getN(formData.price_per_day)} onChange={handleChange} size="small" />
                                           </Grid>  
                                           <Grid item xs={12} px={1}>
                                                 <SoftTypography variant="button" className="me-1">System Information:</SoftTypography>

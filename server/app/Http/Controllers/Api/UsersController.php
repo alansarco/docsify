@@ -133,7 +133,6 @@ class UsersController extends Controller
                                 'updated_by' => "Uploaded by " . $authUser->fullname,
                             ]
                         );
-
                     }
                 }
             }
