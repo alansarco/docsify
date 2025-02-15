@@ -38,6 +38,7 @@ import { genderSelect, gradeSelect, years } from "components/General/Utils";
 import { statusSelect } from "components/General/Utils";
 import { useTheme } from "@emotion/react";
 import TuneIcon from '@mui/icons-material/Tune';
+import UploadStudents from "layouts/students/components/UploadStudents";
 
 function Students() {
     const currentFileName = "layouts/students/index.js";
@@ -230,7 +231,10 @@ function Students() {
           :
           rendering == 3 ?
             <Add HandleRendering={HandleRendering} ReloadTable={ReloadTable} SECTIONS={fetchsections} PROGRAMS={fetchprograms} />
-        :
+          :
+          rendering == 4 ?
+            <UploadStudents HandleRendering={HandleRendering} ReloadTable={ReloadTable} />
+          :
           <SoftBox p={2}>
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
@@ -242,9 +246,14 @@ function Students() {
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
                   {access == 30 &&
-                  <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
-                    <Icon>add</Icon> Add Students
-                  </SoftButton>
+                  <>
+                    <SoftButton onClick={() => setRendering(4)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="warning" size="small" >
+                      <CloudUploadTwoToneIcon size="15px" className="me-1" /> upload excel
+                    </SoftButton>
+                    <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
+                      <Icon>add</Icon> Add Students
+                    </SoftButton>
+                  </>
                   }
                 </SoftBox>
               </SoftBox>

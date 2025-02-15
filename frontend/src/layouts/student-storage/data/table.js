@@ -3,18 +3,14 @@ import { Icon, Table as MuiTable } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import CheckIcon from '@mui/icons-material/Check';
 // React components
 import SoftBox from "components/SoftBox";
-import SoftTypography from "components/SoftTypography";
 
 // React base styles
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
 import SoftButton from "components/SoftButton";
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import DownloadTwoToneIcon from '@mui/icons-material/DownloadTwoTone';
 import { useStateContext } from "context/ContextProvider";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useState } from "react";
@@ -24,6 +20,7 @@ import { passToErrorLogs } from "components/Api/Gateway";
 import { passToSuccessLogs } from "components/Api/Gateway";
 import { toast } from "react-toastify";
 import DownloadButton from "components/General/DownloadButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Table({ DATA, tablehead, ReloadTable  }) {
   const { light, secondary } = colors;
@@ -155,7 +152,7 @@ function Table({ DATA, tablehead, ReloadTable  }) {
             borderTop={`${borderWidth[1]} solid ${light.main}`}
           >
             <SoftButton onClick={() => handleDelete(row.id)} className="text-xxs rounded-pill p-0 ms-1" variant="gradient" color="primary" size="small" iconOnly>
-             <DeleteTwoToneIcon />
+             <DeleteIcon />
             </SoftButton>
              <DownloadButton fileid={row.id} fileName={row.file_name} setSearchTriggered={setSearchTriggered}/>
           </SoftBox>  

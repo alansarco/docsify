@@ -4,7 +4,7 @@ import { useStateContext } from "context/ContextProvider";
 import { apiRoutes } from 'components/Api/ApiRoutes';
 import { toast } from "react-toastify";
 import SoftButton from 'components/SoftButton';
-import DownloadTwoToneIcon from '@mui/icons-material/DownloadTwoTone';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const DownloadButton = ({ setSearchTriggered, fileid, fileName }) => {
     const {token} = useStateContext();  
@@ -44,7 +44,7 @@ const DownloadButton = ({ setSearchTriggered, fileid, fileName }) => {
     return (
         <>
         <SoftButton onClick={handleDownload} className="text-xxs rounded-pill p-0 ms-1" variant="gradient" color="success" size="small" iconOnly>
-             <DownloadTwoToneIcon />
+             <DownloadIcon />
         </SoftButton>
         </>
         

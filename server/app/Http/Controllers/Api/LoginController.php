@@ -128,7 +128,9 @@ class LoginController extends Controller {
             )
         ->first();
 
-        $getCampusLimit = Client::select('request_limit', 'request_timeout', 'file_limit')
+        $getCampusLimit = Client::select('request_limit', 'request_timeout', 'file_limit',
+            DB::raw("CONCAT(DATE_FORMAT(subscription_end, '%M %d, %Y')) as subscription_end")
+            )
             ->where('clientid', $authUser->clientid)
             ->first();
 
@@ -141,6 +143,7 @@ class LoginController extends Controller {
             $userInfo->request_timeout = $formattedTime;
             $userInfo->allowrequest = $allowrequest;
             $userInfo->file_limit = $getCampusLimit->file_limit;
+            $userInfo->subscription_end = $getCampusLimit->subscription_end;
         }
         
 

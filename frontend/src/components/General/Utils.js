@@ -2,6 +2,7 @@ export const actionSelect = [
       { value: "ADD", desc: "ADD" },
       { value: "DELETE", desc: "DELETE" },
       { value: "UPDATE", desc: "UPDATE" },
+      { value: "UPLOAD", desc: "UPLOAD" },
 ];
 
 export const moduleSelect = [

@@ -169,7 +169,7 @@ function LogRepresentative() {
             <SoftBox >   
               <SoftBox className="px-md-4 px-3 py-2 d-block d-sm-flex" justifyContent="space-between" alignItems="center">
                 <SoftBox>
-                  <SoftTypography className="text-uppercase text-dark" variant="h6" >Shool Admin/Representative Logs</SoftTypography>
+                  <SoftTypography className="text-uppercase text-dark" variant="h6" >School Admin/Representative Logs</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >

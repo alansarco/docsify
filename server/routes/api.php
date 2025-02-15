@@ -89,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('retrievestudent', [StudentController::class, 'retrievestudent']);
         Route::get('sectionselect', [StudentController::class, 'sectionselect']);
         Route::get('programselect', [StudentController::class, 'programselect']);
+        Route::post('uploadexcel', [UsersController::class, 'uploadexcel']);
     });
 
     Route::prefix('sections')->group(function () {
@@ -181,10 +182,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('deletestoragedata', [StorageController::class, 'deletestoragedata']);
         Route::get('downloadstoragedata', [StorageController::class, 'downloadstoragedata']);
         Route::post('uploadstoragedata', [StorageController::class, 'uploadstoragedata']);
-    });
-
-    Route::prefix('accounts')->group(function () {
-        Route::post('uploadexcel', [UsersController::class, 'uploadexcel']);
     });
 
     Route::prefix('residents')->group(function () {

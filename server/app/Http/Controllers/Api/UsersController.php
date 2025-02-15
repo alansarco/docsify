@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utilities\Utils;
+use App\Models\LogRepresentative;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,15 @@ class UsersController extends Controller
 {
     public function uploadexcel(Request $request)
     {
-        $authUser = User::select('name')->where('username',  Auth::user()->username)->first();
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
 
         $validator = Validator::make($request->all(), [
             'data' => 'required|file|mimes:xlsx,xls|max:20000',
@@ -54,21 +63,20 @@ class UsersController extends Controller
                                     
                     if (!empty($cells[0])) {
                         $username = isset($cells[0]) ? $cells[0]->getValue() : null;
-                        $name = isset($cells[1]) ? $cells[1]->getValue() : '';
-                        $access_level = isset($cells[2]) ? $cells[2]->getValue() : 5;
-                        $contact = isset($cells[3]) ? $cells[3]->getValue() : '';
-                        $gender = isset($cells[4]) ? $cells[4]->getValue() : '';
-                        $birthdate = isset($cells[5]) ? $cells[5]->getValue() : null;
-                        $address = isset($cells[6]) ? $cells[6]->getValue() : '';
-                        $year_enrolled = isset($cells[7]) ? $cells[7]->getValue() : null;
+                        $first_name = isset($cells[1]) ? $cells[1]->getValue() : '';
+                        $middle_name = isset($cells[2]) ? $cells[2]->getValue() : '';
+                        $last_name = isset($cells[3]) ? $cells[3]->getValue() : '';
+                        $birthdate = isset($cells[4]) ? $cells[4]->getValue() : '';
+                        $contact = isset($cells[5]) ? $cells[5]->getValue() : '';
+                        $email = isset($cells[6]) ? $cells[6]->getValue() : '';
+                        $gender = isset($cells[7]) ? $cells[7]->getValue() : '';
+                        $address = isset($cells[8]) ? $cells[8]->getValue() : '';
+                        $grade = isset($cells[9]) ? $cells[9]->getValue() : '';
+                        $section = isset($cells[10]) ? $cells[10]->getValue() : null;
+                        $program = isset($cells[11]) ? $cells[11]->getValue() : null;
 
-                        // Validation
-                        $role = 'USER';
-                        if ($access_level == 999) {
-                            $role = 'ADMIN';
-                        }
-                        if (!$year_enrolled) {
-                            $year_enrolled = date('Y');
+                        if (!$username) {
+                            throw new \Exception("Row $rowNumber: Make sure that LRN is not empty");
                         }
 
                         if (!is_numeric($contact)) {
@@ -80,31 +88,63 @@ class UsersController extends Controller
                         if (!preg_match('/\d{4}-\d{2}-\d{2}/', $birthdate)) {
                             throw new \Exception("Row $rowNumber: Invalid birthdate format for LRN $username - $birthdate");
                         }
-                        if (!preg_match('/^\d{4}$/', $year_enrolled)) {
-                            throw new \Exception("Row $rowNumber: Invalid year year_enrolled for LRN $username - $year_enrolled");
+
+                        if(!$contact) {
+                            throw new \Exception("Row $rowNumber: Please provide contact for LRN $username");
                         }
+                        if(!$email) {
+                            throw new \Exception("Row $rowNumber: Please provide email for LRN $username");
+                        }
+                        
+                        $checkEmail = User::select('email')
+                            ->where('username', '!=', $username)
+                            ->where('email', $email)
+                            ->first();
+
+                        if($checkEmail) {
+                            throw new \Exception("Row $rowNumber: Email account already taken");
+                        }
+                        
+                        $hashedPassword = Hash::make($email);
 
                         UserUpload::updateOrCreate(
                             ['username' => $username],
                             [
-                                'name' => strtoupper($name),
-                                'role' => $role,
-                                'access_level' => $access_level,
+                                'clientid' => strtoupper($authUser->clientid),
+                                'role' => 'USER',
+                                'access_level' => 5,
+                                'first_name' => strtoupper($first_name),
+                                'middle_name' => strtoupper($middle_name),
+                                'last_name' => strtoupper($last_name),
                                 'birthdate' => $birthdate,
                                 'contact' => $contact,
-                                'email' => $username,
+                                'email' => $email,
                                 'gender' => strtoupper($gender),
                                 'address' => strtoupper($address),
-                                'year_enrolled' => $year_enrolled,
+                                'grade' => $grade,
+                                'section' => strtoupper($section),
+                                'program' => strtoupper($program),
+                                'year_enrolled' => date('Y'),
+                                'password' => $hashedPassword,
                                 'account_status' => 1,
+                                'password_change' => 0,
                                 'deleted_at' => null,
-                                'created_by' => "Uploaded by " . $authUser->name,
-                                'updated_by' => "Uploaded by " . $authUser->name,
+                                'created_by' => "Uploaded by " . $authUser->fullname,
+                                'updated_by' => "Uploaded by " . $authUser->fullname,
                             ]
                         );
+
                     }
                 }
             }
+            
+            LogRepresentative::create([
+                'clientid' => $authUser->clientid,
+                'module' => 'Student Accounts',
+                'action' => 'UPLOAD',
+                'details' => $authUser->fullname .' uploaded a student list',
+                'created_by' => $authUser->fullname,
+            ]);
 
             DB::commit(); // Commit transaction if all rows pass validation
             $reader->close();

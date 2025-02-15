@@ -75,11 +75,10 @@ function UploadStudents({ HandleRendering, ReloadTable }) {
 
         setSubmitProfile(true);
         try {
-            if (!token || access != 999) {
+            if (!token || access != 30) {
                 toast.error(messages.prohibit, { autoClose: true });
                 return;
             }
-
             // Prepare FormData to send
             const formDataToSend = new FormData();
             formDataToSend.append('data', formData.data); // Append the actual file

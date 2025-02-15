@@ -125,6 +125,10 @@ function StudentStorage() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) { 
+        toast.warning("File size exceeds 5MB. Please select a smaller file.");
+        return; 
+      }
       setSelectedFile(file);
       const nameWithoutExt = file.name.split('.').slice(0, -1).join('.'); // Remove the extension
       setFileName(nameWithoutExt); // Store the name without the extension
@@ -135,7 +139,7 @@ function StudentStorage() {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      toast.warning("Please select new file to upload!", { autoClose: true });
+      toast.warning("Please select new or different file to upload!", { autoClose: true });
       return;
     }
   
@@ -143,30 +147,33 @@ function StudentStorage() {
     formData.append('fileData', selectedFile);
     formData.append('fileName', fileName); // Pass the file name
     formData.append('fileType', fileType); // Pass the file type
-  
-    try {
-      setSearchTriggered(true); // Refresh data after upload
-      const response = await axios.post(apiRoutes.uploadStorageData, formData, {
-        headers: {
-          'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`,
-          'Content-Type': 'multipart/form-data',
-        }
-      });
+    setReload(true);      
+
+    
+    // Trigger the API call again with the new page
+    axios.post(apiRoutes.uploadStorageData, formData, {
+      headers: {
+        'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`,
+        'Content-Type': 'multipart/form-data',
+      }
+    })
+    .then(response => {
       if(response.data.status == 200) {
         toast.success(`${response.data.message}`, { autoClose: true });
-        ReloadTable();
-        setSelectedFile(null); 
-        setFileType(""); 
-        setFileName(""); // Reset file name
         passToSuccessLogs(response.data, currentFileName);
       } else {
         toast.error(`${response.data.message}`, { autoClose: true });
         passToErrorLogs(response.data, currentFileName);
-
       }
-    } catch (error) {
-      toast.error("Failed to upload file.", { autoClose: true });
-    }
+      setSelectedFile(null); 
+      setFileType(""); 
+      setFileName(""); 
+      setReload(false);      
+    })
+    .catch(error => {
+      setReload(false);      
+      console.error('Failed to upload file.', error,  { autoClose: true });
+    });
   };
   
 
@@ -197,7 +204,7 @@ function StudentStorage() {
                     className="form-control form-control-sm rounded-5 text-xs"
                   />
                   <SoftButton
-                    className="ms-2 px-3 d-flex rounded-pill"
+                    className="ms-2 px-4 d-flex rounded-pill"
                     variant="gradient"
                     color="dark"
                     size="small"

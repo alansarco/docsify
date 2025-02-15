@@ -85,6 +85,11 @@ function Dashboard() {
         <DashboardNavbar RENDERNAV="1" />         
         <SoftBox px={2} py={3}>
           <SoftBox px={2} py={1} mb={2}>
+            {authUser.subscription_end && access == 30 &&
+              <SoftTypography textGradient color="primary" variant="h6">
+                Expires {authUser.subscription_end}
+                </SoftTypography> 
+              }   
             {authUser != "" && 
               <SoftTypography variant="h4">
                 Welcome back, <span className="text-info text-gradient h4">{authUser.first_name}!</span> 
@@ -92,7 +97,6 @@ function Dashboard() {
               <SoftTypography fontStyle="italic" color="inherit" fontSize="0.9rem">
                 DOCSIFY - {clientprovider ? clientname : "Document Request System"}
               </SoftTypography>
-              
           </SoftBox>
           <SoftBox mb={3}>
             <Grid container spacing={3}>

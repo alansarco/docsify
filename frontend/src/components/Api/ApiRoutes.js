@@ -45,6 +45,7 @@ export const apiRoutes = {
     programSelect: `${mainRoute}/api/students/programselect`,
     retrieveStudentOne: `${mainRoute}/api/students/retrievestudent`,
     updateStudent: `${mainRoute}/api/students/updatestudent`,
+    uploadExcel: `${mainRoute}/api/students/uploadexcel`,
 
     sectionRetrieve: `${mainRoute}/api/sections`,
     addSection: `${mainRoute}/api/sections/addsection`,
@@ -115,18 +116,5 @@ export const apiRoutes = {
     downloadStorageData: `${mainRoute}/api/storages/downloadstoragedata`,
     uploadStorageData: `${mainRoute}/api/storages/uploadstoragedata`,
 
-
-
-
-
-
-
-
-
-
-
-
-    residentsRetrieve: `${mainRoute}/api/residents`,
-    uploadExcel: `${mainRoute}/api/accounts/uploadexcel`,
     // Add more routes here
 };  
