@@ -141,6 +141,7 @@ class DashboardController extends Controller
             DB::raw("DATE_FORMAT(clients.created_at, '%M %d, %Y %h:%i %p') AS created_date"))
             ->whereDate('clients.created_at', Carbon::today())
             ->orderBy('clients.created_at', 'DESC')
+            ->limit(10)
             ->get();
 
         $repnotifs = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
@@ -154,6 +155,7 @@ class DashboardController extends Controller
             ->where('requests.notify_indicator', 1)
             ->where('requests.status', '>=', 0)
             ->where('requests.status', '<', 4)
+            ->whereDate('requests.updated_at', Carbon::today())
             ->orderBy('requests.updated_at', 'DESC')
             ->limit(10)
             ->get();
@@ -169,6 +171,7 @@ class DashboardController extends Controller
             ->where('requests.clientid', $authUser->clientid)
             ->where('requests.notify_indicator', 1)
             ->where('requests.status', 1)
+            ->whereDate('requests.updated_at', Carbon::today())
             ->orderBy('requests.updated_at', 'DESC')
             ->limit(10)
             ->get();
@@ -182,6 +185,7 @@ class DashboardController extends Controller
             ->where('requests.notify_indicator', 1)
             ->where('requests.status', '>=', 0)
             ->where('requests.status', '<', 4)
+            ->whereDate('requests.updated_at', Carbon::today())
             ->orderBy('requests.updated_at', 'DESC')
             ->limit(10)
             ->get();

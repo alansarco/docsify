@@ -73,9 +73,9 @@ function Configurator() {
       >
         <SoftBox>
           <SoftTypography variant="h5">Notifications</SoftTypography>
-          <SoftTypography variant="body2" color="text">
-            {notifs && notifs.length > 0 ? "Active Request" : "No Active Request"}
-          </SoftTypography>
+            <SoftTypography variant="body2" color="text">
+              {notifs && notifs.length > 0 ? "Updates today" : "No updates for today"}
+            </SoftTypography>
         </SoftBox>
 
         <Icon
