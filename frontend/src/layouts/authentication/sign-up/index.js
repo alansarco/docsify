@@ -122,7 +122,7 @@ function SignUp() {
               "birthdate",
               "address",
               "email",
-          ];
+            ];
       
           // Add clientid as required only if role is not 999
           if (formData.role == 5) {
@@ -246,7 +246,7 @@ function SignUp() {
         <>
             {sendOTP && <FixedLoading />}     
             <SoftBox component="form" role="form" onSubmit={handleSubmit} className="d-flex px-4" height={{ xs: "100%", md: "100vh" }}>      
-            <Grid className="m-auto" spacing={3} container maxWidth={{ xs: "100%", md: "1500px" }} justifyContent="center">
+            <Grid className="m-auto" spacing={3} container maxWidth={{ xs: "100%", md: "1500px" }} >
                   <Grid item xs={12} lg={8}  >
                         <SoftBox mb={5} p={4} className="shadow-sm rounded-4 bg-white">
                               <SoftTypography fontWeight="medium" color="info" textGradient>
@@ -457,24 +457,29 @@ function SignUp() {
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Campus ID:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>                                                  
                                                   <SoftInput name="new_clientid" value={getCampusID(formData.new_clientid)} onChange={handleChange} size="small" /> 
                                             </Grid>  
                                             <Grid item xs={12} md={6} lg={6} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Campus Name:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="client_name" value={formData.client_name} onChange={handleChange} size="small" /> 
                                             </Grid>  
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Short Name:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="client_acr" value={formData.client_acr.toUpperCase()} onChange={handleChange} size="small" /> 
                                             </Grid>  
 
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Campus Email:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput type="email" name="client_email" value={formData.client_email} onChange={handleChange} size="small" /> 
                                             </Grid>  
                                             
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
                                                         <option value=""></option>
                                                         {subscriptionSelect && subscriptionSelect.map((sub) => (

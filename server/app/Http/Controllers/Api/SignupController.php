@@ -240,7 +240,6 @@ class SignupController extends Controller
                     if($add) {
                         if($request->role == 30) {
                             // Generate a unique 15-character license key
-                            // Generate a unique 15-character license key
                             do {
                                 $GeneratedLicense = Str::upper(Str::random(15)); // Generate a random string of 15 characters
                             } while (DB::table('license_keys')->where('license_key', $GeneratedLicense)->exists());
@@ -282,6 +281,10 @@ class SignupController extends Controller
                                 'details' => $request->username .' added campus '.$request->new_clientid. '-'.$request->client_name,
                                 'created_by' => $request->username,
                             ]);
+                            return response()->json([
+                                'status' => 200,
+                                'message' => 'Payment Successful and Account Verified! Please login.'
+                            ], 200);
                         }
                         return response()->json([
                             'status' => 200,

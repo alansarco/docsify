@@ -14,11 +14,15 @@ import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { getN } from "components/General/Utils";
 import { getNumber } from "components/General/Utils";
+import { useSignInData } from "layouts/authentication/sign-in/data/signinRedux";
+import { subscriptionSelect } from "components/General/Utils";
+import { formatCurrency } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
+      const { isLoading, status, rawData} = useSignInData();
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
@@ -37,6 +41,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             request_limit: DATA.request_limit == null ? "" : DATA.request_limit,
             request_timeout: DATA.request_timeout == null ? "" : DATA.request_timeout,
             file_limit: DATA.file_limit == null ? "" : DATA.file_limit,
+            subscription: "",
             agreement: false,   
       };
 
@@ -118,6 +123,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("request_limit", formData.request_limit);
                                     data.append("request_timeout", formData.request_timeout);
                                     data.append("file_limit", formData.file_limit);
+                                    data.append("subscription", formData.subscription);
                                     const response = await axios.post(apiRoutes.updateRepresentativeSettings, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
@@ -153,7 +159,6 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                         <SoftTypography fontWeight="bold" className="text-xs">
                               Please fill in the required fields. Rest assured that data is secured.     
                         </SoftTypography> 
-                        
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <Grid container spacing={0} alignItems="center">
@@ -219,6 +224,37 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 />
                                           </Grid>  
                                     </Grid>  
+                                    <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>
+                                          Extend License Subscription    
+                                    </SoftTypography> 
+                                    <ul className="text-danger fw-bold">
+                                          <li className="text-xxs fst-italic">
+                                                Make sure to renew/extend your license before subscription end to avoid campus account suspension
+                                          </li>
+                                          <li className="text-xxs fst-italic">
+                                                We will use your previous payment method
+                                          </li>
+                                    </ul>
+                                    <Grid container spacing={0} alignItems="center">
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                      <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
+                                                      <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
+                                                            <option value=""></option>
+                                                            {subscriptionSelect && subscriptionSelect.map((sub) => (
+                                                            <option key={sub.value} value={sub.value}>
+                                                                  {sub.desc}
+                                                            </option>
+                                                            ))}
+                                                      </select>
+                                                </Grid>
+                                                {rawData >= 0 &&
+                                                
+                                                <Grid item xs={12} md={6} lg={3} px={1}>
+                                                      <SoftTypography variant="button" className="me-1">Total Payment:</SoftTypography>
+                                                      <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
+                                                </Grid>  
+                                                }
+                                          </Grid>
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 

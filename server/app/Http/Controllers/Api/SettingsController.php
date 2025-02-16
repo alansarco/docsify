@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\LogAdmin;
 use App\Models\App_Info;
 use App\Models\Client;
+use App\Models\LicenseKey;
 use App\Models\LogRepresentative;
+use App\Models\SystemIncome;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Str;
 
 class SettingsController extends Controller
 {
@@ -343,6 +346,36 @@ class SettingsController extends Controller
                             ];
                         }
                     }
+                    $app_info = App_Info::select('price_per_day')->first();
+
+                    do {
+                        $GeneratedLicense = Str::upper(Str::random(15)); // Generate a random string of 15 characters
+                    } while (DB::table('license_keys')->where('license_key', $GeneratedLicense)->exists());
+
+                    if($app_info && $app_info->price_per_day && $request->subscription > 0) {
+                        $updateData['subscription_end'] = Carbon::parse($campusExist->subscription_end)->addDays($request->subscription);
+                        $updateData['current_payment'] = $app_info->price_per_day * $request->subscription;
+                        $updateData['total_payment'] = $campusExist->total_payment + ($app_info->price_per_day * $request->subscription);  
+                        $updateData['total_payment'] = $campusExist->total_payment + ($app_info->price_per_day * $request->subscription);  
+                        $updateData['license_key'] = $GeneratedLicense ;
+
+                        LicenseKey::create([
+                            'license_key' => $GeneratedLicense,
+                            'license_price' => $app_info->price_per_day * $request->subscription,
+                            'license_duration' => $request->subscription,
+                            'created_by' => $authUser->fullname,
+                            'license_client' => $campusExist->clientid,
+                            'license_date_use' => Carbon::today(),
+                        ]);
+                        
+                        SystemIncome::create([
+                            'price' => ($app_info->price_per_day * $request->subscription) ?? 0,
+                            'year_sold' => date('Y'), 
+                            'sold_to' => $campusExist->clientid,
+                            'created_by' => $authUser->fullname,
+                        ]);
+                    }
+
                     $update = Client::where('clientid', $request->clientid)->update($updateData);
     
                     if($update) {
