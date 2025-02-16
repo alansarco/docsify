@@ -80,6 +80,12 @@ function DashboardNavbar(props) {
   else if(access == 30) {
     notifs = adminnotifs?.repnotifs?.length || 0;
   }
+  else if(access == 10) {
+    notifs = adminnotifs?.regnotifs?.length || 0;
+  }
+  else if(access == 5) {
+    notifs = adminnotifs?.studentnotifs?.length || 0;
+  }
 
   useEffect(() => {
     const updateTimestamps = () => {

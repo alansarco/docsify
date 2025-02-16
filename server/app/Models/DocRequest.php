@@ -23,6 +23,7 @@ class DocRequest extends Model
         'contact',
         'status',
         'task_owner',
+        'notify_indicator',
         'completed_by',
         'date_completed',
         'created_by',

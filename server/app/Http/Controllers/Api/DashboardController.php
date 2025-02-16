@@ -135,35 +135,63 @@ class DashboardController extends Controller
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
 
-        $adminnotifs = User::select('id', 'username', 'role',
-            DB::raw("CONCAT(COALESCE(first_name, ''),' ',COALESCE(middle_name, ''),' ',COALESCE(last_name, '')) AS fullname"),
-            DB::raw("DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p') AS created_date"))
-            ->where('account_status', '!=', 1)
-            ->where('notify_indicator', '!=', 1)
-            ->where(function ($query) {
-                $query->where('role', 'REPRESENTATIVE')
-                      ->orWhere('role', 'ADMIN');
-            })
-            ->orderBy('created_at', 'DESC')
+        $adminnotifs = Client::leftJoin('users', 'clients.client_representative', 'users.username')
+            ->select('clients.clientid', 'clients.client_name',
+            DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS representative"),
+            DB::raw("DATE_FORMAT(clients.created_at, '%M %d, %Y %h:%i %p') AS created_date"))
+            ->whereDate('clients.created_at', Carbon::today())
+            ->orderBy('clients.created_at', 'DESC')
             ->get();
 
-        $repnotifs = User::select('id', 'username', 'role',
-            DB::raw("CONCAT(COALESCE(first_name, ''),' ',COALESCE(middle_name, ''),' ',COALESCE(last_name, '')) AS fullname"),
-            DB::raw("DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p') AS created_date"))
-            ->where('clientid', $authUser->clientid)
-            ->where('account_status', '!=', 1)
-            ->where('notify_indicator', '!=', 1)
-            ->where(function ($query) {
-                $query->where('role', 'REGISTRAR')
-                      ->orWhere('role', 'USER');
-            })
-            ->orderBy('created_at', 'DESC')
+        $repnotifs = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+            ->leftJoin('users', 'requests.task_owner', 'users.username')
+            ->select('requests.reference_no', 'requests.clientid', 'requests.username', 
+                'requests.status', 'requests.notify_indicator', 'documents.doc_name', 
+                DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS task_owner"),
+                DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
+                DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"))
+            ->where('requests.clientid', $authUser->clientid)
+            ->where('requests.notify_indicator', 1)
+            ->where('requests.status', '>=', 0)
+            ->where('requests.status', '<', 4)
+            ->orderBy('requests.updated_at', 'DESC')
+            ->limit(10)
+            ->get();
+
+        $regnotifs = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+            ->leftJoin('users', 'requests.task_owner', 'users.username')
+            ->select('requests.reference_no', 'requests.clientid', 'requests.username', 
+                'requests.status', 'requests.notify_indicator', 'documents.doc_name', 
+                DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS task_owner"),
+                DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"),
+                DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
+                )
+            ->where('requests.clientid', $authUser->clientid)
+            ->where('requests.notify_indicator', 1)
+            ->where('requests.status', 1)
+            ->orderBy('requests.updated_at', 'DESC')
+            ->limit(10)
+            ->get();
+
+        $studentnotifs = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+            ->select('requests.reference_no', 'requests.clientid', 'requests.username', 
+                'requests.status', 'requests.notify_indicator', 'documents.doc_name', 
+            DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"))
+            ->where('requests.clientid', $authUser->clientid)
+            ->where('requests.username', $authUser->username)
+            ->where('requests.notify_indicator', 1)
+            ->where('requests.status', '>=', 0)
+            ->where('requests.status', '<', 4)
+            ->orderBy('requests.updated_at', 'DESC')
+            ->limit(10)
             ->get();
 
         
         $adminnotifs = [
             'adminnotifs' => $adminnotifs,
             'repnotifs' => $repnotifs,
+            'regnotifs' => $regnotifs,
+            'studentnotifs' => $studentnotifs,
         ];
         if($adminnotifs) {
             return response()->json([

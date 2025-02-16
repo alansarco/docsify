@@ -28,6 +28,10 @@ import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
 import SoftBadge from "components/SoftBadge";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "context/ContextProvider";
+import StudentRoot from "./StudentRoot";
+import RegistrarRoot from "./RegistrarRoot";
+import RepRoot from "./RepRoot";
+import AdminRoot from "./AdminRoot";
 
 function Configurator() {
   const [controller, dispatch] = useSoftUIController();
@@ -44,11 +48,16 @@ function Configurator() {
   else if(access == 30) {
     notifs = adminnotifs?.repnotifs;
   }
+  else if(access == 10) {
+    notifs = adminnotifs?.regnotifs;
+  }
+  else if(access == 5) {
+    notifs = adminnotifs?.studentnotifs;
+  }
   const navigate = useNavigate(); 
   
   const handleViewRequest = () => {
     setOpenConfigurator(dispatch, false); 
-    // navigate("/ongoing");  
   };
   
   const handleCloseConfigurator = () => setOpenConfigurator(dispatch, false); 
@@ -84,29 +93,18 @@ function Configurator() {
         </Icon>
       </SoftBox>
       <Divider />
-      {notifs && notifs.length > 0 && notifs.map((notif) => (
-      <SoftBox key={notif.id} py={2} px={3} className="border-bottom SoftBox cursor-pointer" onClick={handleViewRequest}>
-          <SoftBox display="flex">
-            <SoftTypography variant="h6">{notif.fullname}</SoftTypography>
-            <SoftBadge 
-              badgeContent={notif.role === "USER" ? "student" : notif.role} 
-              variant="gradient" 
-              color={notif.role === "REPRESENTATIVE" ? "dark" 
-                  : notif.role === "REGISTRAR" ? "warning"
-                  : "info"} 
-              size="sm" />
-          </SoftBox>
-          <SoftBox display="flex">
-            <SoftTypography variant="h6" color="secondary" className="text-xxs">{notif.username}</SoftTypography>
-            {/* contained */}
-          </SoftBox>
-          <SoftBox mt={1}>
-            {/* <SoftTypography className="text-xxs" color="dark" ><b>Date Added: </b>{adminnotif.created_date}</SoftTypography> */}
-            <SoftTypography className="text-xxs" color="dark" >{notif.created_date}</SoftTypography>
-          </SoftBox> 
-          
-        </SoftBox>
-       ))}
+      {access == 999 &&
+        <AdminRoot notifs={notifs} handleViewRequest={handleViewRequest} />
+      }
+      {access == 30 &&
+        <RepRoot notifs={notifs} handleViewRequest={handleViewRequest} />
+      }
+      {access == 10 &&
+        <RegistrarRoot notifs={notifs} handleViewRequest={handleViewRequest} />
+      }
+      {access == 5 &&
+        <StudentRoot notifs={notifs} handleViewRequest={handleViewRequest} />
+      }
     </ConfiguratorRoot>
   );
 }

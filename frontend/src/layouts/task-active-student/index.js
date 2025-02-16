@@ -19,7 +19,7 @@ import { DynamicTableHeight } from "components/General/TableHeight";
 import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import DataContainer from "layouts/task-active-student/components/DataContainer";
 
 import Table from "layouts/task-active-student/data/table";
@@ -36,6 +36,10 @@ import Add from "layouts/task-active-student/components/Add";
 import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
 
 function StudentActiveRequest() {
+    const location = useLocation();
+    const { passedData, render } = location.state || {};
+    const [DATA, setDATA] = useState(); 
+    const [rendering, setRendering] = useState(1);
     const currentFileName = "layouts/task-active-student/index.js";
     const {token, access, updateTokenExpiration} = useStateContext();
     updateTokenExpiration();
@@ -100,8 +104,6 @@ function StudentActiveRequest() {
         }
     };
 
-    const [DATA, setDATA] = useState(); 
-    const [rendering, setRendering] = useState(1);
     const [fetchdata, setFetchdata] = useState([]);
     const tableHeight = DynamicTableHeight();  
 
