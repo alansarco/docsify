@@ -55,6 +55,7 @@ function SignUp() {
             middle_name: "",
             last_name: "",
             id_picture: null,
+            school_id: null,
             gender: "",
             contact: "",
             birthdate: "",
@@ -101,6 +102,20 @@ function SignUp() {
                       e.target.value = null;
                   }
             } 
+            else if (type === "file" && name === "school_id") {
+                  const file = files[0];
+                  if (file && (file.type === "application/png" || 
+                          file.type === "image/jpeg" ||
+                          file.name.endsWith(".jpg") ||
+                          file.name.endsWith(".jpeg") ||
+                          file.name.endsWith(".png")
+                    )) {
+                      setFormData({ ...formData, school_id: file });
+                  } else {
+                      toast.error("Only .png and .jpg images are allowed");
+                      e.target.value = null;
+                  }
+            } 
             else {
                   setFormData({ ...formData, [name]: value });
             }
@@ -127,6 +142,7 @@ function SignUp() {
           // Add clientid as required only if role is not 999
           if (formData.role == 5) {
               requiredFields.push("clientid");
+              requiredFields.push("school_id");
           }
           if (formData.role == 30) {
             requiredFields.push("cardname");
@@ -163,6 +179,7 @@ function SignUp() {
               data.append("middle_name", formData.middle_name);
               data.append("last_name", formData.last_name);
               data.append("id_picture", formData.id_picture);
+              data.append("school_id", formData.school_id);
               data.append("gender", formData.gender);
               data.append("contact", formData.contact);
               data.append("birthdate", formData.birthdate);
@@ -244,7 +261,6 @@ function SignUp() {
         <>  
         {status == 1 && !isLoading ? 
         <>
-            {sendOTP && <FixedLoading />}     
             <SoftBox component="form" role="form" onSubmit={handleSubmit} className="d-flex px-4" height={{ xs: "100%", md: "100vh" }}>      
             <Grid className="m-auto" spacing={3} container maxWidth={{ xs: "100%", md: "1500px" }} >
                   <Grid item xs={12} lg={8}  >
@@ -330,14 +346,6 @@ function SignUp() {
                                                             </SoftBox>
                                                       )}
                                                       </SoftBox>
-                                                {/* <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="clientid" value={formData.clientid} onChange={handleChange} >
-                                                <option value="">--- Select Campus ---</option>
-                                                      {fetchclients && fetchclients.map((school) => (
-                                                      <option key={school.clientid} value={school.clientid}>
-                                                            {school.client_name}
-                                                      </option>
-                                                      ))}
-                                                </select> */}
                                               </Grid> 
                                             </>
                                             }
@@ -391,7 +399,7 @@ function SignUp() {
                                                   <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={4} px={1}>
-                                                  <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
+                                                  <SoftTypography variant="button" className="me-1">Profile Picture:</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <input
                                                         type="file"
@@ -430,7 +438,7 @@ function SignUp() {
                                                   </select>
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={2} px={1}>
-                                                  <SoftTypography variant="button" className="me-1"> Year Enrolled: </SoftTypography>
+                                                  <SoftTypography variant="button" className="me-1 text-nowrap"> Year Enrolled: </SoftTypography>
                                                   <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="year_enrolled" value={formData.year_enrolled} onChange={handleChange} >
                                                         <option value=""></option>
                                                         {years && years.map((year) => (
@@ -440,16 +448,27 @@ function SignUp() {
                                                         ))}
                                                   </select>
                                             </Grid>
+                                            <Grid item xs={12} md={6} lg={4} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">School ID:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                  <input
+                                                        type="file"
+                                                        name="school_id"
+                                                        accept="image/*"
+                                                        className="form-control form-control-sm rounded-5 text-xs"
+                                                        onChange={handleChange}
+                                                  />
+                                            </Grid> 
                                             </>
                                             }
                                           </Grid> 
+                                          {formData.role == 30 &&
+                                          <>
                                           <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                                 Campus Information    
                                           </SoftTypography> 
                                           <Grid container spacing={0} alignItems="center">
                                           
-                                          {formData.role == 30 &&
-                                            <>
                                             <Grid item xs={12} px={1}>
                                                 <ul className="text-danger fw-bold">
                                                       <li className="text-xxs fst-italic">You may complete campus information after successful signup</li>
@@ -496,9 +515,9 @@ function SignUp() {
                                                   <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
                                             </Grid>  
                                             }
-                                            </>
-                                            }
                                           </Grid>
+                                          </>
+                                          }
                                           <Grid mt={3} container spacing={0} alignItems="center">
                                             <Grid item xs={12} pl={1}>
                                                   <Checkbox 

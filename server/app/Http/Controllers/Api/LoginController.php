@@ -111,7 +111,7 @@ class LoginController extends Controller {
         select('*', 
             DB::raw("CONCAT(IFNULL(first_name, ''), ' ', IFNULL(middle_name, ''), ' ', IFNULL(last_name, '')) as fullname"),
             DB::raw("TO_BASE64(id_picture) as id_picture"),
-            DB::raw("TO_BASE64(id_picture) as id_picture"),
+            DB::raw("TO_BASE64(requirement) as requirement"),
             DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
             DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),

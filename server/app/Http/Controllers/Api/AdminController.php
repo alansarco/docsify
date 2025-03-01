@@ -265,7 +265,7 @@ class AdminController extends Controller
                             LogAdmin::create([
                                 'module' => 'Admin Accounts',
                                 'action' => 'UPDATE',
-                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
+                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in Profile Picture',
                                 'created_by' => $authUser->fullname,
                             ]);
                         }
@@ -334,6 +334,7 @@ class AdminController extends Controller
 
         $user = User::select('*',
             DB::raw("TO_BASE64(id_picture) as id_picture"),
+            DB::raw("TO_BASE64(requirement) as requirement"),
             DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
             DB::raw("CONCAT(DATE_FORMAT(last_online, '%M %d, %Y %h:%i %p')) as last_online"),
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),

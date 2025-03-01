@@ -62,6 +62,7 @@ class SignupController extends Controller
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+                    'school_id' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
                 ]);
             }
 
@@ -170,6 +171,7 @@ class SignupController extends Controller
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
+                    'school_id' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
                 ]);
             }
     
@@ -182,9 +184,14 @@ class SignupController extends Controller
             else {
                 try {
                     $pictureData = null; // Initialize the variable to hold the file path
+                    $shoolIDData = null; // Initialize the variable to hold the file path
                     if ($request->hasFile('id_picture')) {
                         $file = $request->file('id_picture');
                         $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
+                    }
+                    if ($request->hasFile('school_id')) {
+                        $file = $request->file('school_id');
+                        $shoolIDData = file_get_contents($file->getRealPath()); // Get the file content as a string
                     }
 
                     $clientid = $request->role == 30 ? $request->new_clientid : $request->clientid;
@@ -229,6 +236,7 @@ class SignupController extends Controller
                         'grade' => $grade,   
                         'year_enrolled' => $year_enrolled,   
                         'id_picture' => $pictureData,   
+                        'requirement' => $shoolIDData,   
                         'birthdate' => $request->birthdate,  
                         'account_status' => $account_status,  
                         'updated_by' => $request->first_name,

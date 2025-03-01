@@ -15,6 +15,7 @@ import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 import BackupTwoToneIcon from '@mui/icons-material/BackupTwoTone';
 import ImportContactsTwoToneIcon from '@mui/icons-material/ImportContactsTwoTone';
 import KeyOffTwoToneIcon from '@mui/icons-material/KeyOffTwoTone';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 
 // React layouts
 import SignIn from "layouts/authentication/sign-in";
@@ -46,6 +47,7 @@ import HistoryTask from "layouts/task-history";
 import StudentHistoryRequest from "layouts/task-history-student";
 import StudentActiveRequest from "layouts/task-active-student";
 import StudentStorage from "layouts/student-storage";
+import Transferees from "layouts/transferees";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -167,6 +169,18 @@ const routes = (access) => [
     route: "/programs",
     icon: <TerminalTwoToneIcon size="12px" />,
     component: <Programs />,
+    noCollapse: true,
+  },
+
+  //transfer-pages
+  access == 30 && { type: "title", title: "Transfer Pages", key: "transfer-pages" },
+  access == 30 && {
+    type: "collapse",
+    name: "Transferees",
+    key: "transferees",
+    route: "/transferees",
+    icon: <TransferWithinAStationIcon size="12px" />,
+    component: <Transferees />,
     noCollapse: true,
   },
 

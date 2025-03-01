@@ -286,7 +286,7 @@ class RegistrarController extends Controller
                                 'clientid' => $authUser->clientid,
                                 'module' => 'Registrar Accounts',
                                 'action' => 'UPDATE',
-                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in ID picture',
+                                'details' => $authUser->fullname . ' updated account '. $request->username .' with changes in Profile Picture',
                                 'created_by' => $authUser->fullname,
                             ]);
                         }
@@ -361,6 +361,7 @@ class RegistrarController extends Controller
             'clients.client_acr',
             'clients.clientid',
             DB::raw("TO_BASE64(users.id_picture) as id_picture"),
+            DB::raw("TO_BASE64(users.requirement) as requirement"),
             DB::raw("TO_BASE64(clients.client_logo) as client_logo"),
             DB::raw("TO_BASE64(clients.client_banner) as client_banner"),
             DB::raw("CONCAT(DATE_FORMAT(users.birthdate, '%M %d, %Y')) as birthday"),

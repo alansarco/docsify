@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\SignupController;
-use App\Http\Controllers\Api\ResidentController;
 use App\Http\Controllers\Api\RepresentativeController;
 use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\SectionController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\StudentRequestController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TransfereeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -184,8 +184,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('uploadstoragedata', [StorageController::class, 'uploadstoragedata']);
     });
 
-    Route::prefix('residents')->group(function () {
-        Route::post('/', [ResidentController::class, 'index']);
+    Route::prefix('transferees')->group(function () {
+        Route::post('/', [TransfereeController::class, 'index']);
+        Route::post('addtransferee', [TransfereeController::class, 'addtransferee']);
+        Route::get('deletetransferrequest', [TransfereeController::class, 'deletetransferrequest']);
+        Route::get('rejecttransferrequest', [TransfereeController::class, 'rejecttransferrequest']);
+        Route::get('approvetransferrequest', [TransfereeController::class, 'approvetransferrequest']);
     });
+    Route::get('studentselect', [TransfereeController::class, 'studentselect']);
 
 });

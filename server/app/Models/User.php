@@ -33,6 +33,7 @@ class User extends Authenticatable
         'email', 
         'gender', 
         'id_picture', 
+        'requirement',
         'address', 
         'grade', 
         'section', 

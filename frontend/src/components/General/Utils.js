@@ -14,6 +14,7 @@ export const moduleSelect = [
       { value: "Programs", desc: "Programs" },
       { value: "Requests", desc: "Requests" },
       { value: "Settings", desc: "Settings" },
+      { value: "Transferees", desc: "Transferees" },
 ];
 
 export const minPaymenSelect = [

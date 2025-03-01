@@ -116,5 +116,14 @@ export const apiRoutes = {
     downloadStorageData: `${mainRoute}/api/storages/downloadstoragedata`,
     uploadStorageData: `${mainRoute}/api/storages/uploadstoragedata`,
 
+    transfereeRetrieve: `${mainRoute}/api/transferees`,
+    addTransferee: `${mainRoute}/api/transferees/addtransferee`,
+    deleteTransferRequest: `${mainRoute}/api/transferees/deletetransferrequest`,
+    rejectTransferRequest: `${mainRoute}/api/transferees/rejecttransferrequest`,
+    approveTransferRequest: `${mainRoute}/api/transferees/approvetransferrequest`,
+
+    studentSelect: `${mainRoute}/api/studentselect`,
+
+
     // Add more routes here
 };  

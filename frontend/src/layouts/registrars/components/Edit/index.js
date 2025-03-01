@@ -188,7 +188,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
                                           </Grid>
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1">ID Picture:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1">Profile Picture:</SoftTypography>
                                                 <input
                                                       type="file"
                                                       name="id_picture"
