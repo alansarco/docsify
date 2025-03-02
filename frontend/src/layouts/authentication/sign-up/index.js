@@ -261,6 +261,7 @@ function SignUp() {
         <>  
         {status == 1 && !isLoading ? 
         <>
+            {sendOTP && <FixedLoading />}     
             <SoftBox component="form" role="form" onSubmit={handleSubmit} className="d-flex px-4" height={{ xs: "100%", md: "100vh" }}>      
             <Grid className="m-auto" spacing={3} container maxWidth={{ xs: "100%", md: "1500px" }} >
                   <Grid item xs={12} lg={8}  >

@@ -67,7 +67,6 @@ class ProgramController extends Controller
         $validator = Validator::make($request->all(), [ 
             'program_name' => 'required',
             'program_acr' => 'required',
-            'status' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -86,7 +85,7 @@ class ProgramController extends Controller
             'clientid' => $authUser->clientid,
             'program_name' => $request->program_name,
             'program_acr' => strtoupper($request->program_acr),
-            'status' => $request->status,
+            'status' => 1,
             'created_by' => $authUser->fullname
         ]);
 

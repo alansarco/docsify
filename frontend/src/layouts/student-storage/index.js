@@ -161,6 +161,7 @@ function StudentStorage() {
       if(response.data.status == 200) {
         toast.success(`${response.data.message}`, { autoClose: true });
         passToSuccessLogs(response.data, currentFileName);
+        ReloadTable();
       } else {
         toast.error(`${response.data.message}`, { autoClose: true });
         passToErrorLogs(response.data, currentFileName);
