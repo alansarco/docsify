@@ -1,5 +1,5 @@
-// export const mainRoute = "http://127.0.0.1:8000";
-export const mainRoute = "https://docsify-7ygpq.ondigitalocean.app";
+export const mainRoute = "http://127.0.0.1:8000";
+// export const mainRoute = "https://docsify-7ygpq.ondigitalocean.app";
 
 export const apiRoutes = {  
     login: `${mainRoute}/api/login`,
