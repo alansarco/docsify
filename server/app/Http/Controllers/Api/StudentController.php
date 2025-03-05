@@ -334,7 +334,7 @@ class StudentController extends Controller
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
         
-        if($authUser->role !== "ADMIN" || $authUser->access_level < 999) {
+        if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);

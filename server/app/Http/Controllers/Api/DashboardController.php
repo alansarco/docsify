@@ -144,19 +144,14 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        $repnotifs = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
-            ->leftJoin('users', 'requests.task_owner', 'users.username')
-            ->select('requests.reference_no', 'requests.clientid', 'requests.username', 
-                'requests.status', 'requests.notify_indicator', 'documents.doc_name', 
-                DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS task_owner"),
-                DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
-                DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"))
-            ->where('requests.clientid', $authUser->clientid)
-            ->where('requests.notify_indicator', 1)
-            ->where('requests.status', '>=', 0)
-            ->where('requests.status', '<', 4)
-            ->whereDate('requests.updated_at', Carbon::today())
-            ->orderBy('requests.updated_at', 'DESC')
+        $repnotifs = User::leftJoin('clients', 'users.clientid', 'clients.clientid')
+            ->select('users.username', 'users.clientid', 'users.account_status',
+                DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS fullname"),
+                DB::raw("DATE_FORMAT(users.created_at, '%M %d, %Y %h:%i %p') AS created_date"))
+            ->where('users.clientid', $authUser->clientid)
+            ->where('users.account_status', 0)
+            ->whereRaw('users.created_at = users.updated_at') 
+            ->orderBy('users.created_at', 'DESC')
             ->limit(10)
             ->get();
 

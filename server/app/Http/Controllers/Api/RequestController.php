@@ -350,11 +350,6 @@ class RequestController extends Controller
 
         $today = Carbon::today();
 
-        $updateRequest = [
-            'status' => $request->status,
-            'updated_at' => $today,
-            'updated_by' => $authUser->fullname,
-        ];
 
 
         $createTimeline = [
@@ -366,9 +361,13 @@ class RequestController extends Controller
             'created_at' => $today,
             'updated_by' => $authUser->fullname,
         ];
-
-        $update = DocRequest::where('reference_no', $request->reference_no)->update($updateRequest);
-        
+        $update = DocRequest::where('reference_no', $request->reference_no)
+        ->limit(1) // Ensures only one record is affected
+        ->update([
+            'status' => $request->status,
+            'updated_by' => $authUser->fullname,
+        ]);
+    
         if($update) {
             DocReqTimeline::create($createTimeline);
 

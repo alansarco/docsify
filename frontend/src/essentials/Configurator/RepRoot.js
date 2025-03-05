@@ -16,7 +16,7 @@ function RepRoot({handleViewRequest, notifs}) {
         setDATA(data);
         setRendering(2);
         handleViewRequest();
-        navigate("/active-requests", {
+        navigate("/students", {
             state: { passedData: data, render: 2 }
         });
     
@@ -25,14 +25,14 @@ function RepRoot({handleViewRequest, notifs}) {
     return (
         <SoftBox>
             {notifs && notifs.length > 0 && notifs.map((notif) => (
-            <SoftBox key={notif.reference_no} py={2} px={3} className="border-bottom SoftBox cursor-pointer" 
-                onClick={() => HandleDATA(notif.reference_no)}>
+            <SoftBox key={notif.username} py={2} px={3} className="border-bottom SoftBox cursor-pointer" 
+                onClick={() => HandleDATA(notif.username)}>
                 <SoftBox display="flex">
-                    <SoftTypography variant="h6">{notif.doc_name}</SoftTypography>
+                    <SoftTypography variant="h6">{notif.fullname}</SoftTypography>
                     <SoftBadge 
-                    badgeContent={getStatus(notif.status)} 
+                    badgeContent={getStatus(notif.account_status)} 
                     variant="gradient" 
-                    color={getStatusColor(notif.status)} 
+                    color={getStatusColor(notif.account_status)} 
                     size="sm" 
                     />
                 </SoftBox>
@@ -40,13 +40,7 @@ function RepRoot({handleViewRequest, notifs}) {
                     <SoftTypography variant="h6" color="secondary" className="text-xxs">{notif.username}</SoftTypography>
                 </SoftBox>
                 <SoftBox mt={1}>
-                    <SoftTypography className="text-xxs" color="dark" > <b>Assigned:</b> {notif.task_owner}</SoftTypography>
-                </SoftBox> 
-                <SoftBox mt={0}>
-                    <SoftTypography className="text-xxs" color="dark" > <b>Target Finish:</b> {notif.date_needed}</SoftTypography>
-                </SoftBox> 
-                <SoftBox mt={0}>
-                    <SoftTypography className="text-xxs" color="dark" > <b>Updated:</b> {notif.updated_date}</SoftTypography>
+                    <SoftTypography className="text-xxs" color="dark" > <b>Created Date:</b> {notif.created_date}</SoftTypography>
                 </SoftBox> 
                 
                 </SoftBox>

@@ -105,7 +105,7 @@ class UsersController extends Controller
                             throw new \Exception("Row $rowNumber: Email account already taken");
                         }
                         
-                        $hashedPassword = Hash::make($email);
+                        $hashedPassword = Hash::make($contact);
 
                         UserUpload::updateOrCreate(
                             ['username' => $username],

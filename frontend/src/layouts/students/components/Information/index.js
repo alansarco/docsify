@@ -59,7 +59,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
             toast.error(messages.prohibit, { autoClose: true });
           }
           else {  
-            axios.get(apiRoutes.deleteRepresentative, { params: { username }, headers })
+            axios.get(apiRoutes.deleteStudent, { params: { username }, headers })
               .then(response => {
                 if (response.data.status == 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
@@ -157,7 +157,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
                 </SoftButton>
               </SoftBox>
             </Grid>
-            {access >= 10 && role === "ADMIN" && 
+            {access == 30 && 
             <Grid item xs={12} sm={4} md={2} pl={1}>
               <SoftBox mt={2} display="flex" justifyContent="end">
                 <SoftButton onClick={handleDelete} variant="gradient" color="info" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small">

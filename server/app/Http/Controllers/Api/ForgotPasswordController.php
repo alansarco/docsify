@@ -45,7 +45,7 @@ class ForgotPasswordController extends Controller
                             $otp = Str::random(6);
                             $existingOTP = OTP::where('id', $otp)->first();
                     }
-                    $otpSent = Mail::to($user->username)->send(new OtpStringsEmail($otp));
+                    $otpSent = Mail::to($user->email)->send(new OtpStringsEmail($otp));
         
                     $newOTP = OTP::create([
                             'id' => $otp,
@@ -117,7 +117,7 @@ class ForgotPasswordController extends Controller
         }
 
         $checkpass = new Utils;
-        $checkpass = $checkpass->checkPassword($request->password);
+        $checkpass = $checkpass->checkPassword($request->newpassword);
         if($checkpass) return $checkpass;
 
         $hashedPassword = Hash::make($request->newpassword);

@@ -237,7 +237,6 @@ function InactiveCampus() {
                                 </option>
                                 ))}
                               </select>
-                              <SoftTypography variant="button" className="me-1">Gender:</SoftTypography>
                               <SoftTypography variant="button" className="me-1">Max. Payment:</SoftTypography>
                               <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="max_payment" value={formData.max_payment} onChange={handleChange} >
                                 <option value="">-- Select --</option>
