@@ -26,7 +26,6 @@ class DocRequest extends Model
         'notify_indicator',
         'completed_by',
         'date_completed',
-        'updated_at',
         'created_by',
         'updated_by'
     ];
