@@ -341,6 +341,16 @@ class RequestController extends Controller
                 'message' => 'Request not found!'
             ]);
         }
+        else if($checkrequest->status == 4) {
+            return response()->json([
+                'message' => 'Cannot update request, this has already been completed!'
+            ]);
+        }
+        else if($checkrequest->status > 4) {
+            return response()->json([
+                'message' => 'Cannot update request, this has already been cancelled/rejected!'
+            ]);
+        }
 
         if($checkrequest->task_owner != $authUser->username) {
             return response()->json([
