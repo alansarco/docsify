@@ -230,6 +230,7 @@ function SignUp() {
                                       toast.success(`${response.data.message}`, { autoClose: true });
                                       setSendOTP(false);
                                       passToSuccessLogs(response.data, currentFileName);
+                                      setFormData(initialState);
                                       return true; // Allow SweetAlert to close
                                   } else {
                                       toast.error(`${response.data.message}`, { autoClose: true });

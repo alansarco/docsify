@@ -48,8 +48,8 @@ function SignIn() {
   }, []);
 
   const [formData, setFormData] = useState({
-    username: 'docsifyadmin@gmail.com',
-    password: 'Admin123!',
+    username: '',
+    password: '',
     clientid: '',
   });
 
