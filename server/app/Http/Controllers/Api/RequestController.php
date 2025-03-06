@@ -239,8 +239,8 @@ class RequestController extends Controller
         )
         ->where('clientid', $authUser->clientid)
         ->where('reference_no', $request->data)
-        ->orderBy('status', 'DESC')
         ->orderBy('created_at', 'DESC')
+        ->orderBy('status', 'DESC')
         ->get();
 
         $statusRetrieved = DocReqTimeline::where('clientid', $authUser->clientid)
