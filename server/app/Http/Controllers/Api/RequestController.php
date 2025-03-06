@@ -13,6 +13,7 @@ use App\Models\LogRepresentative;
 use App\Models\Document;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class RequestController extends Controller
 {
@@ -360,8 +361,6 @@ class RequestController extends Controller
 
         $today = Carbon::today();
 
-
-
         $createTimeline = [
             'clientid' => $checkrequest->clientid,
             'reference_no' => $checkrequest->reference_no,
@@ -380,6 +379,21 @@ class RequestController extends Controller
     
         if($update) {
             DocReqTimeline::create($createTimeline);
+            if($authUser->contact) {
+                $details = $request->status_details;
+                $reference_no = $request->reference_no;
+                $message = "Hello! Your request with Refence Number of $reference_no is $getStatus\n\n"
+                    . "Details: $details\n";
+
+                $number = $authUser->contact;
+
+                Http::asForm()->post('https://semaphore.co/api/v4/messages', [
+                    'apikey' => '191998cd60101ec1f81b319a063fb06a',
+                    'number' => $number,
+                    'message' => $message,
+                    'sender_name' => '',
+                ]);
+            }
 
             LogRepresentative::create([
                 'clientid' => $authUser->clientid,
