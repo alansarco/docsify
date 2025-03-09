@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
 use App\Mail\AccoutApproveEmail;
 use App\Models\App_Info;
+use App\Models\DocRequest;
 use App\Models\LogRepresentative;
 use App\Models\StudentProgram;
 use App\Models\StudentSection;
@@ -343,6 +344,7 @@ class StudentController extends Controller
         $delete = User::where('username', $request->username)->delete();
 
         if($delete) {
+            DocRequest::where('username', $request->username)->where('status', '<', 2)->delete();
             LogRepresentative::create([
                 'clientid' => $authUser->clientid,
                 'module' => 'Student Accounts',

@@ -13,6 +13,7 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { useLocation, useNavigate } from "react-router-dom";
+import { validatePassword } from "components/General/Utils";
 
 function areRequiredFieldsFilled(formData) {
       const requiredFields = [
@@ -33,6 +34,7 @@ function Security() {
       const location = useLocation();
       const [submitPass, setSubmitPass] = useState(false);
       const {token} = useStateContext();  
+      const [passwordError, setPasswordError] = useState("");
       const navigate = useNavigate();
 
       const YOUR_ACCESS_TOKEN = token; 
@@ -54,6 +56,9 @@ function Security() {
       const handleChange = (e) => {
             const { name, value } = e.target;
             setFormData({ ...formData, [name]: value });
+            if (name === "newpass") {
+                  setPasswordError(validatePassword(value));
+            }
       };
             
       const handleSubmit = async (e) => {
@@ -98,13 +103,19 @@ function Security() {
                         </SoftTypography>
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
-                                    <Grid container mt={2} spacing={0} alignItems="center">
+                                    <Grid container mt={2} spacing={0} alignItems="top">
                                           <Grid item xs={12} md={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1 text-nowrap">New Password:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-danger text-xs"> *</SoftTypography>
+                                                
                                           </Grid>
                                           <Grid item xs={12} md={4} px={1}>
                                                 <SoftInput name="newpass"  value={formData.newpass} onChange={handleChange} size="small" /> 
+                                                {passwordError && (
+                                                      <SoftTypography variant="caption" className="text-danger fst-italic">
+                                                      {passwordError}
+                                                      </SoftTypography>
+                                                )}
                                           </Grid>
                                     </Grid>
                                     <Grid container mt={2} spacing={0} alignItems="center">

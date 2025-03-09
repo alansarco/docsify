@@ -22,6 +22,7 @@ import visa from "assets/images/logos/visa.png";
 import mastercard from "assets/images/logos/mastercard.png";
 import visamaster from "assets/images/logos/visa-master.png";
 import { getLRN, getCampusID } from "components/General/Utils";
+import { validatePassword } from "components/General/Utils";
 
 function SignUp() {
       const currentFileName = "layouts/authentication/sign-up/index.js";
@@ -31,6 +32,7 @@ function SignUp() {
       const [fetchclients, setFetchClients] = useState([]);
       const [showOptions, setShowOptions] = useState(false);
       const [selectedCampusName, setSelectedCampusName] = useState("");
+      const [passwordError, setPasswordError] = useState("");
 
       if (token) {
         return <Navigate to="/dashboard" />
@@ -118,6 +120,9 @@ function SignUp() {
             } 
             else {
                   setFormData({ ...formData, [name]: value });
+                  if (name === "password") {
+                        setPasswordError(validatePassword(value));
+                  }
             }
       };
             
@@ -292,7 +297,7 @@ function SignUp() {
                                               </select>
                                             </Grid>
                                           </Grid>    
-                                          <Grid container spacing={0} alignItems="center">
+                                          <Grid container spacing={0} alignItems="top">
                                             {formData.role == 5 &&
                                             <>
                                               <Grid item xs={12} md={6} lg={4} px={1}>
@@ -362,6 +367,11 @@ function SignUp() {
                                                   <SoftTypography variant="button" className="me-1">Password:</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="password" value={formData.password} onChange={handleChange} size="small" /> 
+                                                {passwordError && (
+                                                      <SoftTypography variant="caption" className="text-danger fst-italic">
+                                                      {passwordError}
+                                                      </SoftTypography>
+                                                )}
                                             </Grid>     
                                           </Grid>    
                                           <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>

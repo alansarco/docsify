@@ -379,10 +379,15 @@ class RequestController extends Controller
     
         if($update) {
             DocReqTimeline::create($createTimeline);
+            $documentName = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+                ->select('documents.doc_name')
+                ->where('reference_no', $request->reference_no)->first();
+
             if($authUser->contact) {
                 $details = $request->status_details;
                 $reference_no = $request->reference_no;
-                $message = "Hello! Your request with Refence Number of $reference_no is $getStatus\n\n"
+                $documentName = $documentName->doc_name ?? '';
+                $message = "Hello! your Requested Document ($documentName) with Refence Number of $reference_no is $getStatus\n\n"
                     . "Details: $details\n";
 
                 $number = $authUser->contact;
