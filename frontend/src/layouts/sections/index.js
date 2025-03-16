@@ -189,7 +189,8 @@ function Sections() {
                 </SoftBox>
                 <SoftBox display="flex" >
                   <SoftBox component="form" role="form" className="d-flex align-items-center" onSubmit={handleSubmit}>
-                    <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border me-2" name="status" value={formData.status} onChange={handleChange} >
+                    <select className="form-select form-select-sm text-secondary cursor-pointer border me-2"
+                    style={{ borderRadius: "100px 100px 100px 100px" }}  name="status" value={formData.status} onChange={handleChange} >
                         <option value="">-- Select Status--</option>
                         {activeSelect && activeSelect.map((status) => (
                         <option key={status.value} value={status.value}>
