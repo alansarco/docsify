@@ -45,7 +45,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Representative?',
+      title: 'Delete Student?',
       text: "Are you sure you want to delete this account? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,

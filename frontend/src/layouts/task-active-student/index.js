@@ -34,6 +34,7 @@ import { useTheme } from "@emotion/react";
 import { activeStatusSelect, assignedSelect , currentDate} from "components/General/Utils";
 import Add from "layouts/task-active-student/components/Add";
 import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
+import SearchIcon from '@mui/icons-material/Search';
 
 function StudentActiveRequest() {
     const location = useLocation();
@@ -217,6 +218,17 @@ function StudentActiveRequest() {
                   </SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
+                  <SoftBox component="form" role="form" className="d-flex align-items-center" onSubmit={handleSubmit}>
+                    <SoftInput value={formData.filter} onChange={handleChange} placeholder="Search here..."
+                      name="filter" size="small" className="flex-grow-1"
+                      sx={{ borderRadius: "8px 0 0 8px" }} 
+                    />
+                    <SoftButton  variant="gradient" color="info" size="medium" type="submit" iconOnly 
+                      sx={{ borderRadius: "0 8px 8px 0" }} 
+                    >
+                      <SearchIcon />
+                    </SoftButton>
+                  </SoftBox>
                   <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                     <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
                   </SoftButton>
@@ -271,13 +283,7 @@ function StudentActiveRequest() {
                                   ))}
                             </select>
                             </SoftBox>
-                            <SoftInput 
-                              className="my-3"
-                              value={formData.filter}
-                              onChange={handleChange}
-                              placeholder="Search here..." name="filter" size="small"
-                            />
-                            <Grid container display="flex" justifyContent="end">
+                            <Grid container display="flex" justifyContent="end" mt={2}>
                               <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
                                 <SoftButton onClick={HandleClear}  className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="secondary" size="small" >
                                   clear

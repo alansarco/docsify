@@ -37,15 +37,15 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
-  const [menu, setMenu] = useState("profile");
+  const [menu, setMenu] = useState("edit");
 
   const setProfile = () => {
     setMenu("profile");
-    setTabValue(0);
+    setTabValue(1);
   };
   const setEdit = () => {
     setMenu("edit");
-    setTabValue(1);
+    setTabValue(0);
   };
 
   useEffect(() => {
@@ -175,8 +175,8 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
                 onChange={handleSetTabValue}
                 sx={{ background: "transparent" }}
               >
-                <Tab label="Information" onClick={setProfile} icon={<Cube />} />
                 <Tab label="Timeline" onClick={setEdit} icon={<Document />} />
+                <Tab label="Information" onClick={setProfile} icon={<Cube />} />
               </Tabs> 
             </AppBar>
           </Grid>

@@ -31,6 +31,7 @@ import { passToSuccessLogs } from "components/Api/Gateway";
 import CustomPagination from "components/General/CustomPagination";
 import TuneIcon from '@mui/icons-material/Tune';
 import { minPaymenSelect } from "components/General/Utils";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Licenses() {
   const currentFileName = "layouts/licenses/index.js";
@@ -175,16 +176,27 @@ function Licenses() {
                 <SoftTypography className="text-uppercase text-secondary" variant="h6" >License List</SoftTypography>
               </SoftBox>
               <SoftBox display="flex" >
-                <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
+                <SoftBox component="form" role="form" className="d-flex align-items-center" onSubmit={handleSubmit}>
+                  <SoftInput value={formData.filter} onChange={handleChange} placeholder="Search here..."
+                    name="filter" size="small" className="flex-grow-1"
+                    sx={{ borderRadius: "8px 0 0 8px" }} 
+                  />
+                  <SoftButton  variant="gradient" color="info" size="medium" type="submit" iconOnly 
+                    sx={{ borderRadius: "0 8px 8px 0" }} 
+                  >
+                    <SearchIcon />
+                  </SoftButton>
+                </SoftBox>
+                {/* <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
                   <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
-                </SoftButton>
+                </SoftButton> */}
                 <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
                   <Icon>add</Icon> Add License
                 </SoftButton>
               </SoftBox>
             </SoftBox>
-            <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
-              <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
+            <Grid container className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
+              <Grid item xs={12} className="p-4 rounded-5 bg-white shadow" width="100%">
                 <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                   {fetchdata && fetchdata.data && (fetchdata.data.length > 0) ? 
                     <Table table="sm" ReloadTable={ReloadTable} DATA={fetchdata.data} tablehead={tablehead} /> :
@@ -199,7 +211,7 @@ function Licenses() {
                 </SoftBox>
                 {fetchdata && fetchdata.data && fetchdata.data.length > 0 && <SoftBox>{renderPaginationLinks()}</SoftBox>}
               </Grid>
-              {showFilter &&
+              {/* {showFilter &&
               <Grid item xs={12} lg={3} mb={3}>
               <SoftBox component="form" role="form" className="ms-lg-3 px-3 px-4 mt-2 rounded-5 bg-white shadow" onSubmit={handleSubmit}>
                   <Grid container spacing={1} py={1} pb={2}>  
@@ -238,7 +250,7 @@ function Licenses() {
                   </Grid>
               </SoftBox>
               </Grid>
-              }
+              } */}
             </Grid>
           </SoftBox>
         </SoftBox>

@@ -1,5 +1,30 @@
 export const versions = [
     { 
+        version: "V1.1.250317", 
+        details: [
+            {
+                types: "update",
+                description: "Make Timeline tab show first before Information in active requests"
+            },
+            {
+                types: "bug",
+                description: "Shows 'Delete Representative' message when deleting student"
+            },
+            {
+                types: "new",
+                description: "Added preset filter when clicking cards in student dashboard"
+            },
+            {
+                types: "update",
+                description: "Transfer text filter above the table in all users UI"
+            },
+            {
+                types: "update",
+                description: "Joined timeline and information of request history"
+            },
+        ]
+    },
+    { 
         version: "V1.1.250316", 
         details: [
             {

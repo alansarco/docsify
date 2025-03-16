@@ -17,8 +17,14 @@ import FixedLoading from "components/General/FixedLoading";
 import { messages } from "components/General/Messages";
 import axios from "axios";  
 import { getStatus } from "components/General/Utils";
+import TimelineList from "essentials/Timeline/TimelineList";
+import HorizontalTimeline from "components/General/HorizontalTimeline";
+import TimelineItem from "essentials/Timeline/TimelineItem";
+import { getStatusColor } from "components/General/Utils";
+import { getStatusIcon } from "components/General/Utils";
+import SoftTypography from "components/SoftTypography";
 
-function Information({DATA, HandleRendering, ReloadTable}) {
+function Information({DATA, HandleRendering, ReloadTable, STATUS, TIMELINE}) {
   const [deleteUser, setDeleteUser] = useState(false);
   const currentFileName = "layouts/users/components/UserContainer/index.js";
 
@@ -34,61 +40,51 @@ function Information({DATA, HandleRendering, ReloadTable}) {
     ReloadTable();
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();     
-    Swal.fire({
-      customClass: {
-        title: 'alert-title',
-        icon: 'alert-icon',
-        confirmButton: 'alert-confirmButton',
-        cancelButton: 'alert-cancelButton',
-        container: 'alert-container',
-        popup: 'alert-popup'
-      },
-      title: 'Assign to you?',
-      text: "Are you sure you want to assign this request under your name? You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',  
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, I confirm it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setDeleteUser(true);
-          if (!token) {
-            toast.error(messages.prohibit, { autoClose: true });
-          }
-          else {  
-            axios.get(apiRoutes.assignToMe, { params: { reference_no }, headers })
-              .then(response => {
-                if (response.data.status == 200) {
-                  toast.success(`${response.data.message}`, { autoClose: true });
-                } else {
-                  toast.error(`${response.data.message}`, { autoClose: true });
-                }
-                passToSuccessLogs(response.data, currentFileName);
-                HandleRendering(1);
-                ReloadTable();
-                setDeleteUser(false);
-              })  
-              .catch(error => {
-                setDeleteUser(false);
-                toast.error("Cant assign request!", { autoClose: true });
-                passToErrorLogs(error, currentFileName);
-              });
-          }
-      }
-    })
-  };
-
-
   return (
     <>  
       {deleteUser && <FixedLoading /> }
       <SoftBox mt={5} mb={3} px={2}>
         <SoftBox p={4} className="shadow-sm rounded-4 bg-white" >
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} xl={8}>
+              <SoftBox mb={3} px={2}>      
+                  <SoftBox mb={5} px={4} className="shadow-sm rounded-4 bg-white">
+                        <SoftTypography fontWeight="medium" color="info" textGradient>
+                              Request Progress
+                        </SoftTypography>
+                        
+                        <SoftBox mt={2}>
+                              <SoftBox component="form" role="form" className="px-md-0 px-2" >
+                                    <HorizontalTimeline STATUS={STATUS} />
+                                    <TimelineList shadow="shadow-none" title="Timeline of Requested Document"  >
+                                    {(TIMELINE && TIMELINE.length < 0)  ?
+                                    <SoftTypography mt={0} color="dark" fontSize="0.8rem" className="text-center">
+                                    None for Today!
+                                    </SoftTypography> : ""
+                                    }
+                                    {TIMELINE && TIMELINE.map((time, index) => {
+                                    // Get the previous item's status_name
+                                    const prevStatusName = index > 0 ? TIMELINE[index - 1].status_name : null;
+
+                                    return (
+                                          <TimelineItem
+                                                key={index}
+                                                color={getStatusColor(time.status)}
+                                                icon={getStatusIcon(time.status)}
+                                                title={time.status_name === prevStatusName ? "" : time.status_name} // Set empty if same as previous
+                                                dateTime={time.created_date}
+                                                description={time.status_details}
+                                          />
+                                    );
+                                    })}
+
+                                    </TimelineList>
+                              </SoftBox>
+                        </SoftBox>
+                  </SoftBox>
+              </SoftBox>
+            </Grid>
+            <Grid item xs={12} xl={4}>
               <ProfileInfoCard
                 title="Request Information"
                 info={{
@@ -116,15 +112,6 @@ function Information({DATA, HandleRendering, ReloadTable}) {
                 </SoftButton>
               </SoftBox>
             </Grid>
-            {!DATA.task_owner &&
-            <Grid item xs={12} sm={4} md={2} pl={1}>
-              <SoftBox mt={2} display="flex" justifyContent="end">
-                <SoftButton onClick={handleDelete} variant="gradient" color="info" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small">
-                  Assign to me
-                </SoftButton>
-              </SoftBox>
-            </Grid>
-            }
           </Grid>   
         </SoftBox>
       </SoftBox>

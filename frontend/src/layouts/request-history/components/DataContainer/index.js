@@ -167,7 +167,7 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
               </SoftTypography>
             </SoftBox>
           </Grid>
-          <Grid item xs={12} md={5} sx={{ ml: "auto" }}>
+          <Grid item xs={12} md={3} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs
                 orientation={tabsOrientation}
@@ -176,14 +176,14 @@ function DataContainer({DATA, HandleRendering, ReloadTable}) {
                 sx={{ background: "transparent" }}
               >
                 <Tab label="Information" onClick={setProfile} icon={<Cube />} />
-                <Tab label="Timeline" onClick={setEdit} icon={<Document />} />
+                {/* <Tab label="Timeline" onClick={setEdit} icon={<Document />} /> */}
               </Tabs> 
             </AppBar>
           </Grid>
         </Grid>
       </Card>
     </SoftBox>
-    {menu === "profile" && <Information DATA={Data} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
+    {menu === "profile" && <Information DATA={Data} STATUS={maxstatus} TIMELINE={timeline} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
     {menu === "edit" && <Edit STATUS={maxstatus} TIMELINE={timeline} HandleRendering={HandleRendering} ReloadTable={ReloadTable} />}
     </>
   );

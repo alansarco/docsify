@@ -47,8 +47,18 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
       const initialState = {
             reference_no: DATA.reference_no,
             task_owner: DATA.task_owner == null ? "" : DATA.task_owner,
-            agreement: false,   
+            agreement: true,   
       };
+      
+      useEffect(() => {
+            if (DATA && Object.keys(DATA).length > 0) {
+              setFormData({
+                reference_no: DATA.reference_no || "",
+                task_owner: DATA.task_owner ?? "",
+                agreement: true,  
+              });
+            }
+      }, [DATA]);
 
       const [formData, setFormData] = useState(initialState);
 
@@ -168,7 +178,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                 </select>
                                           </Grid>
                                     </Grid>     
-                                    <Grid mt={3} container spacing={0} alignItems="center" className="px-md-4 px-0">
+                                    {/* <Grid mt={3} container spacing={0} alignItems="center" className="px-md-4 px-0">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 
                                                       className={` ${formData.agreement ? '' : 'border-2 border-info'}`} 
@@ -180,7 +190,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                 <SoftTypography variant="p" className="text-xxs text-white fst-italic">(Confirming that the information above are true and accurate) </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                           </Grid>
-                                    </Grid>
+                                    </Grid> */}
                                     </>
                                     }
                                     <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end" className="px-md-4 px-0">

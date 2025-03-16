@@ -35,6 +35,7 @@ import { statusSelect } from "components/General/Utils";
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTheme } from "@emotion/react";
 import { activeSelect } from "components/General/Utils";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Programs() {
     const currentFileName = "layouts/programs/index.js";
@@ -187,16 +188,32 @@ function Programs() {
                   <SoftTypography className="text-uppercase text-dark" variant="h6" >Program List</SoftTypography>
                 </SoftBox>
                 <SoftBox display="flex" >
-                  <SoftButton onClick={() => setShowFilter(!showFilter)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color={showFilter ? 'secondary' : 'success'} size="small" >
-                    <TuneIcon size="15px" className="me-1" /> {showFilter ? 'hide' : 'show'} filter
-                  </SoftButton>
+                  <SoftBox component="form" role="form" className="d-flex align-items-center" onSubmit={handleSubmit}>
+                    <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border me-2" name="status" value={formData.status} onChange={handleChange} >
+                        <option value="">-- Select Status--</option>
+                        {activeSelect && activeSelect.map((status) => (
+                        <option key={status.value} value={status.value}>
+                          {status.desc}
+                        </option>
+                        ))}
+                    </select>
+                    <SoftInput value={formData.filter} onChange={handleChange} placeholder="Search here..."
+                      name="filter" size="small" className="flex-grow-1"
+                      sx={{ borderRadius: "8px 0 0 8px" }} 
+                    />
+                    <SoftButton  variant="gradient" color="info" size="medium" type="submit" iconOnly 
+                      sx={{ borderRadius: "0 8px 8px 0" }} 
+                    >
+                      <SearchIcon />
+                    </SoftButton>
+                  </SoftBox>
                   <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="dark" size="small" >
                     <Icon>add</Icon> Add Program
                   </SoftButton>
                 </SoftBox>
               </SoftBox>
-              <Grid container direction={isSmallScreen ? "column-reverse" : "row"}  className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
-                <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
+              <Grid container className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
+                <Grid item xs={12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
                       <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
@@ -211,46 +228,6 @@ function Programs() {
                   </SoftBox>
                   {fetchdata && fetchdata.data && fetchdata.data.length > 0 && <SoftBox>{renderPaginationLinks()}</SoftBox>}
                 </Grid>
-                {showFilter &&
-                <Grid item xs={12} lg={3} mb={3}>
-                <SoftBox component="form" role="form" className="ms-lg-3 px-3 px-4 mt-2 rounded-5 bg-white shadow" onSubmit={handleSubmit}>
-                    <Grid container spacing={1} py={1} pb={2}>  
-                        <Grid item xs={12}>
-                            <SoftTypography className="me-2 my-auto h6 text-info fw-bold">Filter Result:</SoftTypography>
-                            <SoftBox className="my-auto">
-                            <SoftTypography variant="button" className="me-1">Status:</SoftTypography>
-                            <select className="form-select form-select-sm text-secondary cursor-pointer rounded-5 border" name="status" value={formData.status} onChange={handleChange} >
-                                <option value="">-- Select --</option>
-                                {activeSelect && activeSelect.map((status) => (
-                                <option key={status.value} value={status.value}>
-                                  {status.desc}
-                                </option>
-                                ))}
-                            </select>
-                            </SoftBox>
-                            <SoftInput 
-                              className="my-3"
-                              value={formData.filter}
-                              onChange={handleChange}
-                              placeholder="Search here..." name="filter" size="small"
-                            />
-                            <Grid container display="flex" justifyContent="end">
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton onClick={HandleClear}  className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="secondary" size="small" >
-                                  clear
-                                </SoftButton>
-                              </Grid>
-                              <Grid item xs={12} xl={6} className="px-0 px-lg-1 mt-2 mt-xl-0">
-                                <SoftButton className="px-3 rounded-0 rounded-pill w-100" variant="gradient" color="info" size="small" type="submit">
-                                  search
-                                </SoftButton>
-                              </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </SoftBox>
-                </Grid>
-                }
                 
               </Grid>
             </SoftBox>
