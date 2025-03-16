@@ -176,10 +176,10 @@ function LogAdmin() {
                   <SoftBox component="form" role="form" className="d-flex align-items-center" onSubmit={handleSubmit}>
                     <SoftInput value={formData.filter} onChange={handleChange} placeholder="Search here..."
                       name="filter" size="small" className="flex-grow-1"
-                      sx={{ borderRadius: "8px 0 0 8px" }} 
+                      sx={{ borderRadius: "100px 0 0 100px" }} 
                     />
                     <SoftButton  variant="gradient" color="info" size="medium" type="submit" iconOnly 
-                      sx={{ borderRadius: "0 8px 8px 0" }} 
+                      sx={{ borderRadius: "0 100px 100px 0" }} 
                     >
                       <SearchIcon />
                     </SoftButton>
