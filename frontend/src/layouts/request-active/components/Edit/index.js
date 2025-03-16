@@ -93,6 +93,9 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                   if(!formData.agreement) {
                         toast.warning(messages.agreement, { autoClose: true });
                   }
+                  else if (DATA.task_owner == formData.task_owner) {
+                        toast.error("Please select different assign registrar!", { autoClose: true });
+                  }
                   else {      
                         setSubmitProfile(true);
                         try {

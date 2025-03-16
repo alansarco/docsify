@@ -3,6 +3,10 @@ export const versions = [
         version: "V1.1.250317", 
         details: [
             {
+                types: "bug",
+                description: "Can pass through assigning registrar to request even if the same name"
+            },
+            {
                 types: "update",
                 description: "Make Timeline tab show first before Information in active requests"
             },
