@@ -71,8 +71,7 @@ class RegistrarController extends Controller
 
         $validator = Validator::make($request->all(), [
             'clientid' => 'required',
-            'email' => 'required|email',
-            'username' => 'required',
+            'username' => 'required|email',
             'first_name' => 'required',
             'last_name' => 'required',
             'gender' => 'required',
@@ -115,7 +114,7 @@ class RegistrarController extends Controller
                     'last_name' => strtoupper($request->last_name),
                     'password' => $defaultPassword,   
                     'gender' => $request->gender,   
-                    'email' => $request->email,   
+                    'email' => $request->username,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
                     'role' => 'REGISTRAR',   

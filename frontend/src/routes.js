@@ -48,6 +48,7 @@ import StudentHistoryRequest from "layouts/task-history-student";
 import StudentActiveRequest from "layouts/task-active-student";
 import StudentStorage from "layouts/student-storage";
 import Transferees from "layouts/transferees";
+import Versions from "layouts/authentication/version/Versions";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -334,6 +335,15 @@ const routes = (access) => [
     route: "/authentication/sign-up",
     icon: <InfoTwoToneIcon size="12px" />,
     component: <SignUp />,
+    noCollapse: true,
+  },
+  {
+    type: "",
+    name: "Versions",
+    key: "versions",
+    route: "/software-versions",
+    icon: <InfoTwoToneIcon size="12px" />,
+    component: <Versions />,
     noCollapse: true,
   },
 

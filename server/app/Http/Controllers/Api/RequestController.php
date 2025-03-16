@@ -370,10 +370,13 @@ class RequestController extends Controller
             'created_at' => $today,
             'updated_by' => $authUser->fullname,
         ];
+
         $update = DocRequest::where('reference_no', $request->reference_no)
         ->limit(1) // Ensures only one record is affected
         ->update([
             'status' => $request->status,
+            'completed_by' => $request->status == 4 ? $authUser->fullname : null,
+            'date_completed' => $request->status == 4 ? $today : null,
             'updated_by' => $authUser->fullname,
         ]);
     

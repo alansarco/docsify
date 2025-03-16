@@ -59,10 +59,10 @@ class LoginController extends Controller {
 
         } 
         else if ($verifyUser) {
-            if($request->clientid) {
+            if($verifyUser->clientid) {
                 $validity = new Utils;
-                $valid_client = $validity->checkclient_validity($request->clientid);
-                if ($valid_client && $request->clientid == $verifyUser->clientid) {
+                $valid_client = $validity->checkclient_validity($verifyUser->clientid);
+                if ($valid_client && $verifyUser->clientid) {
                     User::where('username', $verifyUser->username)->update(['last_online' => Carbon::now()]);
                     /** @var \App\Models\User $user */
                     $user = Auth::user();
@@ -76,7 +76,7 @@ class LoginController extends Controller {
                         'role' => $user->role,
                         'access' => $user->access_level,
                         'access_token' => $token,
-                        'clientid' => $request->clientid,
+                        'clientid' => $verifyUser->clientid,
                         'clientname' => $valid_client->client_name,
                         'clientacr' => $valid_client->client_acr,
                         'message' => "Login Success!"
@@ -88,11 +88,11 @@ class LoginController extends Controller {
                     ]);
                 }
                 return response()->json([
-                    'message' => 'Campus is no longer valid!'  
+                    'message' => 'Your account is not connected to any campus!'  
                 ]);
             }
             return response()->json([
-                'message' => 'Please select campus!'  
+                'message' => 'Your campus subscription already expired!'  
             ]);        
         } 
         else {

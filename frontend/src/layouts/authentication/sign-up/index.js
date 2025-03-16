@@ -141,13 +141,13 @@ function SignUp() {
               "contact",
               "birthdate",
               "address",
-              "email",
             ];
       
           // Add clientid as required only if role is not 999
           if (formData.role == 5) {
               requiredFields.push("clientid");
               requiredFields.push("school_id");
+              requiredFields.push("email");
           }
           if (formData.role == 30) {
             requiredFields.push("cardname");
@@ -358,9 +358,9 @@ function SignUp() {
                                             }
                                                 
                                             <Grid item xs={12} md={6} lg={4} px={1}>
-                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Employee ID:"}</SoftTypography>
+                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Username:"}</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                  <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.role == 5 ? getLRN(formData.username) : formData.username} onChange={handleChange} size="small"
+                                                  <SoftInput name="username" type={formData.role == 5 ? "number" : "email"} value={formData.role == 5 ? getLRN(formData.username) : formData.username} onChange={handleChange} size="small"
                                                   /> 
                                             </Grid> 
                                             <Grid item xs={12} md={6} lg={4} px={1}>
@@ -426,11 +426,13 @@ function SignUp() {
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput type="number" name="contact" value={formData.contact} onChange={handleChange} size="small" /> 
                                             </Grid> 
+                                            {formData.role == 5 &&
                                             <Grid item xs={12} md={6} lg={5} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
                                             </Grid> 
+                                            }
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>

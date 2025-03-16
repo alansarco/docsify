@@ -32,25 +32,10 @@ function SignIn() {
   const currentFileName = "layouts/authentication/sign-in/index.js";
   const {token,  setUser, setRole, setAccess, setToken, setClientProvider, setClientName, setClientAcr} = useStateContext(); 
   const [submitLogin, setSubmitLogin] = useState(false);
-  const [fetchclients, setFetchClients] = useState([]);
-  const [showOptions, setShowOptions] = useState(false);
-  const [selectedCampusName, setSelectedCampusName] = useState("");
-
-  useEffect(() => {
-    axios.get(apiRoutes.clientSelect)
-    .then(response => {
-      setFetchClients(response.data.clients);
-      passToSuccessLogs(response.data, currentFileName);
-    })
-    .catch(error => {
-      passToErrorLogs(`Clients not Fetched!  ${error}`, currentFileName);
-    });
-  }, []);
 
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    clientid: '',
   });
 
   const navigate = useNavigate(); 
@@ -113,63 +98,6 @@ function SignIn() {
       image={logo}
     >
       <SoftBox component="form" role="form" onSubmit={handleSubmit}>
-        <SoftBox mb={1}>
-          <SoftBox ml={0.5}>
-            <SoftTypography component="label" variant="caption" fontWeight="bold" color="white" >
-              Campus
-            </SoftTypography>
-          </SoftBox>
-          <SoftBox position="relative">
-          <input
-            type="text"
-            className="form-control form-select form-select-sm text-secondary rounded-5"
-            value={selectedCampusName}
-            onFocus={() => setShowOptions(true)}
-            onBlur={() => setTimeout(() => setShowOptions(false), 200)}
-            onChange={(e) => {
-              setSelectedCampusName(e.target.value);
-              setFormData({ ...formData, clientid: "" });
-            }}
-          />
-          {showOptions && (
-            <SoftBox 
-              position="absolute" 
-              zIndex={10} 
-              width="100%" 
-              maxHeight="200px" 
-              overflow="auto" 
-              className="bg-white rounded-5 shadow"
-            >
-              {fetchclients
-                .filter(school => 
-                  school.client_name.toLowerCase().includes(selectedCampusName.toLowerCase())
-                )
-                .map((school) => (
-                  <SoftBox 
-                    key={school.clientid}
-                    px={2} 
-                    py={1} 
-                    className="text-xs cursor-pointer hover:bg-gray-200 py-1"
-                    onMouseDown={() => {
-                      setFormData({ ...formData, clientid: school.clientid });
-                      setSelectedCampusName(school.client_name); 
-                      setShowOptions(false);
-                    }}
-                  >
-                    {school.client_name}
-                  </SoftBox>
-              ))}
-              {fetchclients.filter(school => 
-                school.client_name.toLowerCase().includes(selectedCampusName.toLowerCase())
-              ).length === 0 && (
-                <SoftBox px={2} py={1} className="text-xxs text-gray-500">
-                  No campus found
-                </SoftBox>
-              )}
-            </SoftBox>
-          )}
-          </SoftBox>
-        </SoftBox>
         <SoftBox mb={1}>
           <SoftBox ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold" color="white" >

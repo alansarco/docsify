@@ -106,6 +106,16 @@ class DashboardController extends Controller
         ->where('clientid', $authUser->clientid)
         ->where('username', $authUser->username)
         ->first();
+
+        $myRecentRequests = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
+            ->select('documents.doc_name', 'requests.reference_no', 'requests.updated_by', 'requests.updated_at', 'requests.status',
+                    DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date")
+                )
+        ->where('requests.clientid', $authUser->clientid)
+        ->where('requests.username', $authUser->username)
+        ->orderBy('requests.updated_at', 'DESC')
+        ->limit(5)
+        ->get();
         
         $otherStats = [
             'data1' => $data1,
@@ -121,6 +131,7 @@ class DashboardController extends Controller
             'taskDistribution' => $taskDistribution,
             'mytask' => $mytask,
             'myRequests' => $myRequests,
+            'myRecentRequests' => $myRecentRequests,
         ];
 
 

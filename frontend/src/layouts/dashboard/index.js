@@ -20,7 +20,7 @@ import DefaultDoughnutChart from "essentials/Charts/DoughnutCharts/DefaultDoughn
 import React, { useState } from "react";
 import { useDashboardData } from 'layouts/dashboard/data/dashboardRedux';
 import { useStateContext } from "context/ContextProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import GradientLineChart from "essentials/Charts/LineCharts/GradientLineChart";
 import VerticalBarChart from "essentials/Charts/BarCharts/VerticalBarChart";
 import TimelineList from "essentials/Timeline/TimelineList";
@@ -29,12 +29,29 @@ import { getStatusIcon } from "components/General/Utils";
 import TimelineDash from "essentials/Timeline/TimelineItem/TimelineDash";
 import { getStatus } from "components/General/Utils";
 import MiniStatisticsCard from "essentials/Cards/StatisticsCards/MiniStatisticsCard";
+import Table from "./data/table";
+import { tablehead } from "./data/head";
+import StudentDasboardLoading from "components/General/StudentDasboardLoading";
 
 function Dashboard() {
   const {token, access, updateTokenExpiration, clientprovider, clientname} = useStateContext();
   updateTokenExpiration();
   if (!token) {
     return <Navigate to="/authentication/sign-in" />
+  }
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleCompleted = () => {
+    navigate("/my-request-history", { state: { from: location, currentstatus: 4 } });
+  }
+
+  const handleOngoing = () => {
+    navigate("/my-active-requests", { state: { from: location } });
+  }
+
+  const handleRejected = () => {
+    navigate("/my-request-history", { state: { from: location, currentstatus: 5 } });
   }
 
   const { 
@@ -295,30 +312,28 @@ function Dashboard() {
             {access == 5 &&
               <Grid item xs={12}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                  <Grid item xs={12} sm={6} md={4} onClick={() => handleCompleted()} className="cursor-pointer">
                     <MiniStatisticsCard
                       title={{ text: "Completed Requests" }}
                       count={otherStats && otherStats.myRequests && otherStats.myRequests.completed || 0}
                       icon={{ color: "dark", component: "note" }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                  <Grid item xs={12} sm={6} md={4} onClick={() => handleOngoing()} className="cursor-pointer">
                     <MiniStatisticsCard
                       title={{ text: "Ongoing Requests" }}
                       count={otherStats && otherStats.myRequests && otherStats.myRequests.ongoing || 0}
                       icon={{ color: "info", component: "note" }}
                     />
                   </Grid>
-                </Grid>
-                <Grid container spacing={3} mt={1}>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                  {/* <Grid item xs={12} sm={6} md={4}>
                     <MiniStatisticsCard
                       title={{ text: "Pending Requests" }}
                       count={otherStats && otherStats.myRequests && otherStats.myRequests.pending || 0}
                       icon={{ color: "warning", component: "note" }}
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                  </Grid> */}
+                  <Grid item xs={12} sm={6} md={4} onClick={() => handleRejected()} className="cursor-pointer">
                     <MiniStatisticsCard
                       title={{ text: "Rejected Requests" }}
                       count={otherStats && otherStats.myRequests && otherStats.myRequests.rejected || 0}
@@ -326,8 +341,38 @@ function Dashboard() {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+                
+                <SoftTypography mt={3} mb={1} color="dark" className="text-uppercase text-sm fw-bold">
+                  Recent Requests
+                </SoftTypography>
+                {otherStats && otherStats.myRecentRequests ?
+                <Grid>
+                  <Grid item xs={12} xl={10}>
+                      {otherStats.myRecentRequests.length > 0 ?
+                      <Table table="sm" DATA={otherStats.myRecentRequests} tablehead={tablehead} /> :
+                      <SoftBox variant="gradient"
+                          borderRadius="lg"
+                          height="10rem"  
+                          className="shadow"
+                          display="flex">
+                          <SoftTypography className="text-sm text-center m-auto text-dark">No data to fetch</SoftTypography>
+                      </SoftBox>
+                      }
+                  </Grid>
+                </Grid> 
+                :
+                <Grid>
+                  <SoftBox variant="gradient"
+                    borderRadius="lg"
+                    height="10rem"  
+                    className="shadow pt-5"
+                    display="flex">
+                    <StudentDasboardLoading />
+                  </SoftBox>
+                </Grid>
                 }
+              </Grid>
+            }
             </Grid>
           </SoftBox>
         </SoftBox>

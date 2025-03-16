@@ -10,6 +10,7 @@ import SoftTypography from "components/SoftTypography";
 
 // React examples
 import PageLayout from "essentials/LayoutContainers/PageLayout";
+import { Link  } from "react-router-dom";
 
 function CoverLayout({ color, header, title, description, image, children }) {
   return (
@@ -36,6 +37,13 @@ function CoverLayout({ color, header, title, description, image, children }) {
           <Grid item xs={12} md={6} className="bg-dark align-items-center" p={3}>
             <SoftBox>
               <SoftBox pt={2} px={3}>
+                <SoftBox display="flex" justifyContent="end">
+                  <SoftTypography mb={0} component={Link} to="/software-versions" 
+                    className="text-xs text-right text-warning">
+                    V1.1.250316
+                  </SoftTypography>
+                </SoftBox>
+                
                 {!header ? (
                   <>
                     {/* <SoftBox mb={0}>

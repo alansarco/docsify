@@ -34,7 +34,6 @@ function Add({HandleRendering, ReloadTable }) {
             gender: "",
             contact: "",
             birthdate: "",
-            email: "",
             id_picture: null,
             agreement: false,   
       };
@@ -84,7 +83,6 @@ function Add({HandleRendering, ReloadTable }) {
                   "contact",
                   "birthdate",
                   "address",
-                  "email",
             ];
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
@@ -110,7 +108,6 @@ function Add({HandleRendering, ReloadTable }) {
                                     data.append("contact", formData.contact);
                                     data.append("birthdate", formData.birthdate);
                                     data.append("address", formData.address);
-                                    data.append("email", formData.email);
                                     const response = await axios.post(apiRoutes.addRegistrar, data, {headers});
                                     if(response.data.status == 200) {
                                           toast.success(`${response.data.message}`, { autoClose: true });
@@ -153,9 +150,9 @@ function Add({HandleRendering, ReloadTable }) {
                                     </SoftTypography>
                                     <Grid container spacing={0} alignItems="center">
                                           <Grid item xs={12} md={6} lg={4} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Username/Employee ID:</SoftTypography>
+                                                <SoftTypography variant="button" className="me-1"> Username:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="username" type={formData.role == 5 ? "number" : "text"} value={formData.username} onChange={handleChange} size="small"
+                                                <SoftInput name="username" type="email" value={formData.username} onChange={handleChange} size="small"
                                                 /> 
                                           </Grid>
                                     </Grid>    
@@ -210,11 +207,6 @@ function Add({HandleRendering, ReloadTable }) {
                                                 <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
-                                          </Grid> 
-                                          <Grid item xs={12} md={6} lg={5} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
                                           </Grid> 
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>

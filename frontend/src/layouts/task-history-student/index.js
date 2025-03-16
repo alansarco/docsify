@@ -19,7 +19,7 @@ import { DynamicTableHeight } from "components/General/TableHeight";
 import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import DataContainer from "layouts/task-history-student/components/DataContainer";
 
 import Table from "layouts/task-history-student/data/table";
@@ -43,7 +43,8 @@ function StudentHistoryRequest() {
     else if(token && access < 5) {
         return <Navigate to="/not-found" />
     }
-    
+    const location = useLocation();
+    const { currentstatus } = location.state || {}; 
     const [showFilter, setShowFilter] = useState(false);
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
@@ -74,7 +75,7 @@ function StudentHistoryRequest() {
         created_at: "",
         filter: "",
         assigned: "",
-        status: "",
+        status: currentstatus || "", 
     };
 
     const [formData, setFormData] = useState(initialState);

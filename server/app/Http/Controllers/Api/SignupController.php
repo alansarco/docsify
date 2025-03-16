@@ -30,8 +30,7 @@ class SignupController extends Controller
 
             if($request->role == 30) {
                 $validator = Validator::make($request->all(), [ 
-                    'email' => 'required|email',
-                    'username' => 'required',
+                    'username' => 'required|email',
                     'first_name' => 'required',
                     'last_name' => 'required',
                     'password' => 'required',
@@ -100,6 +99,11 @@ class SignupController extends Controller
                           $otp = Str::random(6);
                           $existingOTP = OTP::where('id', $otp)->first();
                     }
+
+                    $sentTo = $request->email;
+                    if(!$sentTo) {
+                        $sentTo = $request->username;
+                    }
                     
                     $otpSent = Mail::to($request->email)->send(new OtpStringsEmailVerification($otp));
         
@@ -137,8 +141,7 @@ class SignupController extends Controller
         if($checkOTP) {
             if($request->role == 30) {
                 $validator = Validator::make($request->all(), [ 
-                    'email' => 'required|email',
-                    'username' => 'required',
+                    'username' => 'required|email',
                     'first_name' => 'required',
                     'last_name' => 'required',
                     'password' => 'required',
@@ -194,6 +197,7 @@ class SignupController extends Controller
                     $grade = $request->role != 5 ? '' : $request->grade;
                     $year_enrolled = $request->role != 5 ? '' : $request->year_enrolled;
                     $account_status = $request->role == 30 ? 1 : 0;
+                    $useremail = $request->role == 30 ? $request->username : $request->email;
 
                     $role = new Utils;
                     $role = $role->checkRole($request->role);
@@ -219,7 +223,7 @@ class SignupController extends Controller
                     $add = User::create([
                         'clientid' => $clientid,
                         'username' => $request->username,
-                        'email' => $request->email,
+                        'email' => $useremail,
                         'first_name' => strtoupper($request->first_name),
                         'middle_name' => strtoupper($request->middle_name),
                         'last_name' => strtoupper($request->last_name),
