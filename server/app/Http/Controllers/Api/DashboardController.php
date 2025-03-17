@@ -107,6 +107,21 @@ class DashboardController extends Controller
         ->where('username', $authUser->username)
         ->first();
 
+        $myTaskCard = DocRequest::select(
+            DB::raw("IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) as pending"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) as queue"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END), 0) as processing"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END), 0) as releasing"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END), 0) as completed"),
+            DB::raw("IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) as rejected"),
+            DB::raw("IFNULL(SUM(CASE WHEN status > 0 AND status < 4 
+                AND DATE(date_needed) < '$today'
+                THEN 1 ELSE 0 END), 0) as overdue"),
+        )
+        ->where('clientid', $authUser->clientid)
+        ->where('task_owner', $authUser->username)
+        ->first();
+
         $myRecentRequests = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
             ->select('documents.doc_name', 'requests.reference_no', 'requests.updated_by', 'requests.updated_at', 'requests.status',
                     DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date")
@@ -131,6 +146,7 @@ class DashboardController extends Controller
             'taskDistribution' => $taskDistribution,
             'mytask' => $mytask,
             'myRequests' => $myRequests,
+            'myTaskCard' => $myTaskCard,
             'myRecentRequests' => $myRecentRequests,
         ];
 

@@ -31,7 +31,6 @@ function Table({ users, tablehead, HandleUSER, HandleRendering, ReloadTable }) {
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
   const [searchTriggered, setSearchTriggered] = useState(false);
-  console.log('clientprovider. ',clientprovider)
     const YOUR_ACCESS_TOKEN = token; 
     const headers = {
       'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`

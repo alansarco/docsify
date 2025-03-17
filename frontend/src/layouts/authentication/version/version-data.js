@@ -3,6 +3,14 @@ export const versions = [
         version: "V1.1.250317", 
         details: [
             {
+                types: "new",
+                description: "Add linkable task card for registrar dashboard"
+            },
+            {
+                types: "update",
+                description: "Removed task chart in registrar UI"
+            },
+            {
                 types: "bug",
                 description: "Can pass through rejecting/approving transferee even if its already cancelled"
             },

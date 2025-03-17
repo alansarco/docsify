@@ -54,6 +54,18 @@ function Dashboard() {
     navigate("/my-request-history", { state: { from: location, currentstatus: 5 } });
   }
 
+  const handleTask = (data) => {
+    if(data == 10) {
+      navigate("/active-tasks", { state: { from: location, overduestatus: true } });
+    }
+    else if(data < 4) {
+      navigate("/active-tasks", { state: { from: location, currentstatus: data } });
+    }
+    else {
+      navigate("/task-history", { state: { from: location, currentstatus: data } });
+    }
+  }
+
   const { 
     authUser,
     otherStats , loadOtherStats,
@@ -199,6 +211,7 @@ function Dashboard() {
             }
             {(access == 30 || access == 10) && 
               <>
+                {access == 30 && 
                 <Grid item xs={12} md={7} xl={8}>
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={12} xl={12}>
@@ -226,6 +239,55 @@ function Dashboard() {
                     </Grid>
                   </Grid>
                 </Grid>
+                }
+                {access == 10 && 
+                <Grid item xs={12} md={7} xl={8}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(4)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "Completed Task" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.completed || 0}
+                        icon={{ color: "dark", component: "note" }}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(0)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "Pending Task" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.pending || 0}
+                        icon={{ color: "warning", component: "note" }}
+                      />
+                    </Grid> */}
+                    <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(1)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "On Queue" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.queue || 0}
+                        icon={{ color: "success", component: "note" }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(2)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "Processing" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.processing || 0}
+                        icon={{ color: "info", component: "note" }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(3)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "For Release" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.releasing || 0}
+                        icon={{ color: "dark", component: "note" }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4} onClick={() => handleTask(10)} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "Overdue Task" }}
+                        count={otherStats && otherStats.myTaskCard && otherStats.myTaskCard.overdue || 0}
+                        icon={{ color: "primary", component: "note" }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                }
                 {access == 30 &&
                 <Grid item xs={12} md={5} xl={4}>
                   <Grid container spacing={3}>
@@ -341,7 +403,6 @@ function Dashboard() {
                     />
                   </Grid>
                 </Grid>
-                
                 <SoftTypography mt={3} mb={1} color="dark" className="text-uppercase text-sm fw-bold">
                   Recent Requests
                 </SoftTypography>

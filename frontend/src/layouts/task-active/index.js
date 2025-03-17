@@ -19,7 +19,7 @@ import { DynamicTableHeight } from "components/General/TableHeight";
 import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import DataContainer from "layouts/task-active/components/DataContainer";
 
 import Table from "layouts/task-active/data/table";
@@ -44,7 +44,8 @@ function ActiveTask() {
     else if(token && access < 10) {
         return <Navigate to="/not-found" />
     }
-    
+    const location = useLocation();
+    const { currentstatus, overduestatus } = location.state || {}; 
     const [showFilter, setShowFilter] = useState(false);
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
@@ -69,19 +70,19 @@ function ActiveTask() {
       });
     }, []);
 
-
     const initialState = {
         doc_id: "",
         created_at: "",
         filter: "",
         assigned: "",
-        status: "",
+        status: currentstatus || "", 
+        overdue: overduestatus || false, 
     };
 
     const [formData, setFormData] = useState(initialState);
 
     const HandleClear = (user) => {
-      setFormData(initialState);
+      setFormData({ ...initialState, overdue: false });
     };
 
     const handleChange = (e) => {
@@ -218,7 +219,7 @@ function ActiveTask() {
                 <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
-                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
+                      <Table table="sm" HandleDATA={HandleDATA} overduestatus={formData.overdue} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
