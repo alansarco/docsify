@@ -4,6 +4,10 @@ export const versions = [
         details: [
             {
                 types: "bug",
+                description: "Can pass through rejecting/approving transferee even if its already cancelled"
+            },
+            {
+                types: "bug",
                 description: "Can pass through assigning registrar to request even if the same name"
             },
             {

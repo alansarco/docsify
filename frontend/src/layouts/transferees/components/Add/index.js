@@ -133,6 +133,16 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                         <SoftTypography fontWeight="bold" className="text-xs">
                               Please fill in the required fields. Rest assured that data is secured.     
                         </SoftTypography> 
+                        <SoftTypography fontWeight="bold" className="text-xxs mt-2">
+                        REMINDERS:
+                        </SoftTypography>
+                        <SoftTypography variant="p" className="text-xxs text-secondary span fst-italic">
+                              (Please read before filling up the form)
+                        </SoftTypography>
+                        <ul className="text-danger fw-bold">
+                            <li className="text-xxs fst-italic">When you transfer a student, this will be further reviewed by the receiving school</li>
+                            <li className="text-xxs fst-italic">When the receiving school approved the transferee request, the former school will no longer have access to student data except the completed document requests</li>
+                        </ul>
                         <SoftBox mt={2}>
                               <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                                     <Grid container spacing={0} alignItems="center">
@@ -184,7 +194,7 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                                             school.fullname.toLowerCase().includes(selectedStudentName.toLowerCase())
                                                             ).length === 0 && (
                                                             <SoftBox px={2} py={1} className="text-xxs text-gray-500">
-                                                                  No campus found
+                                                                  No student found
                                                             </SoftBox>
                                                             )}
                                                       </SoftBox>

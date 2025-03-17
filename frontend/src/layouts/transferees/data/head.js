@@ -31,8 +31,8 @@ export const tablehead = [
   },
   {
     name: "action",
-    padding: "ps-2",
-    align: "left",
+    padding: "px-2",
+    align: "center",
   },
   {
     name: "date_added",

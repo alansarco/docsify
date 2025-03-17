@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Utilities\Utils;
+use App\Models\DocRequest;
 use App\Models\LogRepresentative;
 use App\Models\Transferee;
 use App\Models\User;
@@ -163,6 +164,14 @@ class TransfereeController extends Controller
             ]);
         }
 
+        $checkstatus = Transferee::where('id', $request->id)->first();
+
+        if($checkstatus->status != 0) {
+            return response()->json([
+                'message' => 'The request is already approved/rejected, you can no longer cancel it!'
+            ]);
+        }
+
         $delete = Transferee::where('id', $request->id)->delete();
         
         if($delete) {
@@ -190,6 +199,14 @@ class TransfereeController extends Controller
         if($authUser->role !== "REPRESENTATIVE" || $authUser->access_level != 30) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $checkstatus = Transferee::where('id', $request->id)->first();
+
+        if($checkstatus->status == 1) {
+            return response()->json([
+                'message' => 'The request is already approved, you can no longer reject it!'
             ]);
         }
 
@@ -226,6 +243,14 @@ class TransfereeController extends Controller
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
+        $checkstatus = Transferee::where('id', $request->id)->first();
+
+        if($checkstatus->status == 2) {
+            return response()->json([
+                'message' => 'The request is already rejected, you can no longer approve it!'
+            ]);
+        }
+
         $getdata = Transferee::select('username', 'school_to')->where('id', $request->id)->first();
         if($getdata) {
             $updateData = [
@@ -240,6 +265,7 @@ class TransfereeController extends Controller
             User::where('username', $getdata->username)->update($updatestudent);
     
             if($update) {
+                DocRequest::where('username', $getdata->username)->where('status', '<', 2)->delete();
                 LogRepresentative::create([
                     'clientid' => $authUser->clientid,
                     'module' => 'Transferees',
