@@ -50,6 +50,9 @@ function Analytics() {
     const [reloadgrades, setReloadGrades] = useState(true);
     const [fetchgrades, setFetchGrades] = useState([]);
 
+    const [reloadstudentgender, setReloadStudentGender] = useState(true);
+    const [fetchstudentgender, setFetchStudentGender] = useState([]);
+
     const initialState = {
         doc_id: "",
         created_at: "",
@@ -92,6 +95,24 @@ function Analytics() {
             .catch(error => {
                 passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadGrades(false);
+            });
+          setSearchTriggered(false);
+        }
+    }, [searchTriggered]);
+
+    useEffect(() => {
+        if (searchTriggered) {
+            setReloadStudentGender(true);
+            axios.get(apiRoutes.studentGenderCounts, {headers})
+            .then(response => {
+                setReloadStudentGender(false);
+                setFetchStudentGender(response.data.studentgendercounts);
+                passToSuccessLogs(response.data, currentFileName);
+                setFetching("No data Found!")
+            })
+            .catch(error => {
+                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadStudentGender(false);
             });
           setSearchTriggered(false);
         }
@@ -216,7 +237,7 @@ function Analytics() {
                     </Grid>
                     <Grid item xs={12} md={5} xl={4}>
                     <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                        <Grid item xs={12}>
                         <DefaultDoughnutChart
                             title="Student Distribution"
                             nodata={fetchgrades?.gradecounts && Object.values(fetchgrades.gradecounts).every(value => value === "0")}
@@ -234,6 +255,24 @@ function Analytics() {
                                     fetchgrades?.gradecounts?.grade11 ?? 0,
                                     fetchgrades?.gradecounts?.grade12 ??0,
                                     fetchgrades?.gradecounts?.others ?? 0,
+                                ],
+                            },
+                            }}
+                        />  
+                        </Grid>
+                        <Grid item xs={12}>
+                        <DefaultDoughnutChart
+                            title="Gender Distribution"
+                            nodata={fetchstudentgender?.studentgendercounts && Object.values(fetchstudentgender.studentgendercounts).every(value => value === "0")}
+                            loading={reloadstudentgender}
+                            chart={{
+                            labels: ["Male", "Female"],  
+                            datasets: {
+                                label: "Students",
+                                backgroundColors: ["dark", "primary"],
+                                data: [
+                                    fetchstudentgender?.studentgendercounts?.male ?? 0, 
+                                    fetchstudentgender?.studentgendercounts?.female ?? 0, 
                                 ],
                             },
                             }}

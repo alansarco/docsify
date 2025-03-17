@@ -21,6 +21,7 @@ export const apiRoutes = {
     
     StudentAnalyticsChart: `${mainRoute}/api/analytics/studentanalyticschart`,
     gradeCounts: `${mainRoute}/api/analytics/gradecounts`,
+    studentGenderCounts: `${mainRoute}/api/analytics/studentgendercounts`,
     
     adminRetrieve: `${mainRoute}/api/admins`,
     addAdmin: `${mainRoute}/api/admins/addadmin`,

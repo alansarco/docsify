@@ -19,7 +19,7 @@ import SoftTypography from "components/SoftTypography";
 import gradientChartLine from "assets/theme/functions/gradientChartLine";
 
 // StudentAnalyticsChart configurations
-import configs from "essentials/Charts/LineCharts/GradientLineChart/configs";
+import StudentConfig from "essentials/Charts/LineCharts/GradientLineChart/configs/StudentConfig";
 
 // React base styles
 import colors from "assets/theme/base/colors";
@@ -51,7 +51,7 @@ function StudentAnalyticsChart({ title, description, height, chart, loading, tot
         }))
       : [];
 
-    setChartData(configs(chart.labels || [], chartDatasets));
+    setChartData(StudentConfig(chart.labels || [], chartDatasets));
   }, [chart]);
 
   const renderChart = (

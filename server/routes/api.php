@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('analytics')->group(function () {
         Route::post('studentanalyticschart', [AnalyticsController::class, 'studentanalyticschart']);
         Route::get('gradecounts', [AnalyticsController::class, 'gradecounts']);
+        Route::get('studentgendercounts', [AnalyticsController::class, 'studentgendercounts']);
     });
 
     Route::prefix('admins')->group(function () {

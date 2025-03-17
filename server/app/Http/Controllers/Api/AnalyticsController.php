@@ -178,4 +178,26 @@ class AnalyticsController extends Controller
             'gradecounts' => $gradecounts,
         ]);
     }
+
+    public function studentgendercounts() 
+    {
+        $authUser = new Utils;
+        $authUser = $authUser->getAuthUser();
+        
+        $studentgendercounts = User::select(
+            DB::raw("IFNULL(SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END), 0) as male"),
+            DB::raw("IFNULL(SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END), 0) as female"),
+        )
+        ->where('access_level', 5)
+        ->where('clientid', $authUser->clientid)
+        ->first();
+
+        $studentgendercounts = [
+            'studentgendercounts' => $studentgendercounts,
+        ];
+
+        return response()->json([
+            'studentgendercounts' => $studentgendercounts,
+        ]);
+    }
 }
