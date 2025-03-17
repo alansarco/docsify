@@ -19,6 +19,9 @@ export const apiRoutes = {
     otherStatsRetrieve: `${mainRoute}/api/dashboard/otherStats`,
     adminNotifsRetrieve: `${mainRoute}/api/dashboard/adminnotifs`,
     
+    StudentAnalyticsChart: `${mainRoute}/api/analytics/studentanalyticschart`,
+    gradeCounts: `${mainRoute}/api/analytics/gradecounts`,
+    
     adminRetrieve: `${mainRoute}/api/admins`,
     addAdmin: `${mainRoute}/api/admins/addadmin`,
     updateAdmin: `${mainRoute}/api/admins/updateadmin`,

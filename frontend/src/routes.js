@@ -16,6 +16,7 @@ import BackupTwoToneIcon from '@mui/icons-material/BackupTwoTone';
 import ImportContactsTwoToneIcon from '@mui/icons-material/ImportContactsTwoTone';
 import KeyOffTwoToneIcon from '@mui/icons-material/KeyOffTwoTone';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+import QueryStatsTwoToneIcon from '@mui/icons-material/QueryStatsTwoTone';
 
 // React layouts
 import SignIn from "layouts/authentication/sign-in";
@@ -49,6 +50,7 @@ import StudentActiveRequest from "layouts/task-active-student";
 import StudentStorage from "layouts/student-storage";
 import Transferees from "layouts/transferees";
 import Versions from "layouts/authentication/version/Versions";
+import Analytics from "layouts/analytics";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -59,6 +61,15 @@ const routes = (access) => [
     route: "/dashboard",
     icon: <Shop size="12px" />,
     component: <Dashboard />,
+    noCollapse: true,
+  },
+  access == 30 && {
+    type: "collapse",
+    name: "Data Analytics",
+    key: "analytics",
+    route: "/analytics",
+    icon: <QueryStatsTwoToneIcon size="12px" />,
+    component: <Analytics />,
     noCollapse: true,
   },
 

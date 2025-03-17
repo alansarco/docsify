@@ -9,6 +9,10 @@ const colors = {
     default: "#f8f9fa",
   },
 
+  violet: {
+    main: "#9A32CD",
+  },
+
   text: {
     main: "#67748e",
     focus: "#67748e",

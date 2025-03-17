@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
@@ -55,6 +56,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('otherStats', [DashboardController::class, 'OtherStatistics']);
         Route::get('adminnotifs', [DashboardController::class, 'AdminNotifications']);
+    });
+
+    Route::prefix('analytics')->group(function () {
+        Route::post('studentanalyticschart', [AnalyticsController::class, 'studentanalyticschart']);
+        Route::get('gradecounts', [AnalyticsController::class, 'gradecounts']);
     });
 
     Route::prefix('admins')->group(function () {

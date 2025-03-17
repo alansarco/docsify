@@ -1,6 +1,19 @@
-export const latestversions = "V1.1.250317"
+export const latestversions = "V1.1.250318"
 
 export const versions = [
+    { 
+        version: "V1.1.250318", 
+        details: [
+            {
+                types: "new",
+                description: "Added Student Chart in Analytics Page"
+            },
+            {
+                types: "new",
+                description: "Added Analytics Page"
+            },
+        ]
+    },
     { 
         version: "V1.1.250317", 
         details: [
