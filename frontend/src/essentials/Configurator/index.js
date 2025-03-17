@@ -42,11 +42,13 @@ function Configurator() {
     // adminnotifs: true, 
   });
   let notifs = 1;
+  let notifs1 = 1;
   if(access == 999) {
     notifs = adminnotifs?.adminnotifs;
   }
   else if(access == 30) {
     notifs = adminnotifs?.repnotifs;
+    notifs1 = adminnotifs?.repnotifsRA;
   }
   else if(access == 10) {
     notifs = adminnotifs?.regnotifs;
@@ -74,7 +76,7 @@ function Configurator() {
         <SoftBox>
           <SoftTypography variant="h5">Notifications</SoftTypography>
             <SoftTypography variant="body2" color="text">
-              {notifs && notifs.length > 0 ? "Updates today" : "No updates for today"}
+              {((notifs && notifs.length > 0) || (notifs1 && notifs1.length > 0)) ? "Updates today" : "No updates for today"}
             </SoftTypography>
         </SoftBox>
 
@@ -97,7 +99,7 @@ function Configurator() {
         <AdminRoot notifs={notifs} handleViewRequest={handleViewRequest} />
       }
       {access == 30 &&
-        <RepRoot notifs={notifs} handleViewRequest={handleViewRequest} />
+        <RepRoot notifs={notifs} notifs1={notifs1} handleViewRequest={handleViewRequest} />
       }
       {access == 10 &&
         <RegistrarRoot notifs={notifs} handleViewRequest={handleViewRequest} />

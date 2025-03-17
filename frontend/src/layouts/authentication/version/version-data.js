@@ -4,6 +4,10 @@ export const versions = [
         details: [
             {
                 types: "new",
+                description: "Add notification for transferee student"
+            },
+            {
+                types: "new",
                 description: "Add linkable task card for registrar dashboard"
             },
             {

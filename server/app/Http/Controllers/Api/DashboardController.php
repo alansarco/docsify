@@ -7,6 +7,7 @@ use App\Http\Controllers\Utilities\Utils;
 use App\Models\Client;
 use App\Models\DocRequest;
 use App\Models\SystemIncome;
+use App\Models\Transferee;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -161,6 +162,7 @@ class DashboardController extends Controller
     {
         $authUser = new Utils;
         $authUser = $authUser->getAuthUser();
+        $today = Carbon::today();
 
         $adminnotifs = Client::leftJoin('users', 'clients.client_representative', 'users.username')
             ->select('clients.clientid', 'clients.client_name',
@@ -179,6 +181,18 @@ class DashboardController extends Controller
             ->where('users.account_status', 0)
             ->whereRaw('users.created_at = users.updated_at') 
             ->orderBy('users.created_at', 'DESC')
+            ->limit(10)
+            ->get();
+
+        $repnotifsRA = Transferee::leftJoin('clients', 'students_transfer.school_from', 'clients.clientid')
+            ->leftJoin('users', 'students_transfer.username', 'users.username')
+            ->select('students_transfer.id', 'users.username', 'clients.client_name', 'students_transfer.status',
+                DB::raw("CONCAT(COALESCE(users.first_name, ''),' ',COALESCE(users.middle_name, ''),' ',COALESCE(users.last_name, '')) AS fullname"),
+                DB::raw("DATE_FORMAT(students_transfer.updated_at, '%M %d, %Y %h:%i %p') AS updated_date"))
+            ->where('students_transfer.school_to', $authUser->clientid)
+            ->where('students_transfer.status', 0)
+            // ->where('students_transfer.updated_at', $today) 
+            ->orderBy('students_transfer.updated_at', 'DESC')
             ->limit(10)
             ->get();
 
@@ -218,6 +232,7 @@ class DashboardController extends Controller
             'repnotifs' => $repnotifs,
             'regnotifs' => $regnotifs,
             'studentnotifs' => $studentnotifs,
+            'repnotifsRA' => $repnotifsRA,
         ];
         if($adminnotifs) {
             return response()->json([

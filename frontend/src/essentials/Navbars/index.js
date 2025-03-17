@@ -78,7 +78,7 @@ function DashboardNavbar(props) {
     notifs = adminnotifs?.adminnotifs?.length || 0;
   }
   else if(access == 30) {
-    notifs = adminnotifs?.repnotifs?.length || 0;
+    notifs = adminnotifs?.repnotifs?.length + adminnotifs?.repnotifsRA?.length || 0;
   }
   else if(access == 10) {
     notifs = adminnotifs?.regnotifs?.length || 0;
