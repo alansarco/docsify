@@ -11,6 +11,7 @@ import SoftTypography from "components/SoftTypography";
 // React examples
 import PageLayout from "essentials/LayoutContainers/PageLayout";
 import { Link  } from "react-router-dom";
+import { latestversions } from "layouts/authentication/version/version-data";
 
 function CoverLayout({ color, header, title, description, image, children }) {
   return (
@@ -40,7 +41,7 @@ function CoverLayout({ color, header, title, description, image, children }) {
                 <SoftBox display="flex" justifyContent="end">
                   <SoftTypography mb={0} component={Link} to="/software-versions" 
                     className="text-xs text-right text-warning">
-                    V1.1.250316
+                    {latestversions}
                   </SoftTypography>
                 </SoftBox>
                 

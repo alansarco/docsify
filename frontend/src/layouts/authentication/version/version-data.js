@@ -1,3 +1,5 @@
+export const latestversions = "V1.1.250317"
+
 export const versions = [
     { 
         version: "V1.1.250317", 
