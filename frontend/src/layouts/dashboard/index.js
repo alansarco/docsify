@@ -66,6 +66,10 @@ function Dashboard() {
     }
   }
 
+  const handleOverdue = () => {
+    navigate("/active-requests", { state: { from: location, overduestatus: true } });
+  }
+
   const { 
     authUser,
     otherStats , loadOtherStats,
@@ -291,6 +295,13 @@ function Dashboard() {
                 {access == 30 &&
                 <Grid item xs={12} md={5} xl={4}>
                   <Grid container spacing={3}>
+                    <Grid item xs={12} onClick={() => handleOverdue()} className="cursor-pointer">
+                      <MiniStatisticsCard
+                        title={{ text: "Overdue Tasks" }}
+                        count={otherStats && otherStats.overdueTask && otherStats.overdueTask.overdue || 0}
+                        icon={{ color: "primary", component: "note" }}
+                      />
+                    </Grid>
                     <Grid item xs={12}>
                       <DefaultDoughnutChart
                         title="Student Distribution"

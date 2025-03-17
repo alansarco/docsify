@@ -81,7 +81,7 @@ function ActiveTask() {
 
     const [formData, setFormData] = useState(initialState);
 
-    const HandleClear = (user) => {
+    const HandleClear = () => {
       setFormData({ ...initialState, overdue: false });
     };
 

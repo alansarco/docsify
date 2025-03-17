@@ -123,6 +123,14 @@ class DashboardController extends Controller
         ->where('task_owner', $authUser->username)
         ->first();
 
+        $overdueTask = DocRequest::select(
+            DB::raw("IFNULL(SUM(CASE WHEN status > 0 AND status < 4 
+                AND DATE(date_needed) < '$today'
+                THEN 1 ELSE 0 END), 0) as overdue"),
+        )
+        ->where('clientid', $authUser->clientid)
+        ->first();
+
         $myRecentRequests = DocRequest::leftJoin('documents', 'requests.doc_id', 'documents.doc_id')
             ->select('documents.doc_name', 'requests.reference_no', 'requests.updated_by', 'requests.updated_at', 'requests.status',
                     DB::raw("DATE_FORMAT(requests.updated_at, '%M %d, %Y %h:%i %p') AS updated_date")
@@ -149,6 +157,7 @@ class DashboardController extends Controller
             'myRequests' => $myRequests,
             'myTaskCard' => $myTaskCard,
             'myRecentRequests' => $myRecentRequests,
+            'overdueTask' => $overdueTask,
         ];
 
 

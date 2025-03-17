@@ -6,6 +6,10 @@ export const versions = [
         details: [
             {
                 types: "new",
+                description: "Add overdue task card in school representative UI"
+            },
+            {
+                types: "new",
                 description: "Add notification for transferee student"
             },
             {

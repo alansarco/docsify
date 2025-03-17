@@ -16,7 +16,7 @@ import { getStatus } from "components/General/Utils";
 import SoftBadge from "components/SoftBadge";
 import { getStatusColor } from "components/General/Utils";
 
-function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
+function Table({ DATA, tablehead, HandleDATA, HandleRendering, overduestatus }) {
   const { light, secondary } = colors;
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
@@ -43,7 +43,11 @@ function Table({ DATA, tablehead, HandleDATA, HandleRendering }) {
     );
   });
 
-  const renderRows = DATA.map((row) => {
+  const filteredData = overduestatus 
+  ? DATA.filter(row => row.days_overdue !== 0) 
+  : DATA;
+
+  const renderRows = filteredData.map((row) => {
     return (
       <TableRow key={row.reference_no}>
           <SoftBox

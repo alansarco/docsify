@@ -19,7 +19,7 @@ import { DynamicTableHeight } from "components/General/TableHeight";
 import React, { useEffect, useState } from "react";
 import FixedLoading from "components/General/FixedLoading"; 
 import { useStateContext } from "context/ContextProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import DataContainer from "layouts/request-active/components/DataContainer";
 
 import Table from "layouts/request-active/data/table";
@@ -44,7 +44,8 @@ function ActiveRequest() {
     else if(token && access < 10) {
         return <Navigate to="/not-found" />
     }
-    
+    const location = useLocation();
+    const { overduestatus } = location.state || {};
     const [showFilter, setShowFilter] = useState(false);
     const [page, setPage] = useState(1);
     const [fetching, setFetching] = useState("");
@@ -75,13 +76,14 @@ function ActiveRequest() {
         created_at: "",
         filter: "",
         assigned: "",
-        status: "",
+        status: "", 
+        overdue: overduestatus || false, 
     };
 
     const [formData, setFormData] = useState(initialState);
 
     const HandleClear = (user) => {
-      setFormData(initialState);
+      setFormData({ ...initialState, overdue: false });
     };
 
     const handleChange = (e) => {
@@ -218,7 +220,7 @@ function ActiveRequest() {
                 <Grid item xs={12} lg={showFilter ? 9 : 12} className="p-4 rounded-5 bg-white shadow" width="100%">
                   <SoftBox className="mx-2 table-container" height={tableHeight} minHeight={50}>
                     {fetchdata && fetchdata.data && fetchdata.data.length > 0 ? 
-                      <Table table="sm" HandleDATA={HandleDATA} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
+                      <Table table="sm" HandleDATA={HandleDATA} overduestatus={formData.overdue} HandleRendering={HandleRendering} DATA={fetchdata.data} tablehead={tablehead} /> :
                       <>
                       <SoftBox className="d-flex" height="100%">
                         <SoftTypography variant="h6" className="m-auto text-secondary">   
