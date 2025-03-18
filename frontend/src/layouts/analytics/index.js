@@ -56,9 +56,9 @@ function Analytics() {
     const [searchTriggeredRequest, setSearchTriggeredRequest] = useState(true);
     const [fetchrequest, setFetchRequest] = useState([]);
     
-    const [showstudents, setShowStudents] = useState(false);
+    const [showstudents, setShowStudents] = useState(true);
     const [showregistrars, setShowRegistrars] = useState(false);
-    const [showrequests, setShowRequests] = useState(true);
+    const [showrequests, setShowRequests] = useState(false);
 
     const [reloadgrades, setReloadGrades] = useState(true);
     const [fetchgrades, setFetchGrades] = useState([]);
@@ -224,22 +224,6 @@ function Analytics() {
             setSearchTriggeredRequest(false);
         }
     }, [searchTriggeredRequest, showrequests]);
-
-    useEffect(() => {
-        if (showrequests) {
-            setReloadRequestStatus(true);
-            axios.get(apiRoutes.requestStatusCounts, {headers})
-            .then(response => {
-                setReloadRequestStatus(false);
-                setFetchRequestStatus(response.data.requeststatuscounts);
-                passToSuccessLogs(response.data, currentFileName);
-            })
-            .catch(error => {
-                passToErrorLogs(`Request Status Analytics not Fetched!  ${error}`, currentFileName);
-                setReloadRequestStatus(false);
-            });
-        }
-    }, [showrequests]);
     
     useEffect(() => {
         if (showrequests) {
@@ -253,6 +237,22 @@ function Analytics() {
             .catch(error => {
                 passToErrorLogs(`Request Document Counts Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadDocumentCounts(false);
+            });
+        }
+    }, [showrequests]);
+    
+    useEffect(() => {
+        if (showrequests) {
+            setReloadRequestStatus(true);
+            axios.get(apiRoutes.requestStatusCounts, {headers})
+            .then(response => {
+                setReloadRequestStatus(false);
+                setFetchRequestStatus(response.data.requeststatuscounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Request Status Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadRequestStatus(false);
             });
         }
     }, [showrequests]);
