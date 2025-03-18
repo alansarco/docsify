@@ -57,7 +57,7 @@ function Analytics() {
 
     const initialState = {
         grade: "",
-        student_time: 2,
+        student_time: 4,
     };
 
     const [formData, setFormData] = useState(initialState);
