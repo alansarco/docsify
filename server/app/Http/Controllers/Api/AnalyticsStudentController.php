@@ -20,7 +20,7 @@ class AnalyticsStudentController extends Controller
         $today = Carbon::today();
 
         $totalusers = [];
-        $studentLabel = [];
+        $chartLabel = [];
         $totalusersprev = 0;
         $totaluserscurr = 0;
         $totaluserscount = 0;
@@ -44,7 +44,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR7] = $YearGR7;
+                    $chartLabel[$YearGR7] = $YearGR7;
                     $YearGR7--;
                 }   
             }
@@ -64,7 +64,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR7[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -88,7 +88,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR7[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -112,7 +112,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR7[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -140,7 +140,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR8] = $YearGR8;
+                    $chartLabel[$YearGR8] = $YearGR8;
                     $YearGR8--;
                 }   
             }
@@ -160,7 +160,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR8[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -184,7 +184,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR8[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -208,7 +208,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR8[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -236,7 +236,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR9] = $YearGR9;
+                    $chartLabel[$YearGR9] = $YearGR9;
                     $YearGR9--;
                 }
             }
@@ -256,7 +256,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR9[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -280,7 +280,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR9[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -304,7 +304,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR9[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -332,7 +332,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR10] = $YearGR10;
+                    $chartLabel[$YearGR10] = $YearGR10;
                     $YearGR10--;
                 }
             }
@@ -352,7 +352,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR10[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -376,7 +376,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR10[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -400,7 +400,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR10[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -428,7 +428,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR11] = $YearGR11;
+                    $chartLabel[$YearGR11] = $YearGR11;
                     $YearGR11--;
                 }
             }
@@ -448,7 +448,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR11[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -472,7 +472,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR11[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -496,7 +496,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR11[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -524,7 +524,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$YearGR12] = $YearGR12;
+                    $chartLabel[$YearGR12] = $YearGR12;
                     $YearGR12--;
                 }
             }
@@ -544,7 +544,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR12[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -568,7 +568,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusersGR12[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->day - 1) { 
@@ -592,7 +592,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusersGR12[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -617,7 +617,7 @@ class AnalyticsStudentController extends Controller
                     } else if($x == 0) {
                         $totaluserscurr = $totaluserscount;
                     }
-                    $studentLabel[$currentYear] = $currentYear;
+                    $chartLabel[$currentYear] = $currentYear;
                     $currentYear--;
                 }
             }
@@ -636,7 +636,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusers[$dayName] = $totaluserscount;
-                    $studentLabel[$dayName] = $dayName;
+                    $chartLabel[$dayName] = $dayName;
                     if ($x == $today->dayOfWeek-2) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $today->dayOfWeek-1) { 
@@ -659,7 +659,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
             
                     $totalusers[$dayNumber] = $totaluserscount;
-                    $studentLabel[$dayNumber] = $dayNumber;
+                    $chartLabel[$dayNumber] = $dayNumber;
 
                     if ($x == $today->day - 2) { 
                         $totalusersprev = $totaluserscount; // Previous month
@@ -683,7 +683,7 @@ class AnalyticsStudentController extends Controller
                         ->count();
 
                     $totalusers[$monthName] = $totaluserscount;
-                    $studentLabel[$monthName] = $monthName;
+                    $chartLabel[$monthName] = $monthName;
                     if ($x == $currentMonth - 1) { 
                         $totalusersprev = $totaluserscount; // Previous month
                     }  else if ($x == $currentMonth) { 
@@ -712,7 +712,6 @@ class AnalyticsStudentController extends Controller
             'totalusersprev' => $totalusersprev,
             'totaluserscurr' => $totaluserscurr,
             'totalusers' => $totalusers,
-            'studentLabel' => $studentLabel,
             'totalstudents' => $totalstudents,
             'percentageChange' => $percentageChange,
 
@@ -722,7 +721,7 @@ class AnalyticsStudentController extends Controller
             'totalusersGR10' => $totalusersGR10,
             'totalusersGR11' => $totalusersGR11,
             'totalusersGR12' => $totalusersGR12,
-            'studentLabel' => $studentLabel,
+            'chartLabel' => $chartLabel,
         ];
 
         return response()->json([

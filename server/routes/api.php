@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AnalyticsRegistrarController;
+use App\Http\Controllers\Api\AnalyticsRequestController;
 use App\Http\Controllers\Api\AnalyticsStudentController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
@@ -65,6 +66,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('registraranalyticschart', [AnalyticsRegistrarController::class, 'registraranalyticschart']);
         Route::get('registrargendercounts', [AnalyticsRegistrarController::class, 'registrargendercounts']);
+        
+        Route::post('requestanalyticschart', [AnalyticsRequestController::class, 'requestanalyticschart']);
+        Route::get('requeststatuscounts', [AnalyticsRequestController::class, 'requeststatuscounts']);
+        Route::get('documentrequestcounts', [AnalyticsRequestController::class, 'documentrequestcounts']);
     });
 
     Route::prefix('admins')->group(function () {

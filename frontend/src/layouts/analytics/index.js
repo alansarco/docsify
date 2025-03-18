@@ -29,6 +29,8 @@ import { Switch } from "@mui/material";
 import { analyticgradeSelect } from "components/General/Utils";
 import { analytictimeSelect } from "components/General/Utils";
 import RegistrarAnalyticsChart from "essentials/Charts/LineCharts/GradientLineChart/RegistrarAnalyticsChart";
+import RequestAnalyticsChart from "essentials/Charts/LineCharts/GradientLineChart/RequestAnalyticsChart";
+import VerticalBarChart from "essentials/Charts/BarCharts/VerticalBarChart";
 
 function Analytics() {
     const currentFileName = "layouts/analytics/index.js";
@@ -49,6 +51,10 @@ function Analytics() {
     const [reloadregistrar, setReloadRegistrar] = useState(true);
     const [searchTriggeredRegistrar, setSearchTriggeredRegistrar] = useState(true);
     const [fetchregistrar, setFetchRegistrar] = useState([]);
+
+    const [reloadrequest, setReloadRequest] = useState(true);
+    const [searchTriggeredRequest, setSearchTriggeredRequest] = useState(true);
+    const [fetchrequest, setFetchRequest] = useState([]);
     
     const [showstudents, setShowStudents] = useState(false);
     const [showregistrars, setShowRegistrars] = useState(false);
@@ -63,10 +69,17 @@ function Analytics() {
     const [reloadregistrargender, setReloadRegistrarGender] = useState(true);
     const [fetchregistrargender, setFetchRegistrarGender] = useState([]);
 
+    const [reloadrequeststatus, setReloadRequestStatus] = useState(true);
+    const [fetchrequeststatus, setFetchRequestStatus] = useState([]);
+
+    const [reloaddocumentcounts, setReloadDocumentCounts] = useState(true);
+    const [fetchdocumentcounts, setFetchDocumentCounts] = useState([]);
+
     const initialState = {
         grade: "",
         student_time: 4,
         registrar_time: 4,
+        request_time: 4,
     };
 
     const [formData, setFormData] = useState(initialState);
@@ -98,9 +111,19 @@ function Analytics() {
         setSearchTriggeredRegistrar(true);
     };
 
+    const handleChangeRequest = (e) => {
+        if (e.target.name === "request_time") {
+            setFormData((prev) => ({
+                ...prev,
+                request_time: e.target.value,
+            }));
+        }
+        setSearchTriggeredRequest(true);
+    };
+
     //Fetching Student Chart
     useEffect(() => {
-        if (searchTriggeredStudent || showstudents) {
+        if (searchTriggeredStudent && showstudents) {
             setReloadStudent(true);
             axios.post(apiRoutes.StudentAnalyticsChart, formData, {headers})
             .then(response => {
@@ -143,7 +166,7 @@ function Analytics() {
                 passToSuccessLogs(response.data, currentFileName);
             })
             .catch(error => {
-                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                passToErrorLogs(`Gender Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadStudentGender(false);
             });
         }
@@ -152,7 +175,7 @@ function Analytics() {
 
     //Fetching Registrar
     useEffect(() => {
-        if (searchTriggeredRegistrar || showregistrars) {
+        if (searchTriggeredRegistrar && showregistrars) {
             setReloadRegistrar(true);
             axios.post(apiRoutes.RegistrarAnalyticsChart, formData, {headers})
             .then(response => {
@@ -161,7 +184,7 @@ function Analytics() {
                 passToSuccessLogs(response.data, currentFileName);
             })
             .catch(error => {
-                passToErrorLogs(`Student Analytics not Fetched!  ${error}`, currentFileName);
+                passToErrorLogs(`Registrar Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadRegistrar(false);
             });
             setSearchTriggeredRegistrar(false);
@@ -178,11 +201,62 @@ function Analytics() {
                 passToSuccessLogs(response.data, currentFileName);
             })
             .catch(error => {
-                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                passToErrorLogs(`Gender Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadRegistrarGender(false);
             });
         }
     }, [showregistrars]);
+
+    //Fetching Request
+    useEffect(() => {
+        if (searchTriggeredRequest && showrequests) {
+            setReloadRequest(true);
+            axios.post(apiRoutes.RequestAnalyticsChart, formData, {headers})
+            .then(response => {
+                setReloadRequest(false);
+                setFetchRequest(response.data.requestanalyticschart);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Request Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadRequest(false);
+            });
+            setSearchTriggeredRequest(false);
+        }
+    }, [searchTriggeredRequest, showrequests]);
+
+    useEffect(() => {
+        if (showrequests) {
+            setReloadRequestStatus(true);
+            axios.get(apiRoutes.requestStatusCounts, {headers})
+            .then(response => {
+                setReloadRequestStatus(false);
+                setFetchRequestStatus(response.data.requeststatuscounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Request Status Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadRequestStatus(false);
+            });
+        }
+    }, [showrequests]);
+    
+    useEffect(() => {
+        if (showrequests) {
+            setReloadDocumentCounts(true);
+            axios.get(apiRoutes.documentRequestCounts, {headers})
+            .then(response => {
+                setReloadDocumentCounts(false);
+                setFetchDocumentCounts(response.data.documentrequestcounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Request Document Counts Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadDocumentCounts(false);
+            });
+        }
+    }, [showrequests]);
+
 
     const { size } = typography;
 
@@ -292,7 +366,7 @@ function Analytics() {
                                 height="20rem"
                                 loading={reloadstudent}
                                 chart={{ 
-                                labels:  fetchstudent?.studentLabel && Object.values(fetchstudent.studentLabel),
+                                labels:  fetchstudent?.chartLabel && Object.values(fetchstudent.chartLabel),
                                 datasets: [
                                     {
                                         label: "All Students",
@@ -391,7 +465,7 @@ function Analytics() {
                             <RegistrarAnalyticsChart
                                 title="Registrar Analytics Chart"
                                 currentdata={fetchregistrar.totaluserscurr}
-                                totaldata={fetchregistrar.totalstudents}
+                                totaldata={fetchregistrar.totalregistrars}
                                 timeselection={
                                     <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="registrar_time" value={formData.registrar_time} onChange={handleChangeRegistrar} >
                                         {analytictimeSelect && analytictimeSelect.map((time) => (
@@ -415,11 +489,11 @@ function Analytics() {
                                 height="20rem"
                                 loading={reloadregistrar}
                                 chart={{ 
-                                labels:  fetchregistrar?.studentLabel && Object.values(fetchregistrar.studentLabel),
+                                labels:  fetchregistrar?.chartLabel && Object.values(fetchregistrar.chartLabel),
                                 datasets: [
                                     {
                                         label: "Registrar",
-                                        color: "violet",
+                                        color: "dark",
                                         data: fetchregistrar?.totalusers && Object.values(fetchregistrar.totalusers),
                                     },
                                 ],
@@ -438,11 +512,101 @@ function Analytics() {
                                     chart={{
                                     labels: ["Male", "Female"],  
                                     datasets: {
-                                        label: "Students",
+                                        label: "Registrars",
                                         backgroundColors: ["dark", "warning"],
                                         data: [
                                             fetchregistrargender?.registrargendercounts?.male ?? 0, 
                                             fetchregistrargender?.registrargendercounts?.female ?? 0, 
+                                        ],
+                                    },
+                                    }}
+                                />  
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                }
+                {showrequests &&
+                <Grid container spacing={3} mb={5}>
+                    <Grid item xs={12} md={7} xl={8}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={12} xl={12}>
+                            <RequestAnalyticsChart
+                                title="Request Analytics Chart"
+                                currentdata={fetchrequest.totalrequestscurr}
+                                totaldata={fetchrequest.totalrequests}
+                                timeselection={
+                                    <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="request_time" value={formData.request_time} onChange={handleChangeRequest} >
+                                        {analytictimeSelect && analytictimeSelect.map((time) => (
+                                        <option key={time.value} value={time.value}>
+                                                {time.desc}
+                                        </option>
+                                        ))}
+                                    </select>
+                                }
+                                description={
+                                    fetchrequest.percentageChange &&
+                                    <SoftBox display="flex" alignItems="center">
+                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon}</Icon>
+                                        </SoftBox>
+                                        <SoftTypography variant="button" color="text" fontWeight="medium">  
+                                        {fetchrequest.percentageChange}% {increase}{" "}
+                                        </SoftTypography>
+                                    </SoftBox>
+                                } 
+                                height="20rem"
+                                loading={reloadrequest}
+                                chart={{ 
+                                labels:  fetchrequest?.chartLabel && Object.values(fetchrequest.chartLabel),
+                                datasets: [
+                                    {
+                                        label: "Request",
+                                        color: "info",
+                                        data: fetchrequest?.grandtotalrequests && Object.values(fetchrequest.grandtotalrequests),
+                                    },
+                                ],
+                                }}
+                            />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={5} xl={4}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                            <VerticalBarChart
+                                title="Task Distribution Today"
+                                height="15rem"
+                                nodata={fetchdocumentcounts?.documentrequestcounts && 
+                                    fetchdocumentcounts.documentrequestcounts.every(item => item.count === 0)}
+                                loading={reloaddocumentcounts}
+                                maxCount={fetchdocumentcounts?.sumrequest ?? 0}
+                                chart={{
+                                    labels: fetchdocumentcounts?.documentrequestcounts?.map(item => item.doc_name) || [],
+                                    datasets: [{
+                                        color: "dark",
+                                        data: fetchdocumentcounts?.documentrequestcounts?.map(item => item.count) || [],
+                                    }],
+                                }}
+                            />
+
+                            </Grid>
+                            <Grid item xs={12}>
+                                <DefaultDoughnutChart
+                                    title="Request Status Distribution"
+                                    nodata={fetchrequeststatus?.requeststatuscounts && Object.values(fetchrequeststatus.requeststatuscounts).every(value => value === "0")}
+                                    loading={reloadrequeststatus}
+                                    chart={{
+                                    labels: ["Pending", "On Queue", "Processing", "For Release", "Overdue"],  
+                                    datasets: {
+                                        label: "Requests",
+                                        backgroundColors: ["warning", "success", "info", "dark", "primary"],
+                                        data: [
+                                            fetchrequeststatus?.requeststatuscounts?.pending ?? 0, 
+                                            fetchrequeststatus?.requeststatuscounts?.queue ?? 0, 
+                                            fetchrequeststatus?.requeststatuscounts?.processing ?? 0, 
+                                            fetchrequeststatus?.requeststatuscounts?.releasing ?? 0, 
+                                            fetchrequeststatus?.requeststatuscounts?.overdue ?? 0, 
                                         ],
                                     },
                                     }}

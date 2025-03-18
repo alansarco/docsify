@@ -26,6 +26,9 @@ export const apiRoutes = {
     RegistrarAnalyticsChart: `${mainRoute}/api/analytics/registraranalyticschart`,
     registrarGenderCounts: `${mainRoute}/api/analytics/registrargendercounts`,
 
+    RequestAnalyticsChart: `${mainRoute}/api/analytics/requestanalyticschart`,
+    requestStatusCounts: `${mainRoute}/api/analytics/requeststatuscounts`,
+    documentRequestCounts: `${mainRoute}/api/analytics/documentrequestcounts`,
 
     adminRetrieve: `${mainRoute}/api/admins`,
     addAdmin: `${mainRoute}/api/admins/addadmin`,
