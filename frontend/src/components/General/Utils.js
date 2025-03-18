@@ -42,6 +42,23 @@ export const gradeSelect = [
       { value: 12, desc: "12" },
 ];
 
+export const analyticgradeSelect = [
+      { value: 7, desc: "7" },
+      { value: 8, desc: "8" },
+      { value: 9, desc: "9" },
+      { value: 10, desc: "10" },
+      { value: 11, desc: "11" },
+      { value: 12, desc: "12" },
+      { value: 13, desc: "All Grade" },
+];
+
+export const analytictimeSelect = [
+      { value: 1, desc: "Week" },
+      { value: 2, desc: "Month" },
+      { value: 3, desc: "Year" },
+      { value: 4, desc: "Decade" },
+];
+
 export const roleSelect = [
       { value: 30, desc: "School Admin/Representative" },
       { value: 5, desc: "Student" },

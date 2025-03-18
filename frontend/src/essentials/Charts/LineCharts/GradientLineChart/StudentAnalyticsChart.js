@@ -25,8 +25,9 @@ import StudentConfig from "essentials/Charts/LineCharts/GradientLineChart/config
 import colors from "assets/theme/base/colors";
 import AbsoluteLoading from "components/General/AbsoluteLoading";
 import { formatCurrency } from "components/General/Utils";
+import { Grid } from "@mui/material";
 
-function StudentAnalyticsChart({ title, description, height, chart, loading, totaldata }) {
+function StudentAnalyticsChart({ title, description, height, chart, loading, currentdata, totaldata, gradeselection, timeselection }) {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState({});
   const { data, options } = chartData;
@@ -61,12 +62,24 @@ function StudentAnalyticsChart({ title, description, height, chart, loading, tot
         <SoftBox px={description ? 1 : 0} pt={description ? 1 : 0}>
           {title && (
             <SoftBox mb={1}>
-              <SoftTypography variant="h6">{title} <span className="text-info text-gradient">({totaldata} student/s)</span></SoftTypography>
+                <Grid container spacing={2} >
+                    <Grid item xs={12} md={6}>
+                        <SoftTypography variant="h6">{title} <span className="text-info text-gradient">({currentdata} student/s)</span></SoftTypography>
+                        <SoftTypography variant="h6" className="text-xxs">Total Students 
+                            <span className="text-success text-gradient"> ({totaldata} student/s)</span>
+                        </SoftTypography>
+                    </Grid>
+                    <Grid item xs={12} md={6} display="flex" justifyContent="end" alignItems="end">
+                        {gradeselection}
+                        {timeselection}
+                    </Grid>
+                </Grid>
             </SoftBox>
+            
           )}
           <SoftBox mb={2}>
             <SoftTypography component="div" variant="button" fontWeight="regular" color="text">
-              {description}
+              {description ? description : " "}
             </SoftTypography>
           </SoftBox>
         </SoftBox>

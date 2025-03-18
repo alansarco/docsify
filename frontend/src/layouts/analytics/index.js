@@ -26,6 +26,8 @@ import { passToErrorLogs } from "components/Api/Gateway";
 import axios from "axios";
 import StudentAnalyticsChart from "essentials/Charts/LineCharts/GradientLineChart/StudentAnalyticsChart";
 import { Switch } from "@mui/material";
+import { analyticgradeSelect } from "components/General/Utils";
+import { analytictimeSelect } from "components/General/Utils";
 
 function Analytics() {
     const currentFileName = "layouts/analytics/index.js";
@@ -54,19 +56,33 @@ function Analytics() {
     const [fetchstudentgender, setFetchStudentGender] = useState([]);
 
     const initialState = {
-        doc_id: "",
-        created_at: "",
-        filter: "",
-        assigned: "",
-        status: "", 
+        grade: "",
+        student_time: 2,
     };
 
     const [formData, setFormData] = useState(initialState);
 
+    const handleChangeStudent = (e) => {
+        if (e.target.name === "grade") {
+            setFormData((prev) => ({
+                ...prev,
+                grade: e.target.value,
+            }));
+        }
+
+        if (e.target.name === "student_time") {
+            setFormData((prev) => ({
+                ...prev,
+                student_time: e.target.value,
+            }));
+        }
+        setSearchTriggered(true);
+    };
+
     useEffect(() => {
         if (searchTriggered) {
             setReloadStudent(true);
-          axios.post(apiRoutes.StudentAnalyticsChart, formData, {headers})
+            axios.post(apiRoutes.StudentAnalyticsChart, formData, {headers})
             .then(response => {
                 setReloadStudent(false);
                 setFetchStudent(response.data.studentanalyticschart);
@@ -77,46 +93,40 @@ function Analytics() {
                 passToErrorLogs(`Student Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadStudent(false);
             });
-          setSearchTriggered(false);
+            setSearchTriggered(false);
         }
     }, [searchTriggered]);
     
 
     useEffect(() => {
-        if (searchTriggered) {
-            setReloadGrades(true);
-            axios.get(apiRoutes.gradeCounts, {headers})
-            .then(response => {
-                setReloadGrades(false);
-                setFetchGrades(response.data.gradecounts);
-                passToSuccessLogs(response.data, currentFileName);
-                setFetching("No data Found!")
-            })
-            .catch(error => {
-                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
-                setReloadGrades(false);
-            });
-          setSearchTriggered(false);
-        }
-    }, [searchTriggered]);
+        setReloadGrades(true);
+        axios.get(apiRoutes.gradeCounts, {headers})
+        .then(response => {
+            setReloadGrades(false);
+            setFetchGrades(response.data.gradecounts);
+            passToSuccessLogs(response.data, currentFileName);
+            setFetching("No data Found!")
+        })
+        .catch(error => {
+            passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+            setReloadGrades(false);
+        });
+    }, []);
 
     useEffect(() => {
-        if (searchTriggered) {
-            setReloadStudentGender(true);
-            axios.get(apiRoutes.studentGenderCounts, {headers})
-            .then(response => {
-                setReloadStudentGender(false);
-                setFetchStudentGender(response.data.studentgendercounts);
-                passToSuccessLogs(response.data, currentFileName);
-                setFetching("No data Found!")
-            })
-            .catch(error => {
-                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
-                setReloadStudentGender(false);
-            });
-          setSearchTriggered(false);
-        }
-    }, [searchTriggered]);
+        setReloadStudentGender(true);
+        axios.get(apiRoutes.studentGenderCounts, {headers})
+        .then(response => {
+            setReloadStudentGender(false);
+            setFetchStudentGender(response.data.studentgendercounts);
+            passToSuccessLogs(response.data, currentFileName);
+            setFetching("No data Found!")
+        })
+        .catch(error => {
+            passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+            setReloadStudentGender(false);
+        });
+    }, []);
 
     const { size } = typography;
 
@@ -167,6 +177,7 @@ function Analytics() {
                             <SoftTypography variant="button" className="me-1 ms-3 text-nowrap">Request Chart </SoftTypography>
                         </Grid>
                     </Grid>
+                    
                 </SoftBox>
                 {showstudents &&
                 <Grid container spacing={3}>
@@ -175,58 +186,77 @@ function Analytics() {
                         <Grid item xs={12} sm={12} xl={12}>
                         <StudentAnalyticsChart
                             title="Student Analytics Chart"
-                            totaldata={fetchstudent.totaluserscount}
+                            currentdata={fetchstudent.totaluserscurr}
+                            totaldata={fetchstudent.totalstudents}
+                            gradeselection={
+                                <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="grade" value={formData.grade} onChange={handleChangeStudent} >
+                                    <option value="">-- Select Grade --</option>
+                                    {analyticgradeSelect && analyticgradeSelect.map((gr) => (
+                                    <option key={gr.value} value={gr.value}>
+                                            {gr.desc}
+                                    </option>
+                                    ))}
+                                </select>
+                            }
+                            timeselection={
+                                <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="student_time" value={formData.student_time} onChange={handleChangeStudent} >
+                                    {analytictimeSelect && analytictimeSelect.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                            {time.desc}
+                                    </option>
+                                    ))}
+                                </select>
+                            }
                             description={
                                 fetchstudent.percentageChange &&
-                            <SoftBox display="flex" alignItems="center">
-                                <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
-                                <Icon className="font-bold">{icon}</Icon>
+                                <SoftBox display="flex" alignItems="center">
+                                    <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
+                                    <Icon className="font-bold">{icon}</Icon>
+                                    </SoftBox>
+                                    <SoftTypography variant="button" color="text" fontWeight="medium">  
+                                    {fetchstudent.percentageChange}% {increase}{" "}
+                                    </SoftTypography>
                                 </SoftBox>
-                                <SoftTypography variant="button" color="text" fontWeight="medium">  
-                                {fetchstudent.percentageChange}% {increase}{" "}
-                                </SoftTypography>
-                            </SoftBox>
                             } 
                             height="20rem"
                             loading={reloadstudent}
                             chart={{ 
-                            labels: [year-10, year-9, year-8, year-7, year-6, year-5, year-4, year-3, year-2, year-1, year],
+                            labels:  fetchstudent?.studentLabel && Object.values(fetchstudent.studentLabel),
                             datasets: [
                                 {
-                                  label: "All Students",
-                                  color: "violet",
+                                    label: "All Students",
+                                    color: "violet",
                                     data: fetchstudent?.totalusers && Object.values(fetchstudent.totalusers),
                                 },
-                                // ["secondary", "primary", "info", "success", "warning", "error", "secondary"],
-
                                 {
-                                label: "Grade 7",
-                                color: "dark",
-                                    data: fetchstudent?.totalusersGR7 && Object.values(fetchstudent.totalusersGR7),
+                                    label: "Grade 7",
+                                    color: "dark",
+                                    data: 
+                                        fetchstudent?.totalusersGR7 && Object.values(fetchstudent.totalusersGR7),
                                 },
                                 {
-                                label: "Grade 8",
-                                color: "primary",
+                                    label: "Grade 8",
+                                    color: "primary",
                                     data: fetchstudent?.totalusersGR8 && Object.values(fetchstudent.totalusersGR8),
                                 },
                                 {
-                                label: "Grade 9",
-                                color: "info",
+                                    label: "Grade 9",
+                                    color: "info",
                                     data: fetchstudent?.totalusersGR9 && Object.values(fetchstudent.totalusersGR9),
                                 },
                                 {
-                                label: "Grade 10",
-                                color: "success",
+                                    label: "Grade 10",
+                                    color: "success",
                                     data: fetchstudent?.totalusersGR10 && Object.values(fetchstudent.totalusersGR10),
                                 },
                                 {
-                                label: "Grade 11",
-                                color: "warning",
+                                    label: "Grade 11",
+                                    color: "warning",
                                     data: fetchstudent?.totalusersGR11 && Object.values(fetchstudent.totalusersGR11),
                                 },
                                 {
-                                label: "Grade 12",
-                                color: "error",
+                                    label: "Grade 12",
+                                    color: "error",
                                     data: fetchstudent?.totalusersGR12 && Object.values(fetchstudent.totalusersGR12),
                                 },
                             ],

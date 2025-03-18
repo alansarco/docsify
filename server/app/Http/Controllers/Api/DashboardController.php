@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $totalIncome = [];
         
         for ($x = 0; $x <= 10; $x++) {
-            $income = SystemIncome::where('year_sold',   $currentYear)->sum('price');
+            $income = SystemIncome::where('year_sold',  $currentYear)->sum('price');
             $totalIncome[$currentYear] = $income;
             $currentYear--;
         }

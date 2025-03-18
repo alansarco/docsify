@@ -63,8 +63,8 @@ function StudentConfig(labels, datasets) {
         },
         x: {
           title: {
-            display: true,
-            text: 'YEARS (decade)',
+            display: false,
+            text: 'DATE RANGE',
             font: {
               size: 14,
               family: typography.fontFamily,
