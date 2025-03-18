@@ -28,6 +28,7 @@ import StudentAnalyticsChart from "essentials/Charts/LineCharts/GradientLineChar
 import { Switch } from "@mui/material";
 import { analyticgradeSelect } from "components/General/Utils";
 import { analytictimeSelect } from "components/General/Utils";
+import RegistrarAnalyticsChart from "essentials/Charts/LineCharts/GradientLineChart/RegistrarAnalyticsChart";
 
 function Analytics() {
     const currentFileName = "layouts/analytics/index.js";
@@ -42,11 +43,15 @@ function Analytics() {
     };
 
     const [reloadstudent, setReloadStudent] = useState(true);
-    const [searchTriggered, setSearchTriggered] = useState(true);
+    const [searchTriggeredStudent, setSearchTriggeredStudent] = useState(true);
     const [fetchstudent, setFetchStudent] = useState([]);
-    const [fetching, setFetching] = useState("");
-    const [showstudents, setShowStudents] = useState(true);
-    const [showregistrars, setShowRegistrars] = useState(true);
+
+    const [reloadregistrar, setReloadRegistrar] = useState(true);
+    const [searchTriggeredRegistrar, setSearchTriggeredRegistrar] = useState(true);
+    const [fetchregistrar, setFetchRegistrar] = useState([]);
+    
+    const [showstudents, setShowStudents] = useState(false);
+    const [showregistrars, setShowRegistrars] = useState(false);
     const [showrequests, setShowRequests] = useState(true);
 
     const [reloadgrades, setReloadGrades] = useState(true);
@@ -55,9 +60,13 @@ function Analytics() {
     const [reloadstudentgender, setReloadStudentGender] = useState(true);
     const [fetchstudentgender, setFetchStudentGender] = useState([]);
 
+    const [reloadregistrargender, setReloadRegistrarGender] = useState(true);
+    const [fetchregistrargender, setFetchRegistrarGender] = useState([]);
+
     const initialState = {
         grade: "",
         student_time: 4,
+        registrar_time: 4,
     };
 
     const [formData, setFormData] = useState(initialState);
@@ -76,57 +85,104 @@ function Analytics() {
                 student_time: e.target.value,
             }));
         }
-        setSearchTriggered(true);
+        setSearchTriggeredStudent(true);
     };
 
+    const handleChangeRegistrar = (e) => {
+        if (e.target.name === "registrar_time") {
+            setFormData((prev) => ({
+                ...prev,
+                registrar_time: e.target.value,
+            }));
+        }
+        setSearchTriggeredRegistrar(true);
+    };
+
+    //Fetching Student Chart
     useEffect(() => {
-        if (searchTriggered) {
+        if (searchTriggeredStudent || showstudents) {
             setReloadStudent(true);
             axios.post(apiRoutes.StudentAnalyticsChart, formData, {headers})
             .then(response => {
                 setReloadStudent(false);
                 setFetchStudent(response.data.studentanalyticschart);
                 passToSuccessLogs(response.data, currentFileName);
-                setFetching("No data Found!")
             })
             .catch(error => {
                 passToErrorLogs(`Student Analytics not Fetched!  ${error}`, currentFileName);
                 setReloadStudent(false);
             });
-            setSearchTriggered(false);
+            setSearchTriggeredStudent(false);
         }
-    }, [searchTriggered]);
+    }, [searchTriggeredStudent, showstudents]);
     
 
     useEffect(() => {
-        setReloadGrades(true);
-        axios.get(apiRoutes.gradeCounts, {headers})
-        .then(response => {
-            setReloadGrades(false);
-            setFetchGrades(response.data.gradecounts);
-            passToSuccessLogs(response.data, currentFileName);
-            setFetching("No data Found!")
-        })
-        .catch(error => {
-            passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
-            setReloadGrades(false);
-        });
-    }, []);
+        if (showstudents) {
+            setReloadGrades(true);
+            axios.get(apiRoutes.gradeCounts, {headers})
+            .then(response => {
+                setReloadGrades(false);
+                setFetchGrades(response.data.gradecounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadGrades(false);
+            });
+            }
+    }, [showstudents]);
 
     useEffect(() => {
-        setReloadStudentGender(true);
-        axios.get(apiRoutes.studentGenderCounts, {headers})
-        .then(response => {
-            setReloadStudentGender(false);
-            setFetchStudentGender(response.data.studentgendercounts);
-            passToSuccessLogs(response.data, currentFileName);
-            setFetching("No data Found!")
-        })
-        .catch(error => {
-            passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
-            setReloadStudentGender(false);
-        });
-    }, []);
+        if (showstudents) {
+            setReloadStudentGender(true);
+            axios.get(apiRoutes.studentGenderCounts, {headers})
+            .then(response => {
+                setReloadStudentGender(false);
+                setFetchStudentGender(response.data.studentgendercounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadStudentGender(false);
+            });
+        }
+    }, [showstudents]);
+
+
+    //Fetching Registrar
+    useEffect(() => {
+        if (searchTriggeredRegistrar || showregistrars) {
+            setReloadRegistrar(true);
+            axios.post(apiRoutes.RegistrarAnalyticsChart, formData, {headers})
+            .then(response => {
+                setReloadRegistrar(false);
+                setFetchRegistrar(response.data.registraranalyticschart);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Student Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadRegistrar(false);
+            });
+            setSearchTriggeredRegistrar(false);
+        }
+    }, [searchTriggeredRegistrar, showregistrars]);
+
+    useEffect(() => {
+        if (showregistrars) {
+            setReloadRegistrarGender(true);
+            axios.get(apiRoutes.registrarGenderCounts, {headers})
+            .then(response => {
+                setReloadRegistrarGender(false);
+                setFetchRegistrarGender(response.data.registrargendercounts);
+                passToSuccessLogs(response.data, currentFileName);
+            })
+            .catch(error => {
+                passToErrorLogs(`Grade Analytics not Fetched!  ${error}`, currentFileName);
+                setReloadRegistrarGender(false);
+            });
+        }
+    }, [showregistrars]);
 
     const { size } = typography;
 
@@ -146,6 +202,24 @@ function Analytics() {
             increase = "decrease";
         } else {
             fetchstudent.percentageChange = 0; // No change
+            icon = "arrow_forward"; // Neutral change
+            iconColor = "neutral"; // Neutral color
+        }
+    }
+
+    if (fetchregistrar && fetchregistrar.totalusers) {
+        // Get the current and last year population to compare
+        const totalusersValues = Object.values(fetchregistrar.totalusers);
+        if (fetchregistrar.percentageChange > 0) {
+            icon = "arrow_upward";
+            iconColor = "info";
+            increase = "more";
+        } else if (fetchregistrar.percentageChange < 0) {
+            icon = "arrow_downward";
+            iconColor = "primary";
+            increase = "decrease";
+        } else {
+            fetchregistrar.percentageChange = 0; // No change
             icon = "arrow_forward"; // Neutral change
             iconColor = "neutral"; // Neutral color
         }
@@ -177,135 +251,204 @@ function Analytics() {
                     
                 </SoftBox>
                 {showstudents &&
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={5}>
                     <Grid item xs={12} md={7} xl={8}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12} xl={12}>
-                        <StudentAnalyticsChart
-                            title="Student Analytics Chart"
-                            currentdata={fetchstudent.totaluserscurr}
-                            totaldata={fetchstudent.totalstudents}
-                            gradeselection={
-                                <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="grade" value={formData.grade} onChange={handleChangeStudent} >
-                                    <option value="">-- Select Grade --</option>
-                                    {analyticgradeSelect && analyticgradeSelect.map((gr) => (
-                                    <option key={gr.value} value={gr.value}>
-                                            {gr.desc}
-                                    </option>
-                                    ))}
-                                </select>
-                            }
-                            timeselection={
-                                <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="student_time" value={formData.student_time} onChange={handleChangeStudent} >
-                                    {analytictimeSelect && analytictimeSelect.map((time) => (
-                                    <option key={time.value} value={time.value}>
-                                            {time.desc}
-                                    </option>
-                                    ))}
-                                </select>
-                            }
-                            description={
-                                fetchstudent.percentageChange &&
-                                <SoftBox display="flex" alignItems="center">
-                                    <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
-                                    <Icon className="font-bold">{icon}</Icon>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={12} xl={12}>
+                            <StudentAnalyticsChart
+                                title="Student Analytics Chart"
+                                currentdata={fetchstudent.totaluserscurr}
+                                totaldata={fetchstudent.totalstudents}
+                                gradeselection={
+                                    <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="grade" value={formData.grade} onChange={handleChangeStudent} >
+                                        <option value="">-- Select Grade --</option>
+                                        {analyticgradeSelect && analyticgradeSelect.map((gr) => (
+                                        <option key={gr.value} value={gr.value}>
+                                                {gr.desc}
+                                        </option>
+                                        ))}
+                                    </select>
+                                }
+                                timeselection={
+                                    <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="student_time" value={formData.student_time} onChange={handleChangeStudent} >
+                                        {analytictimeSelect && analytictimeSelect.map((time) => (
+                                        <option key={time.value} value={time.value}>
+                                                {time.desc}
+                                        </option>
+                                        ))}
+                                    </select>
+                                }
+                                description={
+                                    fetchstudent.percentageChange &&
+                                    <SoftBox display="flex" alignItems="center">
+                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon}</Icon>
+                                        </SoftBox>
+                                        <SoftTypography variant="button" color="text" fontWeight="medium">  
+                                        {fetchstudent.percentageChange}% {increase}{" "}
+                                        </SoftTypography>
                                     </SoftBox>
-                                    <SoftTypography variant="button" color="text" fontWeight="medium">  
-                                    {fetchstudent.percentageChange}% {increase}{" "}
-                                    </SoftTypography>
-                                </SoftBox>
-                            } 
-                            height="20rem"
-                            loading={reloadstudent}
-                            chart={{ 
-                            labels:  fetchstudent?.studentLabel && Object.values(fetchstudent.studentLabel),
-                            datasets: [
-                                {
-                                    label: "All Students",
-                                    color: "violet",
-                                    data: fetchstudent?.totalusers && Object.values(fetchstudent.totalusers),
-                                },
-                                {
-                                    label: "Grade 7",
-                                    color: "dark",
-                                    data: 
-                                        fetchstudent?.totalusersGR7 && Object.values(fetchstudent.totalusersGR7),
-                                },
-                                {
-                                    label: "Grade 8",
-                                    color: "primary",
-                                    data: fetchstudent?.totalusersGR8 && Object.values(fetchstudent.totalusersGR8),
-                                },
-                                {
-                                    label: "Grade 9",
-                                    color: "info",
-                                    data: fetchstudent?.totalusersGR9 && Object.values(fetchstudent.totalusersGR9),
-                                },
-                                {
-                                    label: "Grade 10",
-                                    color: "success",
-                                    data: fetchstudent?.totalusersGR10 && Object.values(fetchstudent.totalusersGR10),
-                                },
-                                {
-                                    label: "Grade 11",
-                                    color: "warning",
-                                    data: fetchstudent?.totalusersGR11 && Object.values(fetchstudent.totalusersGR11),
-                                },
-                                {
-                                    label: "Grade 12",
-                                    color: "error",
-                                    data: fetchstudent?.totalusersGR12 && Object.values(fetchstudent.totalusersGR12),
-                                },
-                            ],
-                            }}
-                        />
+                                } 
+                                height="20rem"
+                                loading={reloadstudent}
+                                chart={{ 
+                                labels:  fetchstudent?.studentLabel && Object.values(fetchstudent.studentLabel),
+                                datasets: [
+                                    {
+                                        label: "All Students",
+                                        color: "violet",
+                                        data: fetchstudent?.totalusers && Object.values(fetchstudent.totalusers),
+                                    },
+                                    {
+                                        label: "Grade 7",
+                                        color: "dark",
+                                        data: 
+                                            fetchstudent?.totalusersGR7 && Object.values(fetchstudent.totalusersGR7),
+                                    },
+                                    {
+                                        label: "Grade 8",
+                                        color: "primary",
+                                        data: fetchstudent?.totalusersGR8 && Object.values(fetchstudent.totalusersGR8),
+                                    },
+                                    {
+                                        label: "Grade 9",
+                                        color: "info",
+                                        data: fetchstudent?.totalusersGR9 && Object.values(fetchstudent.totalusersGR9),
+                                    },
+                                    {
+                                        label: "Grade 10",
+                                        color: "success",
+                                        data: fetchstudent?.totalusersGR10 && Object.values(fetchstudent.totalusersGR10),
+                                    },
+                                    {
+                                        label: "Grade 11",
+                                        color: "warning",
+                                        data: fetchstudent?.totalusersGR11 && Object.values(fetchstudent.totalusersGR11),
+                                    },
+                                    {
+                                        label: "Grade 12",
+                                        color: "error",
+                                        data: fetchstudent?.totalusersGR12 && Object.values(fetchstudent.totalusersGR12),
+                                    },
+                                ],
+                                }}
+                            />
+                            </Grid>
                         </Grid>
-                    </Grid>
                     </Grid>
                     <Grid item xs={12} md={5} xl={4}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                        <DefaultDoughnutChart
-                            title="Student Distribution"
-                            nodata={fetchgrades?.gradecounts && Object.values(fetchgrades.gradecounts).every(value => value === "0")}
-                            loading={reloadgrades}
-                            chart={{
-                            labels: ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12", "Others"],  
-                            datasets: {
-                                label: "Students",
-                                backgroundColors: ["dark", "primary", "info", "success", "warning", "error", "secondary"],
-                                data: [
-                                    fetchgrades?.gradecounts?.grade7 ?? 0, 
-                                    fetchgrades?.gradecounts?.grade8 ?? 0, 
-                                    fetchgrades?.gradecounts?.grade9 ?? 0, 
-                                    fetchgrades?.gradecounts?.grade10 ?? 0,
-                                    fetchgrades?.gradecounts?.grade11 ?? 0,
-                                    fetchgrades?.gradecounts?.grade12 ??0,
-                                    fetchgrades?.gradecounts?.others ?? 0,
-                                ],
-                            },
-                            }}
-                        />  
-                        </Grid>
-                        <Grid item xs={12}>
-                        <DefaultDoughnutChart
-                            title="Gender Distribution"
-                            nodata={fetchstudentgender?.studentgendercounts && Object.values(fetchstudentgender.studentgendercounts).every(value => value === "0")}
-                            loading={reloadstudentgender}
-                            chart={{
-                            labels: ["Male", "Female"],  
-                            datasets: {
-                                label: "Students",
-                                backgroundColors: ["dark", "primary"],
-                                data: [
-                                    fetchstudentgender?.studentgendercounts?.male ?? 0, 
-                                    fetchstudentgender?.studentgendercounts?.female ?? 0, 
-                                ],
-                            },
-                            }}
-                        />  
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <DefaultDoughnutChart
+                                    title="Student Distribution"
+                                    nodata={fetchgrades?.gradecounts && Object.values(fetchgrades.gradecounts).every(value => value === "0")}
+                                    loading={reloadgrades}
+                                    chart={{
+                                    labels: ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12", "Others"],  
+                                    datasets: {
+                                        label: "Students",
+                                        backgroundColors: ["dark", "primary", "info", "success", "warning", "error", "secondary"],
+                                        data: [
+                                            fetchgrades?.gradecounts?.grade7 ?? 0, 
+                                            fetchgrades?.gradecounts?.grade8 ?? 0, 
+                                            fetchgrades?.gradecounts?.grade9 ?? 0, 
+                                            fetchgrades?.gradecounts?.grade10 ?? 0,
+                                            fetchgrades?.gradecounts?.grade11 ?? 0,
+                                            fetchgrades?.gradecounts?.grade12 ??0,
+                                            fetchgrades?.gradecounts?.others ?? 0,
+                                        ],
+                                    },
+                                    }}
+                                />  
+                            </Grid>
+                            <Grid item xs={12}>
+                                <DefaultDoughnutChart
+                                    title="Gender Distribution"
+                                    nodata={fetchstudentgender?.studentgendercounts && Object.values(fetchstudentgender.studentgendercounts).every(value => value === "0")}
+                                    loading={reloadstudentgender}
+                                    chart={{
+                                    labels: ["Male", "Female"],  
+                                    datasets: {
+                                        label: "Students",
+                                        backgroundColors: ["dark", "primary"],
+                                        data: [
+                                            fetchstudentgender?.studentgendercounts?.male ?? 0, 
+                                            fetchstudentgender?.studentgendercounts?.female ?? 0, 
+                                        ],
+                                    },
+                                    }}
+                                />  
+                            </Grid>
                         </Grid>
                     </Grid>
+                </Grid>
+                }
+                {showregistrars &&
+                <Grid container spacing={3} mb={5}>
+                    <Grid item xs={12} md={7} xl={8}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={12} xl={12}>
+                            <RegistrarAnalyticsChart
+                                title="Registrar Analytics Chart"
+                                currentdata={fetchregistrar.totaluserscurr}
+                                totaldata={fetchregistrar.totalstudents}
+                                timeselection={
+                                    <select className="form-select-sm text-secondary cursor-pointer rounded-5 border me-1" name="registrar_time" value={formData.registrar_time} onChange={handleChangeRegistrar} >
+                                        {analytictimeSelect && analytictimeSelect.map((time) => (
+                                        <option key={time.value} value={time.value}>
+                                                {time.desc}
+                                        </option>
+                                        ))}
+                                    </select>
+                                }
+                                description={
+                                    fetchregistrar.percentageChange &&
+                                    <SoftBox display="flex" alignItems="center">
+                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon}</Icon>
+                                        </SoftBox>
+                                        <SoftTypography variant="button" color="text" fontWeight="medium">  
+                                        {fetchregistrar.percentageChange}% {increase}{" "}
+                                        </SoftTypography>
+                                    </SoftBox>
+                                } 
+                                height="20rem"
+                                loading={reloadregistrar}
+                                chart={{ 
+                                labels:  fetchregistrar?.studentLabel && Object.values(fetchregistrar.studentLabel),
+                                datasets: [
+                                    {
+                                        label: "Registrar",
+                                        color: "violet",
+                                        data: fetchregistrar?.totalusers && Object.values(fetchregistrar.totalusers),
+                                    },
+                                ],
+                                }}
+                            />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={5} xl={4}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <DefaultDoughnutChart
+                                    title="Gender Distribution"
+                                    nodata={fetchregistrargender?.registrargendercounts && Object.values(fetchregistrargender.registrargendercounts).every(value => value === "0")}
+                                    loading={reloadregistrargender}
+                                    chart={{
+                                    labels: ["Male", "Female"],  
+                                    datasets: {
+                                        label: "Students",
+                                        backgroundColors: ["dark", "warning"],
+                                        data: [
+                                            fetchregistrargender?.registrargendercounts?.male ?? 0, 
+                                            fetchregistrargender?.registrargendercounts?.female ?? 0, 
+                                        ],
+                                    },
+                                    }}
+                                />  
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
                 }

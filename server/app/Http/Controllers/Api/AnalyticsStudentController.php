@@ -4,16 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utilities\Utils;
-use App\Models\Client;
-use App\Models\DocRequest;
-use App\Models\SystemIncome;
-use App\Models\Transferee;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AnalyticsController extends Controller
+class AnalyticsStudentController extends Controller
 {
     //returns data of Ither Statistics
     public function studentanalyticschart(Request $request) 

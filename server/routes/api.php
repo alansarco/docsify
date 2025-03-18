@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AdminController;
-use App\Http\Controllers\Api\AnalyticsController;
-use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\AnalyticsRegistrarController;
+use App\Http\Controllers\Api\AnalyticsStudentController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\DashboardController;
@@ -59,9 +59,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('analytics')->group(function () {
-        Route::post('studentanalyticschart', [AnalyticsController::class, 'studentanalyticschart']);
-        Route::get('gradecounts', [AnalyticsController::class, 'gradecounts']);
-        Route::get('studentgendercounts', [AnalyticsController::class, 'studentgendercounts']);
+        Route::post('studentanalyticschart', [AnalyticsStudentController::class, 'studentanalyticschart']);
+        Route::get('gradecounts', [AnalyticsStudentController::class, 'gradecounts']);
+        Route::get('studentgendercounts', [AnalyticsStudentController::class, 'studentgendercounts']);
+
+        Route::post('registraranalyticschart', [AnalyticsRegistrarController::class, 'registraranalyticschart']);
+        Route::get('registrargendercounts', [AnalyticsRegistrarController::class, 'registrargendercounts']);
     });
 
     Route::prefix('admins')->group(function () {

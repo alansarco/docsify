@@ -1,7 +1,7 @@
 // React base styles
 import typography from "assets/theme/base/typography";
 
-function StudentConfig(labels, datasets) {
+function RegistrarConfig(labels, datasets) {
   return {
     data: {
       labels,
@@ -34,7 +34,7 @@ function StudentConfig(labels, datasets) {
         y: {
           title: {
             display: true,
-            text: 'NO OF STUDENTS',
+            text: 'NO OF REGISTRARS',
             font: {
               size: 14,
               family: typography.fontFamily,
@@ -97,4 +97,4 @@ function StudentConfig(labels, datasets) {
 }
 
 
-export default StudentConfig;
+export default RegistrarConfig;
