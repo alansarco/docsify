@@ -69,6 +69,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR7[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -160,6 +165,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR8[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -251,6 +261,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR9[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -342,6 +357,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR10[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -433,6 +453,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR11[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -524,6 +549,11 @@ class AnalyticsController extends Controller
             
                     $totalusersGR12[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
@@ -611,6 +641,11 @@ class AnalyticsController extends Controller
             
                     $totalusers[$dayName] = $totaluserscount;
                     $studentLabel[$dayName] = $dayName;
+                    if ($x == $today->dayOfWeek-2) { 
+                        $totalusersprev = $totaluserscount; // Previous month
+                    }  else if ($x == $today->dayOfWeek-1) { 
+                        $totaluserscurr = $totaluserscount; // Current month
+                    }
                 }
             }
             else if ($request->student_time == 2) {
