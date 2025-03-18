@@ -6,6 +6,14 @@ export const versions = [
         details: [
             {
                 types: "new",
+                description: "Added Request Chart in Analytics Page"
+            },
+            {
+                types: "new",
+                description: "Added Registrar Chart in Analytics Page"
+            },
+            {
+                types: "new",
                 description: "Added Student Chart in Analytics Page"
             },
             {
