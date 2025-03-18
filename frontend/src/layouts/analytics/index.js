@@ -575,7 +575,7 @@ function Analytics() {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                             <VerticalBarChart
-                                title="Task Distribution Today"
+                                title="Document Distribution"
                                 height="15rem"
                                 nodata={fetchdocumentcounts?.documentrequestcounts && 
                                     fetchdocumentcounts.documentrequestcounts.every(item => item.count === 0)}
