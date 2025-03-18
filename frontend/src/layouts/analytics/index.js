@@ -136,8 +136,6 @@ function Analytics() {
     if (fetchstudent && fetchstudent.totalusers) {
         // Get the current and last year population to compare
         const totalusersValues = Object.values(fetchstudent.totalusers);
-        if (totalusersValues.length >= 2) {
-            // Set icon and color based on percentage change
         if (fetchstudent.percentageChange > 0) {
             icon = "arrow_upward";
             iconColor = "info";
@@ -150,7 +148,6 @@ function Analytics() {
             fetchstudent.percentageChange = 0; // No change
             icon = "arrow_forward"; // Neutral change
             iconColor = "neutral"; // Neutral color
-        }
         }
     }
 
