@@ -260,42 +260,65 @@ function Analytics() {
 
     const { size } = typography;
 
-    let icon = "";
-    let iconColor = "";
-    let increase = "";
+    let icon1 = "";
+    let iconColor1 = "";
+    let increase1 = "";
+
+    let icon2 = "";
+    let iconColor2 = "";
+    let increase2 = "";
+
+    let icon3 = "";
+    let iconColor3 = "";
+    let increase3 = "";
     if (fetchstudent && fetchstudent.totalusers) {
         // Get the current and last year population to compare
-        const totalusersValues = Object.values(fetchstudent.totalusers);
         if (fetchstudent.percentageChange > 0) {
-            icon = "arrow_upward";
-            iconColor = "info";
-            increase = "more";
+            icon1 = "arrow_upward";
+            iconColor1 = "info";
+            increase1 = "more";
         } else if (fetchstudent.percentageChange < 0) {
-            icon = "arrow_downward";
-            iconColor = "primary";
-            increase = "decrease";
+            icon1 = "arrow_downward";
+            iconColor1 = "primary";
+            increase1 = "decrease";
         } else {
             fetchstudent.percentageChange = 0; // No change
-            icon = "arrow_forward"; // Neutral change
-            iconColor = "neutral"; // Neutral color
+            icon1 = "arrow_forward"; // Neutral change
+            iconColor1 = "neutral"; // Neutral color
         }
     }
 
     if (fetchregistrar && fetchregistrar.totalusers) {
         // Get the current and last year population to compare
-        const totalusersValues = Object.values(fetchregistrar.totalusers);
         if (fetchregistrar.percentageChange > 0) {
-            icon = "arrow_upward";
-            iconColor = "info";
-            increase = "more";
+            icon2 = "arrow_upward";
+            iconColor2 = "info";
+            increase2 = "more";
         } else if (fetchregistrar.percentageChange < 0) {
-            icon = "arrow_downward";
-            iconColor = "primary";
-            increase = "decrease";
+            icon2 = "arrow_downward";
+            iconColor2 = "primary";
+            increase2 = "decrease";
         } else {
             fetchregistrar.percentageChange = 0; // No change
-            icon = "arrow_forward"; // Neutral change
-            iconColor = "neutral"; // Neutral color
+            icon2 = "arrow_forward"; // Neutral change
+            iconColor2 = "neutral"; // Neutral color
+        }
+    }
+
+    if (fetchrequest && fetchrequest.documentrequestcounts) {
+        // Get the current and last year population to compare
+        if (fetchrequest.percentageChange > 0) {
+            icon2 = "arrow_upward";
+            iconColor2 = "info";
+            increase2 = "more";
+        } else if (fetchrequest.percentageChange < 0) {
+            icon2 = "arrow_downward";
+            iconColor2 = "primary";
+            increase2 = "decrease";
+        } else {
+            fetchrequest.percentageChange = 0; // No change
+            icon2 = "arrow_forward"; // Neutral change
+            iconColor2 = "neutral"; // Neutral color
         }
     }
 
@@ -355,11 +378,11 @@ function Analytics() {
                                 description={
                                     fetchstudent.percentageChange &&
                                     <SoftBox display="flex" alignItems="center">
-                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
-                                        <Icon className="font-bold">{icon}</Icon>
+                                        <SoftBox fontSize={size.lg} color={iconColor1} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon1}</Icon>
                                         </SoftBox>
                                         <SoftTypography variant="button" color="text" fontWeight="medium">  
-                                        {fetchstudent.percentageChange}% {increase}{" "}
+                                        {fetchstudent.percentageChange}% {increase1}{" "}
                                         </SoftTypography>
                                     </SoftBox>
                                 } 
@@ -478,11 +501,11 @@ function Analytics() {
                                 description={
                                     fetchregistrar.percentageChange &&
                                     <SoftBox display="flex" alignItems="center">
-                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
-                                        <Icon className="font-bold">{icon}</Icon>
+                                        <SoftBox fontSize={size.lg} color={iconColor2} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon2}</Icon>
                                         </SoftBox>
                                         <SoftTypography variant="button" color="text" fontWeight="medium">  
-                                        {fetchregistrar.percentageChange}% {increase}{" "}
+                                        {fetchregistrar.percentageChange}% {increase2}{" "}
                                         </SoftTypography>
                                     </SoftBox>
                                 } 
@@ -547,11 +570,11 @@ function Analytics() {
                                 description={
                                     fetchrequest.percentageChange &&
                                     <SoftBox display="flex" alignItems="center">
-                                        <SoftBox fontSize={size.lg} color={iconColor} mb={0.3} mr={0.5} lineHeight={0}>
-                                        <Icon className="font-bold">{icon}</Icon>
+                                        <SoftBox fontSize={size.lg} color={iconColor3} mb={0.3} mr={0.5} lineHeight={0}>
+                                        <Icon className="font-bold">{icon3}</Icon>
                                         </SoftBox>
                                         <SoftTypography variant="button" color="text" fontWeight="medium">  
-                                        {fetchrequest.percentageChange}% {increase}{" "}
+                                        {fetchrequest.percentageChange}% {increase3}{" "}
                                         </SoftTypography>
                                     </SoftBox>
                                 } 
