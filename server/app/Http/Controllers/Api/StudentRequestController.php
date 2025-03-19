@@ -45,7 +45,8 @@ class StudentRequestController extends Controller
                 ->orWhere('user_owner.first_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.middle_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.last_name', 'LIKE' , '%'.$request->filter.'%')
-                ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%');
+                ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%')
+                ->orWhere('documents.doc_name', 'LIKE' , '%'.$request->filter.'%');
             });
         }
 
@@ -115,7 +116,8 @@ class StudentRequestController extends Controller
                 ->orWhere('user_owner.first_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.middle_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.last_name', 'LIKE' , '%'.$request->filter.'%')
-                ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%');
+                ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%')
+                ->orWhere('documents.doc_name', 'LIKE' , '%'.$request->filter.'%');
             });
         }
 
