@@ -364,15 +364,15 @@ function SignUp() {
                                                   <SoftInput name="username" type={formData.role == 5 ? "number" : "email"} value={formData.role == 5 ? getLRN(formData.username) : formData.username} onChange={handleChange} size="small"
                                                   /> 
                                             </Grid> 
-                                            <Grid item xs={12} md={6} lg={4} px={1}>
+                                            <Grid item xs={12} md={6} lg={5} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Password:</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="password" value={formData.password} onChange={handleChange} size="small" /> 
-                                                {passwordError && (
-                                                      <SoftTypography variant="caption" className="text-danger fst-italic">
+                                                  {passwordError && (
+                                                      <SoftTypography variant="caption" className="text-danger fw-bold fst-italic">
                                                       {passwordError}
                                                       </SoftTypography>
-                                                )}
+                                                      )}
                                             </Grid>     
                                           </Grid>    
                                           <SoftTypography mt={3} fontWeight="medium" textTransform="capitalize" color="info" textGradient>

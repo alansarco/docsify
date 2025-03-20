@@ -112,7 +112,7 @@ function Security() {
                                           <Grid item xs={12} md={4} px={1}>
                                                 <SoftInput name="newpass"  value={formData.newpass} onChange={handleChange} size="small" /> 
                                                 {passwordError && (
-                                                      <SoftTypography variant="caption" className="text-danger fst-italic">
+                                                      <SoftTypography variant="caption" className="text-danger fw-bold fst-italic">
                                                       {passwordError}
                                                       </SoftTypography>
                                                 )}

@@ -357,7 +357,7 @@ class StudentRequestController extends Controller
                 'status_name' => 'PENDING',
                 'status_details' => 'Requested a document',
                 'created_at' => $today,
-                'updated_by' => $authUser->fullname,
+                'created_by' => $authUser->fullname,
             ];
             DocReqTimeline::create($createTimeline);
 
@@ -368,7 +368,6 @@ class StudentRequestController extends Controller
                 'status_name' => 'ON QUEUE',
                 'status_details' => 'Request document assigned to '.$getRegistrar->fullname,
                 'created_at' => $today,
-                'created_by' => $authUser->fullname,
             ];
             DocReqTimeline::create($createTimeline);
 
