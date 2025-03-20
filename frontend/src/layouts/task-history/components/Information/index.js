@@ -118,6 +118,7 @@ function Information({DATA, HandleRendering, ReloadTable, STATUS, TIMELINE}) {
                                       icon={getStatusIcon(time.status)}
                                       title={time.status_name === prevStatusName ? "" : time.status_name} // Set empty if same as previous
                                       dateTime={time.created_date}
+                                      created={time.created_by}
                                       description={time.status_details}
                                 />
                           );

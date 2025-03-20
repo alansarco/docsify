@@ -191,7 +191,7 @@ class StudentRequestController extends Controller
                 'reference_no' => $request->reference_no,
                 'status' => 6,
                 'status_name' => "CANCELLED",
-                'status_details' => $authUser->name .' cancelled the request',
+                'status_details' => 'Request has been cancelled',
                 'created_by' => $authUser->fullname,
             ]);
 
@@ -355,7 +355,7 @@ class StudentRequestController extends Controller
                 'reference_no' => $GeneratedID,
                 'status' => 0,
                 'status_name' => 'PENDING',
-                'status_details' => $authUser->fullname .' requested a document',
+                'status_details' => 'Requested a document',
                 'created_at' => $today,
                 'updated_by' => $authUser->fullname,
             ];
@@ -368,7 +368,7 @@ class StudentRequestController extends Controller
                 'status_name' => 'ON QUEUE',
                 'status_details' => 'Request document assigned to '.$getRegistrar->fullname,
                 'created_at' => $today,
-                'updated_by' => $authUser->fullname,
+                'created_by' => $authUser->fullname,
             ];
             DocReqTimeline::create($createTimeline);
 

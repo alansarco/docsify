@@ -237,7 +237,7 @@ class RequestController extends Controller
         ->first();
               
         
-        $timelineRetrieved = DocReqTimeline::select('status','status_name', 'status_details',
+        $timelineRetrieved = DocReqTimeline::select('status','status_name', 'status_details', 'created_by',
             DB::raw("DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p') AS created_date"),
         )
         ->where('clientid', $authUser->clientid)
@@ -371,7 +371,7 @@ class RequestController extends Controller
             'status_name' => $getStatus,
             'status_details' => $request->status_details,
             'created_at' => $today,
-            'updated_by' => $authUser->fullname,
+            'created_by' => $authUser->fullname,
         ];
 
         $update = DocRequest::where('reference_no', $request->reference_no)

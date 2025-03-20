@@ -15,7 +15,7 @@ import { useTimeline } from "essentials/Timeline/context";
 // Custom styles for the TimelineItem
 import { timelineItem, timelineItemIcon } from "essentials/Timeline/TimelineItem/styles";
 
-function TimelineItem({ color, icon, title, dateTime, description, badges, lastItem, details }) {
+function TimelineItem({ color, icon, title, dateTime, description, badges, lastItem, details, created }) {
   const isDark = useTimeline();
 
   const renderBadges =
@@ -58,6 +58,15 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
             color={isDark ? "secondary" : "text"}
           >
             {dateTime}
+          </SoftTypography>
+        </SoftBox>
+        <SoftBox mb={1}>
+          <SoftTypography
+            variant="caption"
+            color="info"
+            className="fst-italic"
+          >
+            {created || "Updated by system"}
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={0.5} mb={1.5}>
