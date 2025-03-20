@@ -6,6 +6,10 @@ export const versions = [
         details: [
             {
                 types: "new",
+                description: "Added updated by data in request timeline"
+            },
+            {
+                types: "new",
                 description: "Added additional ON HOLD status of requests"
             },
             {
