@@ -23,6 +23,7 @@ import mastercard from "assets/images/logos/mastercard.png";
 import visamaster from "assets/images/logos/visa-master.png";
 import { getLRN, getCampusID } from "components/General/Utils";
 import { validatePassword } from "components/General/Utils";
+import { getContact } from "components/General/Utils";
 
 function SignUp() {
       const currentFileName = "layouts/authentication/sign-up/index.js";
@@ -424,7 +425,7 @@ function SignUp() {
                                             <Grid item xs={12} md={6} lg={4} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                  <SoftInput type="number" name="contact" value={formData.contact} onChange={handleChange} size="small" /> 
+                                                  <SoftInput type="number" name="contact" value={getContact(formData.contact)} onChange={handleChange} size="small" /> 
                                             </Grid> 
                                             {formData.role == 5 &&
                                             <Grid item xs={12} md={6} lg={5} px={1}>

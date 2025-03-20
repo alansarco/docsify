@@ -62,12 +62,12 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'username' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'gender' => 'required',
-            'contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
-            'birthdate' => 'required',   
-            'address' => 'required',   
+            // 'first_name' => 'required',
+            // 'last_name' => 'required',
+            // 'gender' => 'required',
+            'contact' => 'required|digits:11',
+            // 'birthdate' => 'required',   
+            // 'address' => 'required',   
         ]);
 
         if($validator->fails()) {
@@ -171,6 +171,7 @@ class ProfileController extends Controller
                     $hashedPassword = Hash::make($request->newpass);
                     $update = User::where('username', $authUser->username)
                     ->update([ 
+                        'password_change' => 1,
                         'password' => $hashedPassword,
                         'updated_by' => $authUser->fullname,
                     ]);

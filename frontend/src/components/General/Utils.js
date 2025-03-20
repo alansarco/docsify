@@ -168,6 +168,14 @@ export function getNumber(amount) {
       return amount;
 }
 
+export function getContact(number) {
+      // Remove any non-digit characters
+      number = number.replace(/\D/g, '');
+  
+      // Trim to a maximum of 11 digits
+      return number.slice(0, 11);
+  }
+
 export function getLRN(amount) {
       // Prevent input if length is already 12
       if (amount.length > 12) {
@@ -238,6 +246,7 @@ export const activeStatusSelect = [
       { value: 1, desc: "On Queue" },
       { value: 2, desc: "Processing" },
       { value: 3, desc: "For Release" },
+      { value: 7, desc: "On Hold" },
 ];
 
 export const historyStatusSelect = [
@@ -254,6 +263,7 @@ export const requestStatusSelect = [
       { value: 4, desc: "Completed" },
       { value: 5, desc: "Rejected" },
       { value: 6, desc: "Cancelled" },
+      { value: 7, desc: "On Hold" },
 ];
 
 export function getStatus(status) {
@@ -277,6 +287,9 @@ export function getStatus(status) {
       }
       if (status == 6) {
             return 'CANCELLED'
+      }
+      if (status == 7) {
+            return 'ON HOLD'
       }
       return '';
 }
@@ -303,6 +316,9 @@ export function getStatusColor(status) {
       if (status == 6) {
             return 'secondary'
       }
+      if (status == 7) {
+            return 'secondary'
+      }
       return 'secondary';
 }
 
@@ -326,7 +342,10 @@ export function getStatusBgColor(status) {
             return 'bg-primary'
       }
       if (status == 6) {
-            return 'bg-primary'
+            return 'bg-secondary'
+      }
+      if (status == 7) {
+            return 'bg-secondary'
       }
       return 'bg-secondary';
 }
@@ -352,6 +371,9 @@ export function getStatusIcon(status) {
       }
       if (status == 6) {
             return 'close'
+      }
+      if (status == 7) {
+            return 'warning'
       }
       return 'notifications';
 }

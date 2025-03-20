@@ -46,7 +46,9 @@ class TaskController extends Controller
             $query->where('requests.status', $request->status);
         }
         else {
-            $query->where('requests.status', '<', 4);
+            $query->where(function ($query) {
+                $query->where('requests.status', '<', 4)->orWhere('requests.status', 7);
+            });
         }
 
         if($request->doc_id) {
@@ -117,6 +119,7 @@ class TaskController extends Controller
         }
         else {
             $query->where('requests.status', '>', 3);
+            $query->where('requests.status', '<', 7);
         }
 
         if($request->doc_id) {

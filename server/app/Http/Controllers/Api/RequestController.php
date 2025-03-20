@@ -53,7 +53,9 @@ class RequestController extends Controller
             $query->where('requests.status', $request->status);
         }
         else {
-            $query->where('requests.status', '<', 4);
+            $query->where(function ($query) {
+                $query->where('requests.status', '<', 4)->orWhere('requests.status', 7);
+            });
         }
 
         if($request->doc_id) {
@@ -136,6 +138,7 @@ class RequestController extends Controller
         }
         else {
             $query->where('requests.status', '>', 3);
+            $query->where('requests.status', '<', 7);
         }
 
         if($request->doc_id) {
@@ -347,7 +350,7 @@ class RequestController extends Controller
                 'message' => 'Cannot update request, this has already been completed!'
             ]);
         }
-        else if($checkrequest->status > 4) {
+        else if($checkrequest->status > 4 && $checkrequest->status < 7) {
             return response()->json([
                 'message' => 'Cannot update request, this has already been cancelled/rejected!'
             ]);

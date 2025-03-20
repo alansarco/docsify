@@ -13,6 +13,7 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { getN } from "components/General/Utils";
+import { getContact } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
@@ -161,7 +162,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Contact:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="system_contact" type="number" value={getN(formData.system_contact)} onChange={handleChange} size="small" />
+                                                <SoftInput name="system_contact" type="number" value={getContact(formData.system_contact)} onChange={handleChange} size="small" />
                                           </Grid>  
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Email:</SoftTypography>

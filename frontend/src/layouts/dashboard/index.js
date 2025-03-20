@@ -122,7 +122,7 @@ function Dashboard() {
               <SoftTypography textGradient color="primary" variant="h6">
                 Expires {authUser.subscription_end}
                 </SoftTypography> 
-              }   
+            }   
             {authUser != "" && 
               <SoftTypography variant="h4">
                 Welcome back, <span className="text-info text-gradient h4">{authUser.first_name}!</span> 
@@ -130,6 +130,11 @@ function Dashboard() {
               <SoftTypography fontStyle="italic" color="inherit" fontSize="0.9rem">
                 DOCSIFY - {clientprovider ? clientname : "Document Request System"}
               </SoftTypography>
+              {authUser.password_change == 0 &&
+              <SoftTypography className="text-xxs m-0 p-0 text-danger">
+                You haven't chage your password ever since. Please change.
+                </SoftTypography> 
+              }   
           </SoftBox>
           <SoftBox mb={3}>
             <Grid container spacing={3}>

@@ -75,7 +75,7 @@ class SettingsController extends Controller
         $validator = Validator::make($request->all(), [
             'system_id' => 'required',
             'system_email' => 'required|email', 
-            'system_contact' => 'required|numeric', 
+            'system_contact' => 'required|digits:11',
             'system_security_code' => 'required',
             'system_admin_limit' => 'required|numeric',
             'system_info' => 'required',
@@ -285,7 +285,7 @@ class SettingsController extends Controller
             'client_name' => 'required',
             'client_acr' => 'required',
             'client_email' => 'required|email',
-            'client_contact' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+            'client_contact' => 'required|digits:11',
             'client_address' => 'required',
             'request_limit' => 'required',
             'request_timeout' => 'required',

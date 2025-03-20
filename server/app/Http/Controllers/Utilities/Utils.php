@@ -89,6 +89,7 @@ class Utils
         else if ($status == 4) return "COMPLETED";
         else if ($status == 5) return "REJECTED";
         else if ($status == 6) return "CANCELLED";
+        else if ($status == 7) return "ON HOLD";
         else return "PENDING";
     }
 

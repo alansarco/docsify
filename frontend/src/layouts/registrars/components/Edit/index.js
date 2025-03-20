@@ -13,6 +13,7 @@ import { useStateContext } from "context/ContextProvider";
 import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
+import { getContact } from "components/General/Utils";
 
 function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/users/components/Edit/index.js";
@@ -200,7 +201,7 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                                <SoftInput type="number" name="contact" value={getContact(formData.contact)} onChange={handleChange} size="small" /> 
                                           </Grid> 
                                           <Grid item xs={12} md={6} lg={5} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>

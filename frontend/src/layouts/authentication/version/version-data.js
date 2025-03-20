@@ -1,6 +1,27 @@
-export const latestversions = "V1.1.250318"
+export const latestversions = "V1.1.250320"
 
 export const versions = [
+    { 
+        version: "V1.1.250320", 
+        details: [
+            {
+                types: "new",
+                description: "Added additional ON HOLD status of requests"
+            },
+            {
+                types: "new",
+                description: "Added password change indicator in dashboard"
+            },
+            {
+                types: "update",
+                description: "Allows only to edit email, contact, and profile picture in profile settings"
+            },
+            {
+                types: "bug",
+                description: "Fix contact field validator that requires 11 digits"
+            },
+        ]
+    },
     { 
         version: "V1.1.250318", 
         details: [

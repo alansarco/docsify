@@ -14,6 +14,7 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getContact } from "components/General/Utils";
 
 function Edit({USER, UpdateLoading}) {
       const currentFileName = "layouts/profile/components/Edit/index.js";
@@ -42,7 +43,7 @@ function Edit({USER, UpdateLoading}) {
             email: USER.email == null ? "" : USER.email,
             contact: USER.contact == null ? "" : USER.contact,
             birthdate: USER.birthdate == null ? "" : USER.birthdate,
-            agreement: false,   
+            agreement: true,   
       };
 
       const [formData, setFormData] = useState(initialState);
@@ -79,7 +80,7 @@ function Edit({USER, UpdateLoading}) {
              const requiredFields = [
                   "username",
                   "contact",
-                  "address",
+                  // "address",
                   "email",
             ];
 
@@ -148,7 +149,7 @@ function Edit({USER, UpdateLoading}) {
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                          {/* <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
@@ -178,8 +179,8 @@ function Edit({USER, UpdateLoading}) {
                                                 <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
-                                          </Grid>
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                          </Grid> */}
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Profile Picture:</SoftTypography>
                                                 <input
                                                       type="file"
@@ -189,23 +190,23 @@ function Edit({USER, UpdateLoading}) {
                                                       onChange={handleChange}
                                                 />
                                           </Grid>  
-                                          <Grid item xs={12} md={6} lg={4} px={1}>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                                <SoftInput type="number" name="contact" value={getContact(formData.contact)} onChange={handleChange} size="small" /> 
                                           </Grid> 
-                                          <Grid item xs={12} md={6} lg={5} px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
                                           </Grid> 
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                          {/* <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid>
+                                          </Grid> */}
                                     </Grid>   
-                                    <Grid mt={3} container spacing={0} alignItems="center">
+                                    {/* <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 
                                                       className={` ${formData.agreement ? '' : 'border-2 border-info'}`} 
@@ -217,7 +218,7 @@ function Edit({USER, UpdateLoading}) {
                                                 <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(Confirming that the information above are true and accurate) </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                           </Grid>
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
                                           <Grid item xs={12} sm={4} md={2} pl={1}>
                                                 <SoftBox mt={2} display="flex" justifyContent="end">

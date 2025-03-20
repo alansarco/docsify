@@ -14,6 +14,7 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { getLRN, gradeSelect } from "components/General/Utils";
+import { getContact } from "components/General/Utils";
 
 function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
       const currentFileName = "layouts/representatives/components/Add/index.js";
@@ -257,7 +258,7 @@ function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Contact Number: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput type="number" name="contact" value={getN(formData.contact)} onChange={handleChange} size="small" /> 
+                                                <SoftInput type="number" name="contact" value={getContact(formData.contact)} onChange={handleChange} size="small" /> 
                                           </Grid> 
                                           <Grid item xs={12} md={6} lg={5} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Email: </SoftTypography>
