@@ -149,24 +149,24 @@ function Edit({USER, UpdateLoading}) {
                                     </SoftTypography>
                                     <input type="hidden" name="username" value={formData.username} size="small" /> 
                                     <Grid container spacing={0} alignItems="center">
-                                          {/* <Grid item xs={12} md={6} lg={4} px={1}>
+                                          <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Firstname:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="first_name" value={formData.first_name.toUpperCase()} onChange={handleChange} size="small" disabled/> 
                                           </Grid>     
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Middle Name:</SoftTypography>
-                                                <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="middle_name" value={formData.middle_name.toUpperCase()} onChange={handleChange} size="small" disabled/> 
                                           </Grid>     
                                           <Grid item xs={12} md={6} lg={4} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Last Name:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" /> 
+                                                <SoftInput name="last_name" value={formData.last_name.toUpperCase()} onChange={handleChange} size="small" disabled/> 
                                           </Grid>         
                                           <Grid item xs={12} md={6} lg={2} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Gender: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="gender" value={formData.gender} onChange={handleChange} >
+                                                <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" disabled name="gender" value={formData.gender} onChange={handleChange} >
                                                       <option value=""></option>
                                                       {genderSelect && genderSelect.map((gender) => (
                                                       <option key={gender.value} value={gender.value}>
@@ -178,8 +178,13 @@ function Edit({USER, UpdateLoading}) {
                                           <Grid item xs={12} lg={6} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Address: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5" name="address" value={formData.address} onChange={handleChange} />
-                                          </Grid> */}
+                                                <input className="form-control form-control-sm text-secondary rounded-5" name="address" disabled value={formData.address} onChange={handleChange} />
+                                          </Grid>
+                                          <Grid item xs={12} md={6} lg={3} px={1}>
+                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
+                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" disabled/>
+                                          </Grid>
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1">Profile Picture:</SoftTypography>
                                                 <input
@@ -200,11 +205,6 @@ function Edit({USER, UpdateLoading}) {
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <SoftInput type="email" name="email" value={formData.email} onChange={handleChange} size="small" /> 
                                           </Grid> 
-                                          {/* <Grid item xs={12} md={6} lg={3} px={1}>
-                                                <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
-                                                <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
-                                          </Grid> */}
                                     </Grid>   
                                     {/* <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
