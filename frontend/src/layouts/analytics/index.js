@@ -305,20 +305,20 @@ function Analytics() {
         }
     }
 
-    if (fetchrequest && fetchrequest.documentrequestcounts) {
+    if (fetchrequest && fetchrequest.totalrequests) {
         // Get the current and last year population to compare
         if (fetchrequest.percentageChange > 0) {
-            icon2 = "arrow_upward";
-            iconColor2 = "info";
-            increase2 = "more";
+            icon3 = "arrow_upward";
+            iconColor3 = "info";
+            increase3 = "more";
         } else if (fetchrequest.percentageChange < 0) {
-            icon2 = "arrow_downward";
-            iconColor2 = "primary";
-            increase2 = "decrease";
+            icon3 = "arrow_downward";
+            iconColor3 = "primary";
+            increase3 = "decrease";
         } else {
             fetchrequest.percentageChange = 0; // No change
-            icon2 = "arrow_forward"; // Neutral change
-            iconColor2 = "neutral"; // Neutral color
+            icon3 = "arrow_forward"; // Neutral change
+            iconColor3 = "neutral"; // Neutral color
         }
     }
 
