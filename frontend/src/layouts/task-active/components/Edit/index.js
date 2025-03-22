@@ -26,6 +26,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
       const currentFileName = "layouts/users/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
+      console.log(DATA.status)
 
       const YOUR_ACCESS_TOKEN = token; 
       const headers = {
@@ -166,7 +167,11 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                       <option value=""></option>
                                                       {requestStatusSelect &&
                                                             requestStatusSelect
-                                                            .filter(stat => stat.value === STATUS + 1 || (STATUS > 1 && stat.value) == 5 ||( STATUS > 1 && stat.value == 7)) // Exclude next immediate value
+                                                            .filter(stat => 
+                                                                  stat.value == STATUS + 1 
+                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 5)
+                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 7)
+                                                            )
                                                             .map(stat => (
                                                                   <option key={stat.value} value={stat.value}>
                                                                         {stat.desc}
