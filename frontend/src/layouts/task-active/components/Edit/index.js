@@ -166,7 +166,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                       <option value=""></option>
                                                       {requestStatusSelect &&
                                                             requestStatusSelect
-                                                            .filter(stat => stat.value === STATUS || stat.value === STATUS + 1 || stat.value == 5 || stat.value == 7) // Exclude next immediate value
+                                                            .filter(stat => stat.value === STATUS + 1 || (STATUS > 1 && stat.value) == 5 ||( STATUS > 1 && stat.value == 7)) // Exclude next immediate value
                                                             .map(stat => (
                                                                   <option key={stat.value} value={stat.value}>
                                                                         {stat.desc}

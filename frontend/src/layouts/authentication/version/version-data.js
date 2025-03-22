@@ -1,6 +1,19 @@
-export const latestversions = "V1.1.250320"
+export const latestversions = "V1.1.250322"
 
 export const versions = [
+    { 
+        version: "V1.1.250322", 
+        details: [
+            {
+                types: "update",
+                description: "Do not show the current status when updating the requested document"
+            },
+            {
+                types: "update",
+                description: "Show On Hold and Rejected status only when the current status higher than On Queue"
+            },
+        ]
+    },
     { 
         version: "V1.1.250320", 
         details: [
