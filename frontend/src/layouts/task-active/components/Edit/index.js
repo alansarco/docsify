@@ -100,9 +100,14 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                 ...initialState, // Reset all fields
                                                 status: prevState.status, // Keep the existing status
                                             }));
-                                        
-                                          ReloadTable();
-                                          UpdateLoading(true);
+                                          if(formData.status == 4 || formData.status == 5) {
+                                                HandleRendering(1);
+                                                ReloadTable();
+                                          }
+                                          else {
+                                                ReloadTable();
+                                                UpdateLoading(true);
+                                          }
                                     } else {
                                           toast.error(`${response.data.message}`, { autoClose: true });
                                     }
@@ -169,8 +174,8 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                             requestStatusSelect
                                                             .filter(stat => 
                                                                   stat.value == STATUS + 1 
-                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 5)
-                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 7)
+                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 5 && (DATA.status != 3 && DATA.status != 4))
+                                                                  || (STATUS > 1 && stat.value != DATA.status && stat.value == 7 && (DATA.status != 3 && DATA.status != 4))
                                                             )
                                                             .map(stat => (
                                                                   <option key={stat.value} value={stat.value}>

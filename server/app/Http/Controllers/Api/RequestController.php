@@ -415,7 +415,7 @@ class RequestController extends Controller
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => 'Requested document assigned successfully!'
+                'message' => 'Requested document updated successfully!'
             ], 200);
         }
         return response()->json([
