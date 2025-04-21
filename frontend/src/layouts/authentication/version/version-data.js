@@ -1,6 +1,15 @@
-export const latestversions = "V1.1.250322"
+export const latestversions = "V1.1.250421"
 
 export const versions = [
+    { 
+        version: "V1.1.250421", 
+        details: [
+            {
+                types: "bug",
+                description: "Error in sending OTP for school representative account registration"
+            },
+        ]
+    },
     { 
         version: "V1.1.250322", 
         details: [

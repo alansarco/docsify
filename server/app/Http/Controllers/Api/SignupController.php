@@ -105,7 +105,7 @@ class SignupController extends Controller
                         $sentTo = $request->username;
                     }
                     
-                    $otpSent = Mail::to($request->email)->send(new OtpStringsEmailVerification($otp));
+                    $otpSent = Mail::to($sentTo)->send(new OtpStringsEmailVerification($otp));
         
                     $newOTP = OTP::create([
                           'id' => $otp,
