@@ -359,7 +359,7 @@ function SignUp() {
                                             }
                                                 
                                             <Grid item xs={12} md={6} lg={4} px={1}>
-                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Username:"}</SoftTypography>
+                                                  <SoftTypography variant="button" className="me-1"> {formData.role == 5 ? "LRN:" : "Email Address:"}</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="username" type={formData.role == 5 ? "number" : "email"} value={formData.role == 5 ? getLRN(formData.username) : formData.username} onChange={handleChange} size="small"
                                                   /> 
