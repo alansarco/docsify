@@ -169,11 +169,21 @@ export function getNumber(amount) {
 }
 
 export function getContact(number) {
-      // Remove any non-digit characters
+      if (!number) return '';
+  
+      // Ensure it's a string
+      number = String(number);
+  
+      // Remove non-digit characters
       number = number.replace(/\D/g, '');
   
-      // Trim to a maximum of 11 digits
-      return number.slice(0, 11);
+      // Keep leading zero if it exists
+      if (number.length > 11 && number.startsWith('0')) {
+          return number.slice(0, 11);
+      }
+  
+      // If it's already 11 or fewer digits, return as is
+      return number;
   }
 
 export function getLRN(amount) {

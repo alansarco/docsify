@@ -37,6 +37,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             notify_campus_add: DATA.notify_campus_add == 1 ? true : false,
             notify_campus_renew: DATA.notify_campus_renew == 1 ? true : false,
             notify_user_approve: DATA.notify_user_approve == 1 ? true : false,
+            notify_user_reject: DATA.notify_user_reject== 1 ? true : false,
             agreement: false,   
       };
 
@@ -118,6 +119,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                     data.append("notify_campus_add", formData.notify_campus_add);
                                     data.append("notify_campus_renew", formData.notify_campus_renew);
                                     data.append("notify_user_approve", formData.notify_user_approve);
+                                    data.append("notify_user_reject", formData.notify_user_reject);
                                     data.append("price_per_day", formData.price_per_day);
                                     const response = await axios.post(apiRoutes.updateAdminSettings, data, {headers});
                                     if(response.data.status == 200) {
@@ -212,9 +214,14 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                                 <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(Campus will receive email notification once their institution has renewed its license)</SoftTypography>
                                           </Grid> 
                                           <Grid item xs={12} pl={1}>
+                                                <Switch name="notify_user_reject" checked={formData.notify_user_reject} onChange={handleChange} />
+                                                <SoftTypography variant="button" className="me-1 ms-3">Notify user when account is rejected? </SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(User will receive email notification once their account has been rejected)</SoftTypography>
+                                          </Grid> 
+                                          <Grid item xs={12} pl={1}>
                                                 <Switch name="notify_user_approve" checked={formData.notify_user_approve} onChange={handleChange} />
                                                 <SoftTypography variant="button" className="me-1 ms-3">Notify user when account is approved? </SoftTypography>
-                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(User will receive email notification once their account request has been approved)</SoftTypography>
+                                                <SoftTypography variant="p" className="text-xxs text-secondary fst-italic">(User will receive email notification once their account has been approved)</SoftTypography>
                                           </Grid> 
                                           <Grid item xs={12} pl={1} mt={3}>
                                                 <Checkbox 

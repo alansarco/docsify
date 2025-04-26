@@ -28,7 +28,7 @@ class ForgotPasswordController extends Controller
                 ]);
             }
             else {
-                $user = User::where('username', $request->username)->first();
+                $user = User::where('email', $request->username)->first();
                     
                 if(!$user) {
                     return response()->json([
@@ -79,7 +79,7 @@ class ForgotPasswordController extends Controller
         $checkOTP = OTP::where('id', $request->otp)->where('valid_for', $request->username)->where('expires_at', ">", now())->first();
 
         if($checkOTP) {
-            $user = User::where('username', $request->username)->first();
+            $user = User::where('email', $request->username)->first();
             if($user) {
                 return response()->json([
                     'status' => 200,  
@@ -121,7 +121,7 @@ class ForgotPasswordController extends Controller
         if($checkpass) return $checkpass;
 
         $hashedPassword = Hash::make($request->newpassword);
-        $update = User::where('username', $request->username)->update([ 'password' => $hashedPassword]);
+        $update = User::where('email', $request->username)->update([ 'password' => $hashedPassword]);
         if($update) {   
             return response()->json([
                 'status' => 200,

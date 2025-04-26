@@ -45,6 +45,8 @@ class SignupController extends Controller
                     'client_acr' => 'required',   
                     'subscription' => 'required',   
                     'client_email' => 'required|email',   
+                    'client_address' => 'required',   
+                    'client_contact' => 'required|digits:11',
                 ]);
             }
             else {
@@ -156,6 +158,8 @@ class SignupController extends Controller
                     'client_acr' => 'required',   
                     'subscription' => 'required',   
                     'client_email' => 'required|email',   
+                    'client_address' => 'required',   
+                    'client_contact' => 'required|digits:11',
                 ]);
             }
             else {
@@ -272,6 +276,8 @@ class SignupController extends Controller
                                 'current_payment' => $current_payment,  
                                 'total_payment' => $current_payment,  
                                 'client_representative' => $request->username,  
+                                'client_address' => $request->client_address,  
+                                'client_contact' => $request->client_contact,  
                                 'created_by' => $request->username,
                                 'updated_by' => $request->username,
                             ]);

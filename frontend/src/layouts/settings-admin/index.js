@@ -180,6 +180,10 @@ function AdminSettings() {
                                     <SoftTypography variant="h6" className="text-secondary fw-normal">{item.notify_user_approve == 1 ? "Yes" : "No"}</SoftTypography>
                                   </Grid>
                                   <Grid item xs={12} md={6} lg={6} mt={2}>
+                                    <SoftTypography variant="h6" color="dark" >Notify User when Account Rejected</SoftTypography>
+                                    <SoftTypography variant="h6" className="text-secondary fw-normal">{item.notify_user_reject == 1 ? "Yes" : "No"}</SoftTypography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6} lg={6} mt={2}>
                                     <SoftTypography variant="h6" color="dark" >Price (per day)</SoftTypography>
                                     <SoftTypography variant="h6" className="text-secondary fw-normal">{formatCurrency(item.price_per_day)}</SoftTypography>
                                   </Grid>

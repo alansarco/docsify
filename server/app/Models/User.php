@@ -43,6 +43,7 @@ class User extends Authenticatable
         'password_change',
         'account_status',
         'notify_indicator',
+        'new_account',
         'updated_by',
         'created_by'
     ];

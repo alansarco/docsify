@@ -165,7 +165,7 @@ function ForgotPassword() {
             <SoftBox mb={1}>
                 <SoftBox ml={0.5}>
                     <SoftTypography component="label" variant="caption" fontWeight="bold" color="white" >
-                    Enter Username
+                    Enter Email
                     </SoftTypography>
                 </SoftBox>
                 <SoftInput disabled={submitLogin} size="small" type="text"  name="username" value={formData1.username} onChange={handleChange}/>

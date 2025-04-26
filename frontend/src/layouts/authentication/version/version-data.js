@@ -1,6 +1,27 @@
-export const latestversions = "V1.1.250421"
+export const latestversions = "V1.1.250425"
 
 export const versions = [
+    { 
+        version: "V1.1.250425", 
+        details: [
+            {
+                types: "new",
+                description: "Add tagging to email when account is rejected"
+            },
+            {
+                types: "new",
+                description: "Add address and contact number for campus information registration"
+            },
+            {
+                types: "update",
+                description: "Use email instead of username in forgot password"
+            },
+            {
+                types: "bug",
+                description: "Error in Contact field"
+            },
+        ]
+    },
     { 
         version: "V1.1.250421", 
         details: [

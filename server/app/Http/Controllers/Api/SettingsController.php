@@ -99,6 +99,7 @@ class SettingsController extends Controller
                     'notify_campus_add' => $request->notify_campus_add === "true" ? 1 : 0,
                     'notify_campus_renew' => $request->notify_campus_renew === "true" ? 1 : 0,
                     'notify_user_approve' => $request->notify_user_approve === "true" ? 1 : 0,
+                    'notify_user_reject' => $request->notify_user_reject === "true" ? 1 : 0,
                     'updated_by' => $authUser->fullname,
                 ];
 

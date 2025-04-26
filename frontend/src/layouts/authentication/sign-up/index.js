@@ -79,6 +79,8 @@ function SignUp() {
             client_acr: "",
             client_email: "",
             new_clientid: "",
+            client_address: "",
+            client_contact: "",
 
             agreement: false,   
       };
@@ -162,6 +164,8 @@ function SignUp() {
             requiredFields.push("client_name");
             requiredFields.push("client_acr");
             requiredFields.push("client_email");
+            requiredFields.push("client_address");
+            requiredFields.push("client_contact");
         }
           const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
           if (emptyRequiredFields.length === 0) {
@@ -200,6 +204,8 @@ function SignUp() {
               data.append("client_name", formData.client_name);
               data.append("client_acr", formData.client_acr);
               data.append("client_email", formData.client_email);
+              data.append("client_address", formData.client_address);
+              data.append("client_contact", formData.client_contact);
 
             //   axios.post(apiRoutes.signupuser, data) 
               const response = await axios.post(apiRoutes.createOTPverification, data);
@@ -503,6 +509,16 @@ function SignUp() {
                                                   <SoftTypography variant="button" className="me-1">Short Name:</SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                   <SoftInput name="client_acr" value={formData.client_acr.toUpperCase()} onChange={handleChange} size="small" /> 
+                                            </Grid>  
+                                            <Grid item xs={12} md={6} lg={8} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">School Address:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                  <SoftInput name="client_address" value={formData.client_address} onChange={handleChange} size="small" /> 
+                                            </Grid>  
+                                            <Grid item xs={12} md={6} lg={4} px={1}>
+                                                  <SoftTypography variant="button" className="me-1">Contact:</SoftTypography>
+                                                  <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
+                                                  <SoftInput name="client_contact" value={getContact(formData.client_contact)} onChange={handleChange} size="small" /> 
                                             </Grid>  
 
                                             <Grid item xs={12} md={6} lg={3} px={1}>
