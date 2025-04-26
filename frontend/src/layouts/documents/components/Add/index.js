@@ -71,6 +71,12 @@ function Add({HandleRendering, ReloadTable }) {
                         try {
                               if (!token) {
                                     toast.error(messages.prohibit, { autoClose: true });
+                              } 
+                              else if (Number(formData.doc_limit) > 10) {
+                                    toast.error("Request limit per year must not exceed 10", { autoClose: true });
+                              }
+                              else if (Number(formData.days_process) > 14) {
+                                    toast.error("Days to process must not exceed 14", { autoClose: true });
                               }
                               else {  
                                     const response = await axios.post(apiRoutes.addDocument, formData, {headers});

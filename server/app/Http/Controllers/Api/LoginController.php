@@ -96,6 +96,17 @@ class LoginController extends Controller {
             ]);        
         } 
         else {
+            $newaccount = User::select('username', 'access_level', 'role', 'clientid')
+            ->where('username', $request->username)
+            ->where('access_level', 5)
+            ->where('new_account', 1)
+            ->first();
+
+            if($newaccount) {
+                return response()->json([
+                    'message' => 'Account is currently under for review!'  
+                ]);
+            }
             return response()->json([
                 'message' => 'Account is no longer active!'  
             ]);

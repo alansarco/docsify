@@ -5,6 +5,14 @@ export const versions = [
         version: "V1.1.250426", 
         details: [
             {
+                types: "new",
+                description: "Document request limit per year is set to 10 and days process is up to 14 days"
+            },
+            {
+                types: "new",
+                description: "Show account for review message when logging in using new or unverified account"
+            },
+            {
                 types: "update",
                 description: "Removed the verify data checkbox when requesting a document"
             },

@@ -41,7 +41,7 @@ function Versions() {
     <>
     {status == 1 && !isLoading ? 
     <>
-        <SoftBox className="bg-white" height="100vh">
+        <SoftBox className="bg-white">
             <SoftTypography px={2} py={2} variant="h6" mb={1} color="white" className="bg-dark">
                 <SoftTypography mb={0} component={Link} to="/authentication/sign-in"  className="text-white">
                     <ArrowBackIosIcon />
