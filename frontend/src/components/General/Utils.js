@@ -184,7 +184,7 @@ export function getContact(number) {
   
       // If it's already 11 or fewer digits, return as is
       return number;
-  }
+}
 
 export function getLRN(amount) {
       // Prevent input if length is already 12

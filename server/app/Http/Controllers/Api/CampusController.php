@@ -119,7 +119,7 @@ class CampusController extends Controller
             'client_name' => 'required',
             'client_acr' => 'required',
             'client_email' => 'required|email',
-            'client_contact' => 'required|digits:11',
+            'client_contact' => 'required|regex:/^[0-9]{7,13}$/',
             'client_address' => 'required',
             'license_key' => 'required',
             'subscription_start' => 'required',
@@ -256,7 +256,7 @@ class CampusController extends Controller
             'client_name' => 'required',
             'client_acr' => 'required',
             'client_email' => 'required|email',
-            'client_contact' => 'required|digits:11',
+            'client_contact' => 'required|regex:/^[0-9]{7,13}$/',
             'client_address' => 'required',
         ]);
 

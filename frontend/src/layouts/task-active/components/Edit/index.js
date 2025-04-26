@@ -188,7 +188,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                           </Grid>   
                                     </Grid>     
                                     <Grid container spacing={0} alignItems="center" mt={3} className="px-md-4 px-0" >
-                                          <Grid item xs={12} lg={10} px={1}>
+                                          <Grid item xs={12} lg={6} px={1}>
                                                 <SoftTypography variant="button" className="me-1 text-white"> Comment:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 {/* <SoftInput name="status_details" value={formData.status_details} onChange={handleChange} size="small"

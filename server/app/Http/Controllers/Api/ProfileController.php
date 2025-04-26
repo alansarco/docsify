@@ -65,7 +65,7 @@ class ProfileController extends Controller
             // 'first_name' => 'required',
             // 'last_name' => 'required',
             // 'gender' => 'required',
-            'contact' => 'required|digits:11',
+            'contact' => 'required|regex:/^[0-9]{7,13}$/',
             // 'birthdate' => 'required',   
             // 'address' => 'required',   
         ]);

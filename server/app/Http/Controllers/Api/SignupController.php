@@ -35,7 +35,7 @@ class SignupController extends Controller
                     'last_name' => 'required',
                     'password' => 'required',
                     'gender' => 'required',
-                    'contact' => 'required|digits:11',
+                    'contact' => 'required|regex:/^[0-9]{7,13}$/',
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
@@ -46,7 +46,7 @@ class SignupController extends Controller
                     'subscription' => 'required',   
                     'client_email' => 'required|email',   
                     'client_address' => 'required',   
-                    'client_contact' => 'required|digits:11',
+                    'client_contact' => 'required|regex:/^[0-9]{7,13}$/',
                 ]);
             }
             else {
@@ -57,7 +57,7 @@ class SignupController extends Controller
                     'last_name' => 'required',
                     'password' => 'required',
                     'gender' => 'required',
-                    'contact' => 'required|digits:11',
+                    'contact' => 'required|regex:/^[0-9]{7,13}$/',
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
@@ -148,7 +148,7 @@ class SignupController extends Controller
                     'last_name' => 'required',
                     'password' => 'required',
                     'gender' => 'required',
-                    'contact' => 'required|digits:11',
+                    'contact' => 'required|regex:/^[0-9]{7,13}$/',
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
@@ -159,7 +159,7 @@ class SignupController extends Controller
                     'subscription' => 'required',   
                     'client_email' => 'required|email',   
                     'client_address' => 'required',   
-                    'client_contact' => 'required|digits:11',
+                    'client_contact' => 'required|regex:/^[0-9]{7,13}$/',
                 ]);
             }
             else {
@@ -170,7 +170,7 @@ class SignupController extends Controller
                     'last_name' => 'required',
                     'password' => 'required',
                     'gender' => 'required',
-                    'contact' => 'required|digits:11',
+                    'contact' => 'required|regex:/^[0-9]{7,13}$/',
                     'birthdate' => 'required',   
                     'address' => 'required',   
                     'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',

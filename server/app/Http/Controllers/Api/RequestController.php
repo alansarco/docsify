@@ -45,6 +45,7 @@ class RequestController extends Controller
                 ->orWhere('user_owner.first_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.middle_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.last_name', 'LIKE' , '%'.$request->filter.'%')
+                ->orWhere('documents.doc_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%');
             });
         }
@@ -83,7 +84,7 @@ class RequestController extends Controller
         $authUser = $authUser->getAuthUser();
         $query->where('requests.clientid', $authUser->clientid);
 
-        $requests = $query->orderBy('requests.created_at')->paginate(50);
+        $requests = $query->orderBy('requests.created_at', 'DESC')->paginate(50);
 
         if($requests) {
             return response()->json([
@@ -129,6 +130,7 @@ class RequestController extends Controller
                 ->orWhere('user_owner.first_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.middle_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('user_owner.last_name', 'LIKE' , '%'.$request->filter.'%')
+                ->orWhere('documents.doc_name', 'LIKE' , '%'.$request->filter.'%')
                 ->orWhere('requests.reference_no', 'LIKE' , '%'.$request->filter.'%');
             });
         }
@@ -166,7 +168,7 @@ class RequestController extends Controller
         $authUser = $authUser->getAuthUser();
         $query->where('requests.clientid', $authUser->clientid);
 
-        $requests = $query->orderBy('requests.created_at')->paginate(50);
+        $requests = $query->orderBy('requests.created_at', 'DESC')->paginate(50);
 
         if($requests) {
             return response()->json([
@@ -249,7 +251,7 @@ class RequestController extends Controller
         $statusRetrieved = DocReqTimeline::where('clientid', $authUser->clientid)
         ->where('reference_no', $request->data)
         ->where('status', '<', 5)
-        ->orderBy('status', 'DESC')
+        ->orderBy('created_at', 'DESC')
         ->value('status');
 
         if($dataRetrieved) {

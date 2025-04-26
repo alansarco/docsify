@@ -5,6 +5,10 @@ export const versions = [
         version: "V1.1.250426", 
         details: [
             {
+                types: "update",
+                description: "CHange the request list order from latest to oldest"
+            },
+            {
                 types: "new",
                 description: "Add textbox input for rejecting student account"
             },
