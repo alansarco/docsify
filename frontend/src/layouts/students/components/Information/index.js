@@ -21,7 +21,7 @@ import SoftTypography from "components/SoftTypography";
 function Information({USER, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
   const currentFileName = "layouts/users/components/UserContainer/index.js";
-
+  const [openModal, setOpenModal] = useState(false);
   const username = USER.username;
   const {token, role, access} = useStateContext();  
   const YOUR_ACCESS_TOKEN = token; 
@@ -86,6 +86,29 @@ function Information({USER, HandleRendering, ReloadTable}) {
     <>  
       {deleteUser && <FixedLoading /> }
       <SoftBox mt={5} mb={3} px={2}>
+        {openModal && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999
+            }}
+            onClick={() => setOpenModal(false)}
+          >
+            <img
+              src={`data:image/*;base64,${USER.requirement}`}
+              alt="enlarged"
+              style={{ maxHeight: '90vh', maxWidth: '90vw' }}
+            />
+          </div>
+        )}
         <SoftBox p={4} className="shadow-sm rounded-4 bg-white" >
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} xl={6}>
@@ -106,7 +129,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
                   Email: USER.email ?? " ",
                   Contact_Number: USER.contact ?? " ",
                   Address: USER.address ?? " ",
-                  Status: USER.account_status == "1" ? "Verified" : "Not Verified",
+                  Status: USER.account_status == "1" ? "Active" : "Inactive",
                   Last_Online: USER.last_online ?? "None",
                 }}
               />
@@ -141,14 +164,15 @@ function Information({USER, HandleRendering, ReloadTable}) {
                           src={`data:image/*;base64,${USER.requirement}`}
                           alt="profile-image"
                           width={200}
-                          className="p-2 text-center my-auto shadow"
+                          className="p-2 text-center my-auto shadow cursor-pointer"
+                          onClick={() => setOpenModal(true)}
                         />
                     </SoftBox>
                 </Grid>
                 }
               </Grid>
             </Grid>
-          </Grid>
+          </Grid>          
           <Grid mt={3} container spacing={0} alignItems="center" justifyContent="end">
             <Grid item xs={12} sm={4} md={2} pl={1}>
               <SoftBox mt={2} display="flex" justifyContent="end">

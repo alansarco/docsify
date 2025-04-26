@@ -25,7 +25,7 @@ export const tablehead = [
     align: "left",
   },
   {
-    name: "verified",
+    name: "Status",
     padding: "px-2",
     align: "center",
   },

@@ -357,7 +357,7 @@ class StudentRequestController extends Controller
                 'status_name' => 'PENDING',
                 'status_details' => 'Requested a document',
                 'created_at' => $today,
-                'created_by' => $authUser->fullname,
+                'created_by' => $authUser->name,
             ];
             DocReqTimeline::create($createTimeline);
 
@@ -366,7 +366,7 @@ class StudentRequestController extends Controller
                 'reference_no' => $GeneratedID,
                 'status' => 1,
                 'status_name' => 'ON QUEUE',
-                'status_details' => 'Request document assigned to '.$getRegistrar->fullname,
+                'status_details' => 'Request document assigned to '.$getRegistrar->name,
                 'created_at' => $today,
             ];
             DocReqTimeline::create($createTimeline);
@@ -375,7 +375,7 @@ class StudentRequestController extends Controller
                 'clientid' => $authUser->clientid,
                 'module' => 'Requests',
                 'action' => 'ADD',
-                'details' => $authUser->fullname .' added new request ' .$GeneratedID. ' - ' .$docInfo->doc_name,
+                'details' => $authUser->name .' added new request ' .$GeneratedID. ' - ' .$docInfo->doc_name,
                 'created_by' => $authUser->fullname,
             ]);
             LogRepresentative::create([

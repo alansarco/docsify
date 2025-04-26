@@ -169,11 +169,12 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                 <SoftTypography variant="button" className="me-1 text-white"> Status: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                                 <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="status" value={formData.status} onChange={handleChange} >
-                                                      <option value=""></option>
+                                                      {/* <option value=""></option> */}
                                                       {requestStatusSelect &&
                                                             requestStatusSelect
                                                             .filter(stat => 
-                                                                  stat.value == STATUS + 1 
+                                                                  stat.value == DATA.status 
+                                                                  || stat.value == STATUS + 1 
                                                                   || (STATUS > 1 && stat.value != DATA.status && stat.value == 5 && (DATA.status != 3 && DATA.status != 4))
                                                                   || (STATUS > 1 && stat.value != DATA.status && stat.value == 7 && (DATA.status != 3 && DATA.status != 4))
                                                             )
@@ -184,12 +185,16 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable, TIMELINE, STAT
                                                             ))
                                                       }
                                                 </select>
-                                          </Grid>
+                                          </Grid>   
+                                    </Grid>     
+                                    <Grid container spacing={0} alignItems="center" mt={3} className="px-md-4 px-0" >
                                           <Grid item xs={12} lg={10} px={1}>
                                                 <SoftTypography variant="button" className="me-1 text-white"> Comment:</SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <SoftInput name="status_details" value={formData.status_details} onChange={handleChange} size="small"
-                                                /> 
+                                                {/* <SoftInput name="status_details" value={formData.status_details} onChange={handleChange} size="small"
+                                                />  */}
+                                                <textarea name="status_details" value={formData.status_details} onChange={handleChange} className="form-control text-xs" rows="5"></textarea>
+
                                           </Grid>    
                                     </Grid>     
                                     {/* <Grid mt={3} container spacing={0} alignItems="center" className="px-md-4 px-0">

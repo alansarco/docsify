@@ -70,8 +70,8 @@ export const genderSelect = [
 ];
 
 export const statusSelect = [
-      { value: 1, desc: "Verified" },
-      { value: 0, desc: "Not Verified" },
+      { value: 1, desc: "Active" },
+      { value: 0, desc: "Inactive" },
 ];
 
 export const activeSelect = [

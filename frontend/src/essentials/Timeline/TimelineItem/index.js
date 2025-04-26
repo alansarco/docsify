@@ -66,7 +66,7 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
             color="info"
             className="fst-italic"
           >
-            {created || "Updated by system"}
+            {created ? `Updated by ${created}` : "Updated by system"}
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={0.5} mb={1.5}>

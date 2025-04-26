@@ -1,6 +1,31 @@
-export const latestversions = "V1.1.250425"
+export const latestversions = "V1.1.250426"
 
 export const versions = [
+    { 
+        version: "V1.1.250426", 
+        details: [
+            {
+                types: "update",
+                description: "Removed the verify data checkbox when requesting a document"
+            },
+            {
+                types: "update",
+                description: "Change the requst timeline comment from input to textarea"
+            },
+            {
+                types: "update",
+                description: "Change the updated by label in request timeline"
+            },
+            {
+                types: "update",
+                description: "Change all the verified terms for account status to active/inactive"
+            },
+            {
+                types: "new",
+                description: "Enlarge School ID/document when clicked"
+            },
+        ]
+    },
     { 
         version: "V1.1.250425", 
         details: [

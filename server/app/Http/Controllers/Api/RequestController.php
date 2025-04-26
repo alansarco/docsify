@@ -281,7 +281,7 @@ class RequestController extends Controller
         $updateData = [
             'task_owner' => $authUser->username,
             'status' => 1,
-            'updated_by' => $authUser->fullname,
+            'updated_by' => $authUser->name,
         ];
 
         $update = DocRequest::where('reference_no', $request->reference_no)->update($updateData);
@@ -294,7 +294,7 @@ class RequestController extends Controller
                 'status' => 1,
                 'status_name' => "ON QUEUE",
                 'status_details' => $authUser->name .' assigned the request under its name',
-                'created_by' => $authUser->fullname,
+                'created_by' => $authUser->name,
             ]);
 
             LogRepresentative::create([
@@ -371,7 +371,7 @@ class RequestController extends Controller
             'status_name' => $getStatus,
             'status_details' => $request->status_details,
             'created_at' => $today,
-            'created_by' => $authUser->fullname,
+            'created_by' => $authUser->name,
         ];
 
         $update = DocRequest::where('reference_no', $request->reference_no)
@@ -380,7 +380,7 @@ class RequestController extends Controller
             'status' => $request->status,
             'completed_by' => $request->status == 4 ? $authUser->fullname : null,
             'date_completed' => $request->status == 4 ? $today : null,
-            'updated_by' => $authUser->fullname,
+            'updated_by' => $authUser->name,
         ]);
     
         if($update) {
@@ -496,7 +496,7 @@ class RequestController extends Controller
             'status' => $status,
             'task_owner' => $request->task_owner,
             'updated_at' => $today,
-            'updated_by' => $authUser->fullname,
+            'updated_by' => $authUser->name,
         ];
 
 
@@ -507,7 +507,7 @@ class RequestController extends Controller
             'status_name' => $getStatus,
             'status_details' => 'Request document assigned to '.$checkuser->fullname,
             'created_at' => $today,
-            'updated_by' => $authUser->fullname,
+            'updated_by' => $authUser->name,
         ];
 
         $update = DocRequest::where('reference_no', $request->reference_no)->update($updateRequest);

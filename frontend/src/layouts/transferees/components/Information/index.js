@@ -106,7 +106,7 @@ function Information({USER, HandleRendering, ReloadTable}) {
                   Email: USER.email ?? " ",
                   Contact_Number: USER.contact ?? " ",
                   Address: USER.address ?? " ",
-                  Status: USER.account_status == "1" ? "Verified" : "Not Verified",
+                  Status: USER.account_status == "1" ? "Active" : "Inactive",
                   Last_Online: USER.last_online ?? "None",
                 }}
               />
