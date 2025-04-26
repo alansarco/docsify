@@ -5,8 +5,12 @@ export const versions = [
         version: "V1.1.250426", 
         details: [
             {
+                types: "bug",
+                description: "Document name cannot be filtered in request list"
+            },
+            {
                 types: "update",
-                description: "CHange the request list order from latest to oldest"
+                description: "Change the request list order from latest to oldest"
             },
             {
                 types: "new",
