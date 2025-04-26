@@ -280,8 +280,14 @@ class StudentController extends Controller
                     $userInfo = User::where('username', $request->username)->first();
                     $data = $request->username;
 
+
                     if($userInfo->account_status != $request->account_status && $userInfo->account_status != 1 && $request->account_status == 1) {
-                        Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                        $updateData['new_account'] = 0;
+                        
+                        $adminInfo = App_Info::first();
+                        if($adminInfo->notify_user_approve == 1) {
+                            Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                        }
                     }
 
                     $update = User::where('username', $request->username)->update($updateData);
