@@ -35,7 +35,8 @@ function Information({USER, HandleRendering, ReloadTable}) {
   };
 
   const handleDelete = async (e) => {
-    e.preventDefault();     
+    e.preventDefault();
+  
     Swal.fire({
       customClass: {
         title: 'alert-title',
@@ -45,23 +46,48 @@ function Information({USER, HandleRendering, ReloadTable}) {
         container: 'alert-container',
         popup: 'alert-popup'
       },
-      title: 'Delete Student?',
-      text: "Are you sure you want to delete this account? You won't be able to revert this!",
+      title: 'Reject Student?',
+      text: "Are you sure you want to reject this account? You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',  
+      confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+      confirmButtonText: 'Yes, reject it!'
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setDeleteUser(true);
+        // Ask for reject message after confirm
+        const { value: reject_message } = await Swal.fire({
+          customClass: {
+            title: 'alert-title',
+            icon: 'alert-icon',
+            confirmButton: 'alert-confirmButton',
+            cancelButton: 'alert-cancelButton',
+            container: 'alert-container',
+            popup: 'alert-popup'
+          },
+          title: 'Reason for Deletion',
+          input: 'text',
+          icon: 'warning',
+          inputPlaceholder: 'Enter a reason...',
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'You need to enter a reason!';
+            }
+          }
+        });
+  
+        if (reject_message) {
+          setDeleteUser(true);
           if (!token) {
             toast.error(messages.prohibit, { autoClose: true });
-          }
-          else {  
-            axios.get(apiRoutes.deleteStudent, { params: { username }, headers })
+          } else {
+            axios.get(apiRoutes.deleteStudent, {
+              params: { username, reject_message },
+              headers
+            })
               .then(response => {
-                if (response.data.status == 200) {
+                if (response.data.status === 200) {
                   toast.success(`${response.data.message}`, { autoClose: true });
                 } else {
                   toast.error(`${response.data.message}`, { autoClose: true });
@@ -70,16 +96,18 @@ function Information({USER, HandleRendering, ReloadTable}) {
                 HandleRendering(1);
                 ReloadTable();
                 setDeleteUser(false);
-              })  
+              })
               .catch(error => {
                 setDeleteUser(false);
-                toast.error("Cant delete student", { autoClose: true });
+                toast.error("Can't reject student", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }
+        }
       }
-    })
+    });
   };
+  
 
 
   return (
@@ -181,11 +209,11 @@ function Information({USER, HandleRendering, ReloadTable}) {
                 </SoftButton>
               </SoftBox>
             </Grid>
-            {access == 30 && 
+            {access == 30 && USER.new_account == 1 &&
             <Grid item xs={12} sm={4} md={2} pl={1}>
               <SoftBox mt={2} display="flex" justifyContent="end">
-                <SoftButton onClick={handleDelete} variant="gradient" color="info" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small">
-                  Delete
+                <SoftButton onClick={handleDelete} variant="gradient" color="primary" className="mx-2 w-100 text-xxs px-3 rounded-pill" size="small">
+                  Reject
                 </SoftButton>
               </SoftBox>
             </Grid>}

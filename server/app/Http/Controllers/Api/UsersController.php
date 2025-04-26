@@ -127,6 +127,7 @@ class UsersController extends Controller
                                 'year_enrolled' => date('Y'),
                                 'password' => $hashedPassword,
                                 'account_status' => 1,
+                                'new_account' => 0,
                                 'password_change' => 0,
                                 'deleted_at' => null,
                                 'created_by' => "Uploaded by " . $authUser->fullname,

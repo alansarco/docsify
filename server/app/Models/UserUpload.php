@@ -32,6 +32,7 @@ class UserUpload extends Model
         'password', 
         'password_change',
         'account_status',
+        'new_account',
         'updated_by',
         'created_by'
     ];

@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Utilities\Utils;
+use App\Mail\AccountRejectEmail;
 use App\Mail\AccoutApproveEmail;
 use App\Models\App_Info;
 use App\Models\DocRequest;
@@ -340,6 +341,21 @@ class StudentController extends Controller
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
+
+        $user = User::where('username', $request->username)->first();
+        if(!$user) {
+            return response()->json([
+                'message' => 'Something went wrong! Try again later.'
+            ]);
+        }
+
+        $adminInfo = App_Info::first();
+
+        if($adminInfo->notify_user_reject == 1) {
+            $data =  $request->username;
+            $reject_message =  $request->reject_message;
+            $otpSent = Mail::to($user->email)->send(new AccountRejectEmail($data, $reject_message));
+        }
         
         $delete = User::where('username', $request->username)->delete();
 
@@ -349,12 +365,18 @@ class StudentController extends Controller
                 'clientid' => $authUser->clientid,
                 'module' => 'Student Accounts',
                 'action' => 'DELETE',
-                'details' => $authUser->fullname .' deleted account '. $request->username,
+                'details' => $authUser->fullname .' rejected account '. $request->username,
                 'created_by' => $authUser->fullname,
             ]);
+            if($otpSent) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Student rejected successfully and email notification is sent to user!'
+                ], 200);
+            }
             return response()->json([
                 'status' => 200,
-                'message' => 'Student deleted successfully!'
+                'message' => 'Student rejected successfully!'
             ], 200);
         }
         else {

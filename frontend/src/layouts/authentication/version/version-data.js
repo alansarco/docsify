@@ -6,6 +6,10 @@ export const versions = [
         details: [
             {
                 types: "new",
+                description: "Add textbox input for rejecting student account"
+            },
+            {
+                types: "new",
                 description: "Document request limit per year is set to 10 and days process is up to 14 days"
             },
             {
@@ -18,7 +22,7 @@ export const versions = [
             },
             {
                 types: "update",
-                description: "Change the requst timeline comment from input to textarea"
+                description: "Change the request timeline comment from input to textarea"
             },
             {
                 types: "update",
