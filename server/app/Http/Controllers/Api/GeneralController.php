@@ -20,6 +20,7 @@ class GeneralController extends Controller {
             $app_info = App_info::select('*',
                 DB::raw("TO_BASE64(org_structure) as org_structure"),
                 DB::raw("TO_BASE64(logo) as logo"),
+                DB::raw("TO_BASE64(student_template) as student_template"),
                 )
                 ->first();
 
