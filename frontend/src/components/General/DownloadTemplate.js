@@ -34,7 +34,7 @@ const DownloadTemplate = ({ setSearchTriggered, fileid, fileName }) => {
             setSearchTriggered(false);
             toast.success("Downloading file successfull!", { autoClose: true });
         } catch (error) {
-            toast.error("No file or requiremnts to download!", { autoClose: true });
+            toast.error("No file to download!", { autoClose: true });
             setSearchTriggered(false);
             console.log(error);
         }
