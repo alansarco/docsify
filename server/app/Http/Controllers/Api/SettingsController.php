@@ -24,6 +24,7 @@ class SettingsController extends Controller
         $settings = App_Info::select('*',
             DB::raw("TO_BASE64(org_structure) as org_structure"),
             DB::raw("TO_BASE64(logo) as logo"),
+            DB::raw("TO_BASE64(student_template) as student_template"),
             )
             ->paginate(1);
 
@@ -45,6 +46,7 @@ class SettingsController extends Controller
         $settings = App_Info::select('*',
             DB::raw("TO_BASE64(org_structure) as org_structure"),
             DB::raw("TO_BASE64(logo) as logo"),
+            DB::raw("TO_BASE64(student_template) as student_template"),
             )
             ->first();
         

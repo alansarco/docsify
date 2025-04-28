@@ -136,6 +136,7 @@ class LoginController extends Controller {
         $sysem_detail = App_Info::select('system_info',
             DB::raw("TO_BASE64(org_structure) as org_structure"),
             DB::raw("TO_BASE64(logo) as logo"),
+            DB::raw("TO_BASE64(student_template) as student_template"),
             )
         ->first();
 
