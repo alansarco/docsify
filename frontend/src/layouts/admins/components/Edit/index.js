@@ -16,7 +16,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { getContact } from "components/General/Utils";
 
 function Edit({USER, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/admins/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 

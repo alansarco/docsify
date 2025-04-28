@@ -38,7 +38,7 @@ import { toast } from "react-toastify";
 import SearchIcon from '@mui/icons-material/Search';
 
 function LogRepresentative() {
-    const currentFileName = "layouts/log-admin/index.js";
+    const currentFileName = "layouts/log-representative/index.js";
     const {token, access, updateTokenExpiration, role} = useStateContext();
     updateTokenExpiration();
     if (!token) {

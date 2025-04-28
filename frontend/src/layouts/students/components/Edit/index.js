@@ -17,7 +17,7 @@ import { gradeSelect, years } from "components/General/Utils";
 import { getContact } from "components/General/Utils";
 
 function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROGRAMS }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/students/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token, clientprovider} = useStateContext();  
 

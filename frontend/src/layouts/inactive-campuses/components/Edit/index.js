@@ -15,7 +15,7 @@ import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/inactive-campuses/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 

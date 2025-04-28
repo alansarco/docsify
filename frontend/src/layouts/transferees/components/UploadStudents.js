@@ -13,7 +13,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import * as XLSX from "xlsx";
 
 function UploadStudents({ HandleRendering, ReloadTable }) {
-    const currentFileName = "layouts/juniors/components/UploadStudents.js";
+    const currentFileName = "layouts/transferees/components/UploadStudents.js";
     const [submitProfile, setSubmitProfile] = useState(false);
     const { token, access } = useStateContext();  
 

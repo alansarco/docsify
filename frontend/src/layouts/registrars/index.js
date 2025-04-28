@@ -40,7 +40,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import SearchIcon from '@mui/icons-material/Search';
 
 function Registrars() {
-    const currentFileName = "layouts/stduents/index.js";
+    const currentFileName = "layouts/registrars/index.js";
     const {token, access, updateTokenExpiration, clientprovider} = useStateContext();
     updateTokenExpiration();
     if (!token) {

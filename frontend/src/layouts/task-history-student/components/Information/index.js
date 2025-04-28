@@ -26,7 +26,7 @@ import SoftTypography from "components/SoftTypography";
 
 function Information({DATA, HandleRendering, ReloadTable, STATUS, TIMELINE}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+  const currentFileName = "layouts/task-history-student/components/Information/index.js";
 
   const reference_no = DATA.reference_no;
   const {token, role, access} = useStateContext();  

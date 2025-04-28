@@ -16,7 +16,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { getNumber } from "components/General/Utils";
 
 function Add({HandleRendering, ReloadTable }) {
-      const currentFileName = "layouts/admins/components/Add/index.js";
+      const currentFileName = "layouts/task-active-student/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
       const [fetchdocuments, setFetchDocuments] = useState([]);

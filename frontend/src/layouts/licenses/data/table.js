@@ -23,7 +23,7 @@ import { formatCurrency } from "components/General/Utils";
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 
 function Table({ DATA, tablehead, ReloadTable }) {
-  const currentFileName = "layouts/organizations/data/table.js";
+  const currentFileName = "layouts/licenses/data/table.js";
   const {token} = useStateContext();
   const { light } = colors;
   const { size, fontWeightBold } = typography;

@@ -19,7 +19,7 @@ import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-router-dom";
 
 function NotFound() {
-      const currentFileName = "layouts/users/index.js";
+      const currentFileName = "layouts/blank/index.js";
       const {token, access, updateTokenExpiration} = useStateContext();
       updateTokenExpiration();
       if (!token) {

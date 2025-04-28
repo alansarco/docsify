@@ -20,7 +20,7 @@ import { getStatus } from "components/General/Utils";
 
 function Information({DATA, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+  const currentFileName = "layouts/request-active/components/Information/index.js";
 
   const reference_no = DATA.reference_no;
   const {token, role, access} = useStateContext();  

@@ -30,7 +30,7 @@ function areRequiredFieldsFilled(formData) {
       }
       
 function Security() {
-      const currentFileName = "layouts/users/components/Security/index.js";
+      const currentFileName = "layouts/profile/components/Security/index.js";
       const location = useLocation();
       const [submitPass, setSubmitPass] = useState(false);
       const {token} = useStateContext();  

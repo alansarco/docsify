@@ -20,7 +20,7 @@ import SoftTypography from "components/SoftTypography";
 
 function Information({USER, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+  const currentFileName = "layouts/students/components/Information/index.js";
   const [openModal, setOpenModal] = useState(false);
   const username = USER.username;
   const {token, role, access} = useStateContext();  

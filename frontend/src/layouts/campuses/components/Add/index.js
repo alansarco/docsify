@@ -15,7 +15,7 @@ import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
 function Add({HandleRendering, ReloadTable }) {
-      const currentFileName = "layouts/representatives/components/Add/index.js";
+      const currentFileName = "layouts/campuses/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 

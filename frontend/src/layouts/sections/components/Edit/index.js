@@ -16,7 +16,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { activeSelect } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/sections/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 

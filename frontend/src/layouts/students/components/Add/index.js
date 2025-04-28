@@ -17,7 +17,7 @@ import { getLRN, gradeSelect } from "components/General/Utils";
 import { getContact } from "components/General/Utils";
 
 function Add({HandleRendering, ReloadTable, SECTIONS, PROGRAMS }) {
-      const currentFileName = "layouts/representatives/components/Add/index.js";
+      const currentFileName = "layouts/students/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token, clientprovider} = useStateContext();  
 

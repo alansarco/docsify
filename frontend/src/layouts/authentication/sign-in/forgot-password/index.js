@@ -29,7 +29,7 @@ import { messages } from "components/General/Messages";
 import { apiRoutes } from "components/Api/ApiRoutes";
 
 function ForgotPassword() {
-  const currentFileName = "layouts/authentication/sign-in/index.js";
+  const currentFileName = "layouts/authentication/sign-in/forgot-password/index.js";
   const {token} = useStateContext(); 
   const [submitLogin, setSubmitLogin] = useState(false);
   const [step, setStep] = useState(1);

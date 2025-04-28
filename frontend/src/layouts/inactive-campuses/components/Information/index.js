@@ -20,7 +20,7 @@ import { formatCurrency } from "components/General/Utils";
 
 function Information({DATA, LICENSE, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+  const currentFileName = "layouts/inactive-campuses/components/Information/index.js";
   const clientid = DATA.clientid;
   const {token, role, access} = useStateContext();  
   const YOUR_ACCESS_TOKEN = token; 

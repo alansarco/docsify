@@ -19,7 +19,7 @@ import axios from "axios";
 
 function Information({USER, HandleRendering, ReloadTable}) {
   const [deleteUser, setDeleteUser] = useState(false);
-  const currentFileName = "layouts/users/components/UserContainer/index.js";
+  const currentFileName = "layouts/representatives/components/Informtation/index.js";
 
   const username = USER.username;
   const {token, role, access} = useStateContext();  

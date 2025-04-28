@@ -20,7 +20,7 @@ import { formatCurrency } from "components/General/Utils";
 import { getContact } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/settings-representative/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
       const { isLoading, status, rawData} = useSignInData();

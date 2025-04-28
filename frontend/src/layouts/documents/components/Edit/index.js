@@ -17,7 +17,7 @@ import { getNumber } from "components/General/Utils";
 import { activeSelect } from "components/General/Utils";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
-      const currentFileName = "layouts/users/components/Edit/index.js";
+      const currentFileName = "layouts/documents/components/Edit/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token} = useStateContext();  
 

@@ -16,7 +16,7 @@ import { apiRoutes } from "components/Api/ApiRoutes";
 import { getContact } from "components/General/Utils";
 
 function Add({HandleRendering, ReloadTable }) {
-      const currentFileName = "layouts/representatives/components/Add/index.js";
+      const currentFileName = "layouts/registrars/components/Add/index.js";
       const [submitProfile, setSubmitProfile] = useState(false);
       const {token, clientprovider} = useStateContext();  
 
