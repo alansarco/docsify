@@ -1,6 +1,15 @@
-export const latestversions = "V1.1.250426"
+export const latestversions = "V1.1.250428"
 
 export const versions = [
+    { 
+        version: "V1.1.250428", 
+        details: [
+            {
+                types: "new",
+                description: "Add download button for student template"
+            },
+        ]
+    },
     { 
         version: "V1.1.250426", 
         details: [

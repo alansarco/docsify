@@ -28,6 +28,7 @@ class App_Info extends Model
         'notify_campus_renew',
         'notify_user_approve',
         'notify_user_reject',
+        'student_template',
         'created_by'
     ];
 }

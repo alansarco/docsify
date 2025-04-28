@@ -58,6 +58,7 @@ export const apiRoutes = {
     updateStudent: `${mainRoute}/api/students/updatestudent`,
     uploadExcel: `${mainRoute}/api/students/uploadexcel`,
     deleteStudent: `${mainRoute}/api/students/deletestudent`,
+    downloadStudentTemplate: `${mainRoute}/api/students/downloadstudenttemplate`,
 
 
     sectionRetrieve: `${mainRoute}/api/sections`,

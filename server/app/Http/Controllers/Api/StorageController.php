@@ -70,14 +70,14 @@ class StorageController extends Controller
         }
     
         // Determine the MIME type of the file data
-    $finfo = new \finfo(FILEINFO_MIME_TYPE);
-    $mimeType = $finfo->buffer($application->file_data) ?: 'octet-stream';
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($application->file_data) ?: 'octet-stream';
 
-    return response()->stream(function () use ($application) {
-        echo $application->file_data;
-    }, 200, [
-        'Content-Type' => $mimeType,
-    ]);
+        return response()->stream(function () use ($application) {
+            echo $application->file_data;
+        }, 200, [
+            'Content-Type' => $mimeType,
+        ]);
     }
 
     public function uploadstoragedata(Request $request) {

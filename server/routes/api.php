@@ -105,6 +105,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('sectionselect', [StudentController::class, 'sectionselect']);
         Route::get('programselect', [StudentController::class, 'programselect']);
         Route::post('uploadexcel', [UsersController::class, 'uploadexcel']);
+        Route::get('downloadstudenttemplate', [UsersController::class, 'downloadstudenttemplate']);
+
     });
 
     Route::prefix('sections')->group(function () {

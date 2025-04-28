@@ -11,9 +11,10 @@ import { passToErrorLogs, passToSuccessLogs } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import * as XLSX from "xlsx";
+import DownloadTemplate from "components/General/DownloadTemplate";
 
 function UploadStudents({ HandleRendering, ReloadTable }) {
-    const currentFileName = "layouts/juniors/components/UploadStudents.js";
+    const currentFileName = "layouts/students/components/UploadStudents.js";
     const [submitProfile, setSubmitProfile] = useState(false);
     const { token, access } = useStateContext();  
 
@@ -121,6 +122,7 @@ function UploadStudents({ HandleRendering, ReloadTable }) {
                             <li className="text-xxs fst-italic">Make sure to check the masterlist as uploading will be not successfull once data are not in correct format</li>
                             <li className="text-xxs fst-italic">The default password of student accountwill be their contact number</li>
                     </ul>
+                    <DownloadTemplate fileid="1" fileName="Students" setSearchTriggered={setSubmitProfile}/>
                     <SoftBox mt={2}>
                         <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                             <Grid container spacing={0} alignItems="center">

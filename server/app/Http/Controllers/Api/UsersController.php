@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utilities\Utils;
+use App\Models\App_Info;
 use App\Models\LogRepresentative;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -176,6 +177,24 @@ class UsersController extends Controller
 
             return response()->json(['status' => 500, 'message' => 'Failed to upload data due to error in row ' . $rowNumber . ': ' . $e->getMessage()]);
         }
+    }
+
+    public function downloadstudenttemplate(Request $request) {
+        $application = App_Info::select('student_template')->first();
+    
+        if (!$application || !$application->student_template) {
+            return response()->json(['message' => 'File not found!'], 404);
+        }
+    
+        // Determine the MIME type of the file data
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($application->student_template) ?: 'octet-stream';
+
+        return response()->stream(function () use ($application) {
+            echo $application->student_template;
+        }, 200, [
+            'Content-Type' => $mimeType,
+        ]);
     }
 
 }
