@@ -26,7 +26,6 @@ const DownloadTemplate = ({ setSearchTriggered, fileid, fileName }) => {
 
             // Create a link element to download the file
             const link = document.createElement('a');
-            console.log(fileName)
             link.href = url;
             link.setAttribute('download', file_name); // Set the file name
             document.body.appendChild(link);
