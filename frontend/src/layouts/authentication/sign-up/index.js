@@ -50,7 +50,7 @@ function SignUp() {
       }, []);
 
       const initialState = {
-            role: "",
+            role: 30,
             clientid: "",
             username: "",
             password: "",
@@ -290,7 +290,7 @@ function SignUp() {
                                           <SoftTypography fontWeight="medium" textTransform="capitalize" color="info" textGradient>
                                                 Account Information    
                                           </SoftTypography>
-                                          <Grid container spacing={0} alignItems="center">
+                                          {/* <Grid container spacing={0} alignItems="center">
                                             <Grid item xs={12} md={6} lg={4} px={1}>
                                               <SoftTypography variant="button" className="me-1"> Account Type: </SoftTypography>
                                               <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
@@ -303,7 +303,7 @@ function SignUp() {
                                                     ))}
                                               </select>
                                             </Grid>
-                                          </Grid>    
+                                          </Grid>    */}
                                           <Grid container spacing={0} alignItems="top">
                                             {formData.role == 5 &&
                                             <>

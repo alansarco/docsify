@@ -50,6 +50,9 @@ class SignupController extends Controller
                 ]);
             }
             else {
+                return response()->json([
+                    'message' => 'Username already exist!'
+                ]);  
                 $validator = Validator::make($request->all(), [ 
                     'email' => 'required|email',
                     'username' => 'required',

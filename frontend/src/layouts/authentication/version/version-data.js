@@ -1,6 +1,15 @@
-export const latestversions = "V1.1.250428"
+export const latestversions = "V1.1.250429"
 
 export const versions = [
+    { 
+        version: "V1.1.250429", 
+        details: [
+            {
+                types: "update",
+                description: "Remove student registration, allow only school admin/representative"
+            },
+        ]
+    },
     { 
         version: "V1.1.250428", 
         details: [
