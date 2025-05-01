@@ -53,6 +53,7 @@ class Utils
         $registrar = User::select(
             'users.username',
             DB::raw("CONCAT(IFNULL(users.username, ''), ' - ', IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as fullname"),
+            DB::raw("CONCAT(IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as name"),
             DB::raw("(SELECT COUNT(*) FROM requests 
                      WHERE requests.task_owner = users.username 
                        AND requests.status > 0 
