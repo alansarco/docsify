@@ -13,11 +13,15 @@ import { passToErrorLogs, passToSuccessLogs  } from "components/Api/Gateway";
 import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import { getN } from "components/General/Utils";
-import { getNumber } from "components/General/Utils";
+import { getNumber, getCardNumber, cardyears , getCVV, monthSelect  } from "components/General/Utils";
 import { useSignInData } from "layouts/authentication/sign-in/data/signinRedux";
 import { subscriptionSelect } from "components/General/Utils";
 import { formatCurrency } from "components/General/Utils";
 import { getContact } from "components/General/Utils";
+import paypal from "assets/images/logos/paypal.png";
+import maya from "assets/images/logos/maya.png";
+import visa from "assets/images/logos/visa.png";
+import mastercard from "assets/images/logos/mastercard.png";
 
 function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
       const currentFileName = "layouts/settings-representative/components/Edit/index.js";
@@ -43,6 +47,13 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             request_timeout: DATA.request_timeout == null ? "" : DATA.request_timeout,
             file_limit: DATA.file_limit == null ? "" : DATA.file_limit,
             subscription: "",
+
+            cardname: "",
+            cardnumber: "",
+            cvv: "",
+            expmonth: "",
+            expyear: "",
+
             agreement: false,   
       };
 
@@ -90,7 +101,7 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
             e.preventDefault(); 
             toast.dismiss();
              // Check if all required fields are empty
-             const requiredFields = [
+             let requiredFields = [
                   "clientid",
                   "client_name",
                   "client_acr",
@@ -98,12 +109,32 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                   "client_email",
                   "file_limit",
             ];
+            if (formData.cardname != ""
+                  || formData.cardnumber != "" 
+                  || formData.cvv != "" 
+                  || formData.expmonth != "" 
+                  || formData.expyear != "" 
+            ) {
+                  requiredFields.push("cardname");
+                  requiredFields.push("cardnumber");
+                  requiredFields.push("cvv");
+                  requiredFields.push("expmonth");
+                  requiredFields.push("expyear");
+      
+                  requiredFields.push("subscription");
+            }
 
             const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
 
             if (emptyRequiredFields.length === 0) {
                   if(!formData.agreement) {
                         toast.warning(messages.agreement, { autoClose: true });
+                  }
+                  else if (formData.cvv != "" && !/^\d{3}$/.test(getCVV(formData.cvv)) && formData.role == 30) { 
+                        toast.error("CVV must be exactly 3 digits", { autoClose: true });
+                  }
+                  else if (formData.cardnumber != "" && !/^\d{16}$/.test(getCardNumber(formData.cardnumber)) && formData.role == 30) { 
+                        toast.error("Card number must be exactly 16 digits", { autoClose: true });
                   }
                   else {      
                         setSubmitProfile(true);
@@ -232,30 +263,81 @@ function Edit({DATA, HandleRendering, UpdateLoading, ReloadTable }) {
                                           <li className="text-xxs fst-italic">
                                                 Make sure to renew/extend your license before subscription end to avoid campus account suspension
                                           </li>
-                                          <li className="text-xxs fst-italic">
-                                                We will use your previous payment method
-                                          </li>
                                     </ul>
                                     <Grid container spacing={0} alignItems="center">
-                                          <Grid item xs={12} md={6} lg={3} px={1}>
-                                                      <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
-                                                      <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
-                                                            <option value=""></option>
-                                                            {subscriptionSelect && subscriptionSelect.map((sub) => (
-                                                            <option key={sub.value} value={sub.value}>
-                                                                  {sub.desc}
-                                                            </option>
-                                                            ))}
-                                                      </select>
-                                                </Grid>
-                                                {rawData >= 0 &&
+                                          <Grid item xs={12} px={1}>
+                                                <SoftBox>
+                                                      <SoftBox >
+                                                            <SoftTypography variant="h6" className="text-uppercase">Accepted Cards</SoftTypography>
+                                                      </SoftBox>
+
+                                                      <SoftBox display="flex" mt={1}>
+                                                            <img src={paypal} alt="paypal" width={50} height={30} className="me-1" />
+                                                            <img src={maya}  alt="maya" width={50} height={30} className="me-1" />
+                                                            <img src={visa} alt="visa" width={50} height={30} className="me-1" />
+                                                            <img src={mastercard} alt="visa" width={50} height={30} className="me-1" />
+                                                      </SoftBox>
+
+                                                      <Grid container spacing={0} alignItems="center" mt={3}>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="text-xxs text-uppercase">Name on Card</SoftTypography>
+                                                                  <SoftInput mb={5} name="cardname" value={formData.cardname} onChange={handleChange} size="small" /> 
+                                                            </Grid>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="text-xxs text-uppercase">Card Number</SoftTypography>
+                                                                  <SoftInput name="cardnumber" value={getCardNumber(formData.cardnumber)} onChange={handleChange} size="small" /> 
+                                                            </Grid>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="text-xxs text-uppercase">CVV</SoftTypography>
+                                                                  <SoftInput name="cvv" value={getCVV(formData.cvv)} onChange={handleChange} size="small" />
+                                                            </Grid>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Month:</SoftTypography>
+                                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expmonth" value={formData.expmonth} onChange={handleChange} >
+                                                                        <option value=""></option>
+                                                                        {monthSelect && monthSelect.map((month) => (
+                                                                        <option key={month.value} value={month.value}>
+                                                                              {month.desc}
+                                                                        </option>
+                                                                        ))}
+                                                                  </select>
+                                                            </Grid>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Year:</SoftTypography>
+                                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expyear" value={formData.expyear} onChange={handleChange} >
+                                                                        <option value=""></option>
+                                                                        {cardyears && cardyears.map((year) => (
+                                                                        <option key={year} value={year}>
+                                                                              {year}
+                                                                        </option>
+                                                                        ))}
+                                                                  </select>
+                                                            </Grid>
+                                                            <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                  <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
+                                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
+                                                                        <option value=""></option>
+                                                                        {subscriptionSelect && subscriptionSelect.map((sub) => (
+                                                                        <option key={sub.value} value={sub.value}>
+                                                                              {sub.desc}
+                                                                        </option>
+                                                                        ))}
+                                                                  </select>
+                                                            </Grid>
+                                                            {rawData >= 0 &&
+                                                                  <Grid item xs={12} md={6} lg={3} px={1}>
+                                                                        <SoftTypography variant="button" className="me-1">Total Payment:</SoftTypography>
+                                                                        <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
+                                                                  </Grid>  
+                                                            }
+                                                      </Grid>
+
+                                                            
                                                 
-                                                <Grid item xs={12} md={6} lg={3} px={1}>
-                                                      <SoftTypography variant="button" className="me-1">Total Payment:</SoftTypography>
-                                                      <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
-                                                </Grid>  
-                                                }
-                                          </Grid>
+                                                            
+                                                </SoftBox>
+                                          </Grid>  
+                                    </Grid>  
                                     <Grid mt={3} container spacing={0} alignItems="center">
                                           <Grid item xs={12} pl={1}>
                                                 <Checkbox 

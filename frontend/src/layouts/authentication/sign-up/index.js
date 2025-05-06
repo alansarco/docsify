@@ -74,7 +74,7 @@ function SignUp() {
             expmonth: "",
             expyear: "",
 
-            subscription: "",
+            subscription: 30,
             client_name: "",
             client_acr: "",
             client_email: "",
@@ -153,31 +153,31 @@ function SignUp() {
               requiredFields.push("email");
           }
           if (formData.role == 30) {
-            requiredFields.push("cardname");
-            requiredFields.push("cardnumber");
-            requiredFields.push("cvv");
-            requiredFields.push("expmonth");
-            requiredFields.push("expyear");
+            // requiredFields.push("cardname");
+            // requiredFields.push("cardnumber");
+            // requiredFields.push("cvv");
+            // requiredFields.push("expmonth");
+            // requiredFields.push("expyear");
 
-            requiredFields.push("subscription");
+            // requiredFields.push("subscription");
             requiredFields.push("new_clientid");
             requiredFields.push("client_name");
             requiredFields.push("client_acr");
             requiredFields.push("client_email");
             requiredFields.push("client_address");
             requiredFields.push("client_contact");
-        }
+            }
           const emptyRequiredFields = requiredFields.filter(field => !formData[field]);
           if (emptyRequiredFields.length === 0) {
             if(!formData.agreement) {
                   toast.warning(messages.agreement, { autoClose: true });
             }
-            else if (!/^\d{3}$/.test(getCVV(formData.cvv)) && formData.role == 30) { 
-                  toast.error("CVV must be exactly 3 digits", { autoClose: true });
-            }
-            else if (!/^\d{16}$/.test(getCardNumber(formData.cardnumber)) && formData.role == 30) { 
-                  toast.error("Card number must be exactly 16 digits", { autoClose: true });
-            }
+            // else if (!/^\d{3}$/.test(getCVV(formData.cvv)) && formData.role == 30) { 
+            //       toast.error("CVV must be exactly 3 digits", { autoClose: true });
+            // }
+            // else if (!/^\d{16}$/.test(getCardNumber(formData.cardnumber)) && formData.role == 30) { 
+            //       toast.error("Card number must be exactly 16 digits", { autoClose: true });
+            // }
 
             else {    
               setSendOTP(true);
@@ -493,6 +493,7 @@ function SignUp() {
                                             <Grid item xs={12} px={1}>
                                                 <ul className="text-danger fw-bold">
                                                       <li className="text-xxs fst-italic">You may complete campus information after successful signup</li>
+                                                      <li className="text-xxs fst-italic">You are eligible for a 30-day free trial</li>
                                                 </ul>
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={3} px={1}>
@@ -530,8 +531,8 @@ function SignUp() {
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1"> Subscription: </SoftTypography>
                                                   <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="subscription" value={formData.subscription} onChange={handleChange} >
-                                                        <option value=""></option>
+                                                  <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" disabled name="subscription" value={formData.subscription} onChange={handleChange} >
+                                                        <option value="30">30-day trial</option>
                                                         {subscriptionSelect && subscriptionSelect.map((sub) => (
                                                         <option key={sub.value} value={sub.value}>
                                                               {sub.desc}
@@ -543,7 +544,8 @@ function SignUp() {
                                             
                                             <Grid item xs={12} md={6} lg={3} px={1}>
                                                   <SoftTypography variant="button" className="me-1">Total Payment:</SoftTypography>
-                                                  <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" /> 
+                                                  {/* <SoftInput disabled value={formatCurrency(formData.subscription * (rawData))} size="small" />  */}
+                                                  <SoftInput disabled value={formatCurrency(0)} size="small" /> 
                                             </Grid>  
                                             }
                                           </Grid>
@@ -600,20 +602,20 @@ function SignUp() {
 
                               <SoftBox mt={3}>
                                     <SoftTypography variant="button" className="text-xxs text-uppercase">Name on Card</SoftTypography>
-                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                    <SoftInput mb={5} name="cardname" value={formData.cardname} onChange={handleChange} size="small" /> 
+                                    {/* <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography> */}
+                                    <SoftInput mb={5} name="cardname" value={formData.cardname} onChange={handleChange} size="small" disabled/> 
 
                                     <SoftTypography variant="button" className="text-xxs text-uppercase">Card Number</SoftTypography>
-                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                    <SoftInput name="cardnumber" value={getCardNumber(formData.cardnumber)} onChange={handleChange} size="small" /> 
+                                    {/* <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography> */}
+                                    <SoftInput name="cardnumber" value={getCardNumber(formData.cardnumber)} onChange={handleChange} size="small" disabled/> 
                                     
                                     <SoftTypography variant="button" className="text-xxs text-uppercase">CVV</SoftTypography>
-                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                    <SoftInput name="cvv" value={getCVV(formData.cvv)} onChange={handleChange} size="small" />
+                                    {/* <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography> */}
+                                    <SoftInput name="cvv" value={getCVV(formData.cvv)} onChange={handleChange} size="small" disabled/>
                                     
                                     <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Month:</SoftTypography>
-                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expmonth" value={formData.expmonth} onChange={handleChange} >
+                                    {/* <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography> */}
+                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expmonth" value={formData.expmonth} onChange={handleChange} disabled>
                                           <option value=""></option>
                                           {monthSelect && monthSelect.map((month) => (
                                           <option key={month.value} value={month.value}>
@@ -623,8 +625,8 @@ function SignUp() {
                                     </select>
                              
                                     <SoftTypography variant="button" className="text-xxs text-uppercase">Exp Year:</SoftTypography>
-                                    <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expyear" value={formData.expyear} onChange={handleChange} >
+                                    {/* <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography> */}
+                                    <select className="form-control form-select form-select-sm text-secondary rounded-5 cursor-pointer" name="expyear" value={formData.expyear} onChange={handleChange} disabled>
                                           <option value=""></option>
                                           {cardyears && cardyears.map((year) => (
                                           <option key={year} value={year}>
