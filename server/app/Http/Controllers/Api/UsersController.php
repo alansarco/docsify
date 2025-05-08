@@ -67,7 +67,11 @@ class UsersController extends Controller
                         $first_name = isset($cells[1]) ? $cells[1]->getValue() : '';
                         $middle_name = isset($cells[2]) ? $cells[2]->getValue() : '';
                         $last_name = isset($cells[3]) ? $cells[3]->getValue() : '';
-                        $birthdate = isset($cells[4]) ? $cells[4]->getValue() : '';
+                        // $birthdate = isset($cells[4]) ? $cells[4]->getValue() : '';
+                        $birthdateRaw = isset($cells[4]) ? $cells[4]->getValue() : '';
+                        $birthdate = $birthdateRaw instanceof \DateTime
+                            ? $birthdateRaw->format('Y-m-d') // convert to string
+                            : (is_string($birthdateRaw) ? $birthdateRaw : '');
                         $contact = isset($cells[5]) ? $cells[5]->getValue() : '';
                         $email = isset($cells[6]) ? $cells[6]->getValue() : '';
                         $gender = isset($cells[7]) ? $cells[7]->getValue() : '';
@@ -159,7 +163,7 @@ class UsersController extends Controller
                 return response()->json(['status' => 500, 'message' => 'Failed to delete uploaded file: ' . $e->getMessage()]);
             }
 
-            return response()->json(['status' => 200, 'message' => 'Residents data uploaded successfully!']);
+            return response()->json(['status' => 200, 'message' => 'Student data uploaded successfully!']);
 
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback transaction if any error occurs

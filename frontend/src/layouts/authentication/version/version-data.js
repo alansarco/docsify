@@ -1,6 +1,15 @@
-export const latestversions = "V1.1.250429"
+export const latestversions = "V1.1.250508"
 
 export const versions = [
+    { 
+        version: "V1.1.250508", 
+        details: [
+            {
+                types: "bug",
+                description: "Resolve issue in uploading students masterlist"
+            },
+        ]
+    },
     { 
         version: "V1.1.250429", 
         details: [

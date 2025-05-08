@@ -119,15 +119,15 @@ function UploadStudents({ HandleRendering, ReloadTable }) {
                     <ul className="text-danger fw-bold">
                             <li className="text-xxs fst-italic">When USERNAME matches the existing record in database, they will be replaced by new data</li>
                             <li className="text-xxs fst-italic">Existing USERNAME in database that does not matches the new master list will be retain to maintain data integrity</li>
-                            <li className="text-xxs fst-italic">Make sure to check the masterlist as uploading will be not successfull once data are not in correct format</li>
-                            <li className="text-xxs fst-italic">The default password of student accountwill be their contact number</li>
+                            <li className="text-xxs fst-italic">Make sure to check the student masterlist as uploading will be not successfull once data are not in correct format</li>
+                            <li className="text-xxs fst-italic">The default password of student account will be their contact number</li>
                     </ul>
                     <DownloadTemplate fileid="1" fileName="Students" setSearchTriggered={setSubmitProfile}/>
                     <SoftBox mt={2}>
                         <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                             <Grid container spacing={0} alignItems="center">
                                 <Grid item xs={12} sm={6} md={4} px={1}>
-                                    <SoftTypography variant="button" className="me-1">Upload Resident Master List:</SoftTypography>
+                                    <SoftTypography variant="button" className="me-1">Upload Student Master List:</SoftTypography>
                                     <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
                                     <input
                                         type="file"
