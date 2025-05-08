@@ -83,8 +83,8 @@ class UsersController extends Controller
                         if (!$username) {
                             throw new \Exception("Row $rowNumber: Make sure that LRN is not empty");
                         }
-                        if (!preg_match('/^\d{11}$/', $username)) {
-                            throw new \Exception("Row $rowNumber: LRN must be exactly 11 digits");
+                        if (!preg_match('/^\d{12}$/', $username)) {
+                            throw new \Exception("Row $rowNumber: LRN must be exactly 12 digits");
                         }
 
                         if (!is_numeric($contact)) {
