@@ -267,7 +267,15 @@ function Edit({USER, HandleRendering, UpdateLoading, ReloadTable, SECTIONS, PROG
                                           <Grid item xs={12} md={6} lg={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Birthdate: </SoftTypography>
                                                 <SoftTypography variant="span" className="text-xxs text-danger fst-italic">*</SoftTypography>
-                                                <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" />
+                                                {/* <input className="form-control form-control-sm text-secondary rounded-5"  max={currentDate} name="birthdate" value={formData.birthdate} onChange={handleChange} type="date" /> */}
+                                                <input
+                                                      className="form-control form-control-sm text-secondary rounded-5"
+                                                      type="date"
+                                                      name="birthdate"
+                                                      value={formData.birthdate}
+                                                      onChange={handleChange}
+                                                      max={new Date(new Date().setFullYear(new Date().getFullYear() - 14)).toISOString().split('T')[0]}
+                                                />
                                           </Grid>
                                           <Grid item xs={12} sm={6} md={3} px={1}>
                                                 <SoftTypography variant="button" className="me-1"> Account Status: </SoftTypography>

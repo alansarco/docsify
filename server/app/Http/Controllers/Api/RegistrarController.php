@@ -130,7 +130,7 @@ class RegistrarController extends Controller
             $otpSent = false;
             $adminInfo = App_Info::first();
             if($adminInfo->notify_user_approve == 1) {
-                $otpSent = Mail::to($request->email)->send(new AccoutApproveEmail($data));
+                $otpSent = Mail::to($request->username)->send(new AccoutApproveEmail($data));
             }
 
             if($add) {
