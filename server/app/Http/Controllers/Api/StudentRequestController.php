@@ -343,6 +343,7 @@ class StudentRequestController extends Controller
             'purpose' => $request->purpose,
             'task_owner' => $assignedRegistrar,
             'doc_id' => $request->doc_id,
+            'duration' => $docInfo->days_process,
             'contact' => $authUser->contact,
             'date_needed' => $date_needed,
             'status' => 1,

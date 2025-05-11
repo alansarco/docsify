@@ -18,6 +18,7 @@ class DocRequest extends Model
         'clientid',
         'username',
         'doc_id',
+        'duration',
         'date_needed',
         'purpose',
         'contact',

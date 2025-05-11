@@ -12,14 +12,17 @@ import AbsoluteLoading from "components/General/AbsoluteLoading";
 // Timeline context
 import { TimelineProvider } from "essentials/Timeline/context";
 
-function TimelineList({ title, dark, children,  loading, shadow }) {
+function TimelineList({ title, dark, children,  loading, shadow, total }) {
   return (
     <TimelineProvider value={dark} mb={2}>
       <Card className={shadow} >
         <SoftBox bgColor={dark ? "dark" : "white"} variant="gradient" minHeight="15rem">
-          <SoftBox pt={3} px={3}>
+          <SoftBox pt={3} px={3} className="d-flex justify-content-between">
             <SoftTypography mb={0} variant="h6" fontWeight="medium" color={dark ? "white" : "dark"}>
               {title}
+            </SoftTypography>
+            <SoftTypography mb={0} fontWeight="medium" color={dark ? "white" : "success"} className="text-xs">
+              Total: {total || 0} day/s
             </SoftTypography>
           </SoftBox>
             {loading ? <AbsoluteLoading /> : <SoftBox p={2}>{children}</SoftBox>}

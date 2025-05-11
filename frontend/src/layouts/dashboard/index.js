@@ -355,7 +355,7 @@ function Dashboard() {
                 <Grid item xs={12} md={5} xl={4}>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
-                      <TimelineList title="My Tasks">
+                      <TimelineList title="My Tasks" total={otherStats && otherStats.mytaskDays}>
                         {(otherStats && otherStats.mytask && otherStats.mytask.length < 0)  ?
                         <SoftTypography mt={0} color="dark" fontSize="0.8rem" className="text-center">
                         None for Today!

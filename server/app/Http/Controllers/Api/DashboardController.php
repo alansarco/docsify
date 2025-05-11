@@ -88,7 +88,7 @@ class DashboardController extends Controller
                 'requests.reference_no',
                 'documents.doc_name',
                 DB::raw("CONCAT(IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as fullname"),
-                DB::raw("DATE_FORMAT(requests.created_at, '%M %d, %Y') AS date_added"),
+                DB::raw("DATE_FORMAT(requests.created_at, '%M %d, %Y %h:%i %p') AS date_added"),
                 DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
                 DB::raw("CASE WHEN CURDATE() > requests.date_needed THEN DATEDIFF(CURDATE(), requests.date_needed) ELSE 0 END AS days_overdue")
             )
@@ -97,6 +97,11 @@ class DashboardController extends Controller
             ->where('requests.task_owner', $authUser->username)
             ->orderBy('requests.created_at')
             ->get();
+
+
+        $mytaskDays = DocRequest::where('task_owner', $authUser->username)
+            ->whereDate('created_at', now()->toDateString())
+            ->sum('duration');
 
         $myRequests = DocRequest::select(
             DB::raw("IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) as pending"),
@@ -154,6 +159,7 @@ class DashboardController extends Controller
             'registrarCounts' => $registrarCounts,
             'taskDistribution' => $taskDistribution,
             'mytask' => $mytask,
+            'mytaskDays' => $mytaskDays,
             'myRequests' => $myRequests,
             'myTaskCard' => $myTaskCard,
             'myRecentRequests' => $myRecentRequests,

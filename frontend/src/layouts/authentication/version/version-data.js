@@ -1,6 +1,19 @@
-export const latestversions = "V1.1.250508"
+export const latestversions = "V1.1.250511"
 
 export const versions = [
+    { 
+        version: "V1.1.250511", 
+        details: [
+            {
+                types: "update",
+                description: "Improve the automation in assigning the registrar"
+            },
+            {
+                types: "new",
+                description: "Add number of days of task in dashboard"
+            },
+        ]
+    },
     { 
         version: "V1.1.250508", 
         details: [

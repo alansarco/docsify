@@ -55,17 +55,28 @@ class Utils
             DB::raw("CONCAT(IFNULL(users.username, ''), ' - ', IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as fullname"),
             DB::raw("CONCAT(IFNULL(users.first_name, ''), ' ', IFNULL(users.middle_name, ''), ' ', IFNULL(users.last_name, '')) as name"),
             DB::raw("(SELECT COUNT(*) FROM requests 
-                     WHERE requests.task_owner = users.username 
-                       AND requests.status > 0 
-                       AND requests.status < 4 
-                       AND DATE(requests.created_at) = CURDATE()
-                     ) AS request_count")
+                    WHERE requests.task_owner = users.username 
+                        AND requests.status IN (1, 2, 3, 7)
+                        AND DATE(requests.created_at) = CURDATE()
+                    ) AS request_count"),
+
+            DB::raw("(SELECT SUM(requests.duration) FROM requests 
+                    WHERE requests.task_owner = users.username 
+                        AND DATE(requests.created_at) = CURDATE()
+                    ) AS request_days"),
+
+            DB::raw("(SELECT MAX(requests.created_at) FROM requests 
+                    WHERE requests.task_owner = users.username 
+                      AND DATE(requests.created_at) = CURDATE()
+                  ) AS request_recent")
         )
         ->where('users.role', 'REGISTRAR')
         ->where('users.access_level', 10)
         ->where('users.account_status', 1)
         ->where('users.clientid', $authUser->clientid)
         ->orderBy('request_count', 'asc') // Sort by the lowest request count
+        ->orderBy('request_days', 'asc') // Sort by the lowest request days total
+        ->orderBy('request_recent', 'asc') // Sort by the most idle registrar
         ->first();
         
         return $registrar;
