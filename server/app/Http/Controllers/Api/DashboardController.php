@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 DB::raw("DATE_FORMAT(requests.date_needed, '%M %d, %Y') AS date_needed"),
                 DB::raw("CASE WHEN CURDATE() > requests.date_needed THEN DATEDIFF(CURDATE(), requests.date_needed) ELSE 0 END AS days_overdue")
             )
-            ->whereIn('requests.status', [1, 2, 3, 4, 7])
+            ->whereIn('requests.status', [1, 2, 3, 7])
             ->where('requests.clientid', $authUser->clientid)
             ->where('requests.task_owner', $authUser->username)
             ->orderBy('requests.created_at')
@@ -101,7 +101,7 @@ class DashboardController extends Controller
 
         $mytaskDays = DocRequest::where('task_owner', $authUser->username)
             ->whereDate('created_at', now()->toDateString())
-            ->whereIn('requests.status', [1, 2, 3, 4, 7])
+            ->whereIn('requests.status', [1, 2, 3, 7])
             ->sum('duration');
 
         $myRequests = DocRequest::select(
